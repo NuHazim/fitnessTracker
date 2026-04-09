@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Fitness Tracker</title>
+
+    <style>
+
+    </style>
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  </head>
+
+  <body>
+    <nav class="navbar bg-light shadow-sm">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center">
+          <button
+            class="btn"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar"
+          >
+            ☰
+          </button>
+
+          <a class="navbar-brand m-0 p-0" href="#">
+            Health & Fitness
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div
+      class="offcanvas offcanvas-start show"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      data-bs-backdrop="false"
+    >
+
+      <div class="offcanvas-body">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
+          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
+          <li class="nav-item"><a class="nav-link active" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
+          <li class="nav-item"><a class="nav-link" href="Profile.html"><i class="fa-solid fa-user"></i>Profile</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+      <h1>Reminders</h1>
+      <div>
+        bruh
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const offcanvas = document.getElementById("offcanvasNavbar");
+      const body = document.body;
+
+      offcanvas.addEventListener("show.bs.offcanvas", () => {
+        body.classList.add("sidebar-open");
+      });
+
+      offcanvas.addEventListener("hidden.bs.offcanvas", () => {
+        body.classList.remove("sidebar-open");
+      });
+    </script>
+  </body>
+</html>
