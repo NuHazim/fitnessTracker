@@ -1,0 +1,81 @@
+.fitnessContainer{
+    background-color: #eef3ff;
+    height:100vh;
+}
+.logWorkoutButton{
+    position: absolute;
+    top:110px;
+    right:40px;
+    background-color: black;
+    color:white;
+    border:1px solid black;
+    padding:0.3rem 1rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.logWorkoutButton:hover{
+    background-color: rgb(37, 37, 37);
+}
+.sumWorkBoxes{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:center ;
+    padding: 1rem;
+    gap:1rem;
+}
+.sumWorkBox{
+    flex:1 1 200px;
+    background-color: white;
+    border-radius: 10px;
+    padding:1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border:1px solid rgb(229, 229, 229);
+}
+.sumWorkBox p span{
+    font-size: 2em;
+}
+.workHisBox{
+    background-color: white;
+    margin:1rem;
+    padding:1.3rem;
+    border-radius: 10px;
+    border:1px solid rgb(229, 229, 229);
+}
+.noWorkBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.logFirstWorkoutButton{
+    background-color: black;
+    color:white;
+    border:1px solid black;
+    padding:0.3rem 1rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.logFirstWorkoutButton:hover{
+    background-color: rgb(37, 37, 37);
+}
+.workForm{
+    display: flex;
+    flex-wrap: wrap;
+}
+.QuestionBox{
+    display: flex;
+    flex-direction: column;
+    margin:0.5rem;
+    flex:1 1 200px;
+}
+.QuestionBox label span{
+    color:red;
+}
+.QuestionBox input,.QuestionBox select,.QuestionBox textarea{
+    background-color: rgb(234, 234, 234);
+    border-radius: 10px;
+    border: none;
+    padding:0.3rem 1rem;
+}

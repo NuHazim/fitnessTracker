@@ -13,6 +13,7 @@
 
     </style>
     <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="FitnessTracker.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   </head>
 
@@ -57,10 +58,96 @@
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent">
+    <div class="fitnessContainer" id="mainContent">
       <h1>Fitness Tracker</h1>
-      <div>
-        bruh
+      <p>Log and track your workouts and activities</p>
+      <button class="logWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Workout</button>
+      <div class="sumWorkBoxes">
+        <div class="sumWorkBox">
+          <p>Total Workouts<br><span>0</span></p>
+          <i style="color:lightskyblue;" class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="sumWorkBox">
+          <p>Total Minutes<br><span>0</span></p>
+          <i style="color:lightgreen;" class="fa-regular fa-clock"></i>
+        </div>
+        <div class="sumWorkBox">
+          <p>Total Steps<br><span>0</span></p>
+          <i style="color:purple;" class="fa-solid fa-shoe-prints"></i>
+        </div>
+        <div class="sumWorkBox">
+          <p>Total Calories<br><span>0</span></p>
+          <i style="color:orange;" class="fa-solid fa-fire"></i>
+        </div>
+      </div>
+      <div class="workHisBox">
+        <p style="font-weight: bold;">Workout History</p>
+        <p>All your logged activities</p>
+        <div class="noWorkBox">
+          <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i>
+          <p style="color:grey;">No workouts logged yet</p>
+          <button class="logFirstWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Your First Workout</button>
+        </div>
+      </div>
+      <!-- Button trigger modal -->
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Log New Workout<br><span style="font-size: 0.8em;color:grey;font-weight: lighter;">Record your fitness activity with details</span></h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="workForm">
+                <div class="QuestionBox">
+                  <label>Workout Type<span>*</span></label>
+                  <select required placeholder="Select workout type">
+                    <option>Running</option>
+                    <option>Walking</option>
+                    <option>Cycling</option>
+                    <option>Swimming</option>
+                    <option>Gym Workout</option>
+                    <option>Yoga</option>
+                    <option>HIIT</option>
+                    <option>Cardio</option>
+                    <option>Strength Training</option>
+                    <option>Sports</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="QuestionBox">
+                  <label>Date<span>*</span></label>
+                  <input type="date" required>
+                </div>
+                <div class="QuestionBox">
+                  <label>Time<span>*</span></label>
+                  <input type="time" required>
+                </div>
+                <div class="QuestionBox">
+                  <label>Duration(minutes)<span>*</span></label>
+                  <input type="number" placeholder="30" required>
+                </div>
+                <div class="QuestionBox">
+                  <label>Steps(optional)</label>
+                  <input type="number" placeholder="5000">
+                </div>
+                <div class="QuestionBox">
+                  <label>Calories Burned(optional)</label>
+                  <input type="number" placeholder="200">
+                </div>
+                <div class="QuestionBox">
+                  <label>Notes(optional)</label>
+                  <textarea placeholder="How did the workout feel?"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" style="background-color: white;border:1px solid rgb(229, 229, 229);color:black;font-size: 0.9em;" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" style="background-color: black;border:none;font-size: 0.9em;" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

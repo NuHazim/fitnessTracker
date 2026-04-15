@@ -25,6 +25,7 @@ padding: 20px;
 
 body.sidebar-open #mainContent {
 margin-left: 250px;
+margin-right: 0;
 }
 .btn{
 font-size: 1.3em;
