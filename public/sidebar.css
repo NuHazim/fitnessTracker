@@ -1,42 +1,50 @@
 body {
-margin: 0;
+    margin: 0;
+    overflow: hidden auto !important;
+    /* override Bootstrap's overflow:hidden */
+}
+
+body.modal-open {
+    padding-right: 0 !important;
 }
 
 .navbar {
-height: 60px;
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-z-index: 1050;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
 }
 
 #offcanvasNavbar {
-width: 250px;
-top: 60px;
-height: calc(100% - 60px);
+    width: 250px;
+    top: 60px;
+    height: calc(100% - 60px);
 }
 
 #mainContent {
-margin-top: 60px;
-transition: margin-left 0.3s;
-padding: 20px;
+    margin-top: 60px;
+    transition: margin-left 0.3s;
+    padding: 20px;
 }
 
 body.sidebar-open #mainContent {
-margin-left: 250px;
-margin-right: 0;
-}
-.btn{
-font-size: 1.3em;
-}
-.fa-solid{
-    margin:0.5rem;
+    margin-left: 250px;
+    margin-right: 0;
 }
 
-.active{
-    padding:10px 15px;
-    background: linear-gradient(90deg, #4a00e0, #8e2de2); 
+.btn {
+    font-size: 1.3em;
+}
+
+.fa-solid {
+    margin: 0.5rem;
+}
+
+.active {
+    padding: 10px 15px;
+    background: linear-gradient(90deg, #4a00e0, #8e2de2);
     border-radius: 10px;
-    color:white !important;
+    color: white !important;
 }
