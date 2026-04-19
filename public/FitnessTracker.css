@@ -48,6 +48,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin:2rem;
 }
 .logFirstWorkoutButton{
     background-color: black;
@@ -79,3 +80,43 @@
     border: none;
     padding:0.3rem 1rem;
 }
+.workBox{
+    background-color: rgb(247, 247, 247);
+    border-radius: 10px;
+    padding:1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom:0.5rem;
+}
+.workBox:hover{
+    background-color: rgb(239, 239, 239);
+}
+.workBoxLogo{
+    border: 1px solid lightblue;
+    width:3.4rem;
+    height:3.4rem;
+    padding:0.8rem;
+    font-size: 2em;
+    border-radius: 50%;
+    color:rgb(0, 125, 167);
+    background-color: lightblue;
+    margin-right: 1rem;
+}
+.workDetails p{
+    margin-bottom: 0.2rem;
+}
+.workDetails p span{
+    margin-right: 0.5rem;
+}
+.workBoxButtons button{
+    border: none;
+    background:none;
+}
+.workBoxButtons button:nth-child(1){
+    color:rgb(0, 157, 255);
+}
+.workBoxButtons button:nth-child(2){
+    color:red;
+}
+
