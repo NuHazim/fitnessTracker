@@ -21,45 +21,82 @@
             data-bs-target="#offcanvasNavbar">&#9776;</button>
           <a class="navbar-brand m-0 p-0" href="#">Health &amp; Fitness</a>
         </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+          <button class="logoutButton">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>Logout
+          </button>
+          <button class="profileButton">
+            <i class="fa-solid fa-user"></i>
+          </button>
+        </div>
       </div>
     </nav>
 
+
     <!-- ══════════════ SIDEBAR ══════════════ -->
-    <div class="offcanvas offcanvas-start show" tabindex="-1"
-      id="offcanvasNavbar" data-bs-backdrop="false">
+<div class="offcanvas offcanvas-start show"
+  tabindex="-1"
+  id="offcanvasNavbar"
+  data-bs-backdrop="false"
+  data-bs-scroll="true">
+
+  <div class="offcanvas-body">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="Dashboard.html">
+          <i class="fa-solid fa-house"></i>Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="FitnessTracker.html">
+          <i class="fa-solid fa-dumbbell"></i>Fitness Tracker
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="ProgressCharts.html">
+          <i class="fa-solid fa-arrow-trend-up"></i>Progress Charts
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="NutritionPlanner.html">
+          <i class="fa-solid fa-calendar"></i>Nutrition Planner
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="Reminders.html">
+          <i class="fa-solid fa-clock"></i>Reminders
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="Profile.html">
+          <i class="fa-solid fa-user"></i>Profile
+        </a>
+      </li>
+    </ul>
+  </div>
+
+    <div
+      class="offcanvas offcanvas-start show"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      data-bs-backdrop="false"
+      data-bs-scroll="true"
+    >
+
       <div class="offcanvas-body">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="Dashboard.html">
-              <i class="fa-solid fa-house"></i>Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="FitnessTracker.html">
-              <i class="fa-solid fa-dumbbell"></i>Fitness Tracker
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="ProgressCharts.html">
-              <i class="fa-solid fa-arrow-trend-up"></i>Progress Charts
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="NutritionPlanner.html">
-              <i class="fa-solid fa-calendar"></i>Nutrition Planner
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="Reminders.html">
-              <i class="fa-solid fa-clock"></i>Reminders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="Profile.html">
-              <i class="fa-solid fa-user"></i>Profile
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
+          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
+          <li class="nav-item"><a class="nav-link active" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
+
         </ul>
+      </div>
+      <div class="mt-auto sidebar-user">
+        <hr>
+        <p id="sidebarUsername" class="m-0 fw-bold">Username</p>
+        <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em;">email@example.com</p>
       </div>
     </div>
 

@@ -1,169 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <title>Fitness Tracker</title>
 
-    <style>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <title>Fitness Tracker</title>
+  <style> </style>
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="FitnessTracker.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+</head>
 
-    </style>
-    <link rel="stylesheet" href="sidebar.css">
-    <link rel="stylesheet" href="FitnessTracker.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-  </head>
-
-  <body>
-    <nav class="navbar bg-light shadow-sm">
-      <div class="container-fluid">
-        <div class="d-flex align-items-center">
-          <button
-            class="btn"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-          >
-            ☰
-          </button>
-
-          <a class="navbar-brand m-0 p-0" href="#">
-            Health & Fitness
-          </a>
-        </div>
+<body>
+  <nav class="navbar bg-light shadow-sm">
+    <div class="container-fluid">
+      <div class="d-flex align-items-center"> 
+        <button class="btn" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNavbar"> ☰ 
+        </button> 
+        <a class="navbar-brand m-0 p-0" href="#"> Health & Fitness </a>
       </div>
-    </nav>
-
-    <div
-      class="offcanvas offcanvas-start show"
-      tabindex="-1"
-      id="offcanvasNavbar"
-      data-bs-backdrop="false"
-
-    >
-
-      <div class="offcanvas-body">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
-          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
-          <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
-          <li class="nav-item"><a class="nav-link" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
-          <li class="nav-item"><a class="nav-link" href="Profile.html"><i class="fa-solid fa-user"></i>Profile</a></li>
-        </ul>
+      <div class="ms-auto d-flex align-items-center gap-2">
+          <button class="logoutButton">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>Logout
+          </button>
+          <button class="profileButton">
+            <i class="fa-solid fa-user"></i>
+          </button>
+        </div>
+    </div>
+  </nav>
+  <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasNavbar" data-bs-backdrop="false"
+    data-bs-scroll="true">
+    <div class="offcanvas-body">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a>
+        </li>
+        <li class="nav-item"><a class="nav-link active" href="FitnessTracker.html"><i
+              class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
+        <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i
+              class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
+        <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i
+              class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
+        <li class="nav-item"><a class="nav-link" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a>
+        </li>
+      </ul>
+    </div>
+    <div class="mt-auto sidebar-user">
+      <hr>
+      <p id="sidebarUsername" class="m-0 fw-bold">Username</p>
+      <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em;">email@example.com</p>
+    </div>
+  </div> 
+  <!-- Main Content -->
+  <div class="fitnessContainer" id="mainContent">
+    <h1 style="margin-left: 1rem;">Fitness Tracker</h1>
+    <p style="margin-left: 1rem;">Log and track your workouts and activities</p> <button class="logWorkoutButton"
+      data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Workout</button>
+    <div class="sumWorkBoxes">
+      <div class="sumWorkBox">
+        <p>Total Workouts<br><span id="totalWorks">0</span></p> <i style="color:lightskyblue;"
+          class="fa-solid fa-chart-line"></i>
+      </div>
+      <div class="sumWorkBox">
+        <p>Total Minutes<br><span id="totalMins">0</span></p> <i style="color:lightgreen;"
+          class="fa-regular fa-clock"></i>
+      </div>
+      <div class="sumWorkBox">
+        <p>Total Steps<br><span id="totalSteps">0</span></p> <i style="color:purple;"
+          class="fa-solid fa-shoe-prints"></i>
+      </div>
+      <div class="sumWorkBox">
+        <p>Total Calories<br><span id="totalCals">0</span></p> <i style="color:orange;" class="fa-solid fa-fire"></i>
       </div>
     </div>
-
-    <!-- Main Content -->
-    <div class="fitnessContainer" id="mainContent">
-      <h1>Fitness Tracker</h1>
-      <p>Log and track your workouts and activities</p>
-      <button class="logWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Workout</button>
-      <div class="sumWorkBoxes">
-        <div class="sumWorkBox">
-          <p>Total Workouts<br><span>0</span></p>
-          <i style="color:lightskyblue;" class="fa-solid fa-chart-line"></i>
-        </div>
-        <div class="sumWorkBox">
-          <p>Total Minutes<br><span>0</span></p>
-          <i style="color:lightgreen;" class="fa-regular fa-clock"></i>
-        </div>
-        <div class="sumWorkBox">
-          <p>Total Steps<br><span>0</span></p>
-          <i style="color:purple;" class="fa-solid fa-shoe-prints"></i>
-        </div>
-        <div class="sumWorkBox">
-          <p>Total Calories<br><span>0</span></p>
-          <i style="color:orange;" class="fa-solid fa-fire"></i>
-        </div>
-      </div>
-      <div class="workHisBox">
-        <p style="font-weight: bold;">Workout History</p>
-        <p>All your logged activities</p>
-        <div class="noWorkBox">
-          <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i>
-          <p style="color:grey;">No workouts logged yet</p>
-          <button class="logFirstWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Your First Workout</button>
-        </div>
-      </div>
-      <!-- Button trigger modal -->
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Log New Workout<br><span style="font-size: 0.8em;color:grey;font-weight: lighter;">Record your fitness activity with details</span></h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form class="workForm">
-                <div class="QuestionBox">
-                  <label>Workout Type<span>*</span></label>
-                  <select required placeholder="Select workout type">
-                    <option>Running</option>
-                    <option>Walking</option>
-                    <option>Cycling</option>
-                    <option>Swimming</option>
-                    <option>Gym Workout</option>
-                    <option>Yoga</option>
-                    <option>HIIT</option>
-                    <option>Cardio</option>
-                    <option>Strength Training</option>
-                    <option>Sports</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="QuestionBox">
-                  <label>Date<span>*</span></label>
-                  <input type="date" required>
-                </div>
-                <div class="QuestionBox">
-                  <label>Time<span>*</span></label>
-                  <input type="time" required>
-                </div>
-                <div class="QuestionBox">
-                  <label>Duration(minutes)<span>*</span></label>
-                  <input type="number" placeholder="30" required>
-                </div>
-                <div class="QuestionBox">
-                  <label>Steps(optional)</label>
-                  <input type="number" placeholder="5000">
-                </div>
-                <div class="QuestionBox">
-                  <label>Calories Burned(optional)</label>
-                  <input type="number" placeholder="200">
-                </div>
-                <div class="QuestionBox">
-                  <label>Notes(optional)</label>
-                  <textarea placeholder="How did the workout feel?"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" style="background-color: white;border:1px solid rgb(229, 229, 229);color:black;font-size: 0.9em;" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" style="background-color: black;border:none;font-size: 0.9em;" class="btn btn-primary">Save changes</button>
+    <div id="workHisBox" class="workHisBox">
+      <p style="font-weight: bold;">Workout History</p>
+      <p>All your logged activities</p> <!-- template is the goat --> <template id="templateWorkBox">
+        <div class="workBox">
+          <div style="display: flex;"> <i class="fa-solid fa-person-running workBoxLogo"></i>
+            <div class="workDetails">
+              <p style="font-weight: bolder;" id="workoutName"></p>
+              <p> <span id="dateWork"></span> <span id="timeWork"></span> <span id="minWork"></span> <span
+                  id="stepsWork"></span> <span id="calWork"></span> </p>
+              <p id="notesWork"></p>
             </div>
           </div>
+          <div class="workBoxButtons"> <button><i class="fa-solid fa-pen"></i></button> <button><i
+                class="fa-solid fa-trash"></i></button> </div>
+        </div>
+      </template>
+      <!-- <div class="noWorkBox"> <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i> <p style="color:grey;">No workouts logged yet</p> <button class="logFirstWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Your First Workout</button> </div> -->
+    </div> <!-- Button trigger modal --> <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Log New Workout<br><span
+                style="font-size: 0.8em;color:grey;font-weight: lighter;">Record your fitness activity with
+                details</span></h1> <button type="button" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="workForm" class="workForm">
+              <div class="QuestionBox"> <label>Workout Type<span>*</span></label> <select id="workType" required
+                  placeholder="Select workout type">
+                  <option>Running</option>
+                  <option>Walking</option>
+                  <option>Cycling</option>
+                  <option>Swimming</option>
+                  <option>Gym Workout</option>
+                  <option>Yoga</option>
+                  <option>HIIT</option>
+                  <option>Cardio</option>
+                  <option>Strength Training</option>
+                  <option>Sports</option>
+                  <option>Other</option>
+                </select> </div>
+              <div class="QuestionBox"> <label>Date<span>*</span></label> <input id="workDate" type="date" required>
+              </div>
+              <div class="QuestionBox"> <label>Time<span>*</span></label> <input id="workTime" type="time" required>
+              </div>
+              <div class="QuestionBox"> <label>Duration(minutes)<span>*</span></label> <input id="workMin" type="number"
+                  placeholder="30" required> </div>
+              <div class="QuestionBox"> <label>Steps(optional)</label> <input id="workSteps" type="number"
+                  placeholder="5000"> </div>
+              <div class="QuestionBox"> <label>Calories Burned(optional)</label> <input id="workCal" type="number"
+                  placeholder="200"> </div>
+              <div class="QuestionBox"> <label>Notes(optional)</label> <textarea id="workNotes"
+                  placeholder="How did the workout feel?"></textarea> </div>
+            </form>
+          </div>
+          <div class="modal-footer"> <button type="button"
+              style="background-color: white;border:1px solid rgb(229, 229, 229);color:black;font-size: 0.9em;"
+              id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <button
+              id="saveWorkButton" type="button" style="background-color: black;border:none;font-size: 0.9em;"
+              class="btn btn-primary" onclick="validateAndSubmit()">Save Workout</button> </div>
         </div>
       </div>
     </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="FitnessTracker.js"></script>
+  <script> 
+    const offcanvas = document.getElementById("offcanvasNavbar"); 
+    const body = document.body; 
+    offcanvas.addEventListener("show.bs.offcanvas", () => { 
+      body.classList.add("sidebar-open"); 
+      }); 
+    offcanvas.addEventListener("hidden.bs.offcanvas", () => { 
+      body.classList.remove("sidebar-open"); 
+      }); 
+  </script>
+</body>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-      const offcanvas = document.getElementById("offcanvasNavbar");
-      const body = document.body;
-
-      offcanvas.addEventListener("show.bs.offcanvas", () => {
-        body.classList.add("sidebar-open");
-      });
-
-      offcanvas.addEventListener("hidden.bs.offcanvas", () => {
-        body.classList.remove("sidebar-open");
-      });
-    </script>
-  </body>
 </html>
