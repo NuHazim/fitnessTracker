@@ -3,79 +3,436 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <title>Fitness Tracker</title>
-
-    <style>
-
-    </style>
-    <link rel="stylesheet" href="sidebar.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="sidebar.css"/>
+    <link rel="stylesheet" href="reminders.css"/>
+    <title>Notifications &amp; Reminders</title>
   </head>
 
   <body>
+
+    <!-- ══════════════ NAVBAR ══════════════ -->
     <nav class="navbar bg-light shadow-sm">
       <div class="container-fluid">
         <div class="d-flex align-items-center">
-          <button
-            class="btn"
-            type="button"
+          <button class="btn" type="button"
             data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-          >
-            ☰
-          </button>
-
-          <a class="navbar-brand m-0 p-0" href="#">
-            Health & Fitness
-          </a>
+            data-bs-target="#offcanvasNavbar">&#9776;</button>
+          <a class="navbar-brand m-0 p-0" href="#">Health &amp; Fitness</a>
         </div>
       </div>
     </nav>
 
-    <div
-      class="offcanvas offcanvas-start show"
-      tabindex="-1"
-      id="offcanvasNavbar"
-      data-bs-backdrop="false"
-    >
-
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <div class="offcanvas offcanvas-start show" tabindex="-1"
+      id="offcanvasNavbar" data-bs-backdrop="false">
       <div class="offcanvas-body">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
-          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
-          <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
-          <li class="nav-item"><a class="nav-link active" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
-          <li class="nav-item"><a class="nav-link" href="Profile.html"><i class="fa-solid fa-user"></i>Profile</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="Dashboard.html">
+              <i class="fa-solid fa-house"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="FitnessTracker.html">
+              <i class="fa-solid fa-dumbbell"></i>Fitness Tracker
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ProgressCharts.html">
+              <i class="fa-solid fa-arrow-trend-up"></i>Progress Charts
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="NutritionPlanner.html">
+              <i class="fa-solid fa-calendar"></i>Nutrition Planner
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="Reminders.html">
+              <i class="fa-solid fa-clock"></i>Reminders
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Profile.html">
+              <i class="fa-solid fa-user"></i>Profile
+            </a>
+          </li>
         </ul>
       </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- ══════════════ MAIN CONTENT ══════════════ -->
     <div id="mainContent">
-      <h1>Reminders</h1>
-      <div>
-        bruh
+
+      <!-- Permission Banner -->
+      <div id="permissionBanner">
+        <i class="fa-solid fa-bell-slash perm-icon"></i>
+        <p class="perm-text">
+          Browser notifications are blocked. Enable them so reminders can alert you on time.
+        </p>
+        <button onclick="requestNotificationPermission()"
+          class="btn btn-sm btn-warning fw-bold">
+          Enable Notifications
+        </button>
+      </div>
+
+      <!-- Page Header -->
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 class="fw-bold mb-1 page-title">Notifications &amp; Reminders</h1>
+          <p class="text-muted mb-0">Stay on track with regular reminders</p>
+        </div>
+        <button class="btn btn-dark-custom d-flex align-items-center gap-2"
+          id="btnAddReminder">
+          <i class="fa-solid fa-plus"></i> Add Reminder
+        </button>
+      </div>
+
+      <!-- Info Banner -->
+      <div class="info-banner mb-4">
+        <i class="fa-solid fa-circle-info info-icon"></i>
+        <div>
+          <strong class="info-title">How reminders work</strong>
+          <p class="info-text mb-0">
+            Reminders will appear as browser notifications at the specified time each day.
+            Make sure to keep this tab open or allow notifications for the best experience.
+          </p>
+        </div>
+      </div>
+
+      <!-- Active Reminders -->
+      <div class="section-card mb-4">
+        <h5 class="fw-bold mb-1">Active Reminders</h5>
+        <p class="section-sub text-muted mb-3" id="activeCount">0 reminder(s) enabled</p>
+        <div id="reminderList">
+          <div class="empty-state">
+            <i class="fa-solid fa-bell-slash fa-2x mb-3 d-block"></i>
+            <p>No reminders yet. Click <strong>Add Reminder</strong> to get started.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Presets -->
+      <div class="section-card">
+        <h5 class="fw-bold mb-1">Quick Reminder Presets</h5>
+        <p class="section-sub text-muted mb-3">Common reminders you might want to set</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="preset-card" id="preset1">
+              <div class="preset-card-inner">
+                <div class="preset-icon preset-icon-workout">
+                  <i class="fa-solid fa-dumbbell"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">Morning Workout</div>
+                  <div class="preset-time">07:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="preset-card" id="preset2">
+              <div class="preset-card-inner">
+                <div class="preset-icon preset-icon-meal">
+                  <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">Lunch Time</div>
+                  <div class="preset-time">12:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="preset-card" id="preset3">
+              <div class="preset-card-inner">
+                <div class="preset-icon preset-icon-water">
+                  <i class="fa-solid fa-droplet"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">Afternoon Hydration</div>
+                  <div class="preset-time">15:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="preset-card" id="preset4">
+              <div class="preset-card-inner">
+                <div class="preset-icon preset-icon-workout">
+                  <i class="fa-solid fa-person-running"></i>
+                </div>
+                <div>
+                  <div class="fw-semibold">Evening Workout</div>
+                  <div class="preset-time">18:00</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /mainContent -->
+
+
+    <!-- ══════════════════════════════════════════
+         CREATE REMINDER MODAL
+    ══════════════════════════════════════════ -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+
+          <div class="modal-header border-0 px-4 pt-4 pb-1">
+            <div>
+              <h5 class="modal-title fw-bold">Create New Reminder</h5>
+              <p class="text-muted mb-0 modal-subtitle">
+                Set up a notification to help you stay consistent
+              </p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body px-4 pb-0">
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="createType">
+                Reminder Type <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" id="createType">
+                <option value="workout">Workout</option>
+                <option value="meal">Meal</option>
+                <option value="water">Water Intake</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="createTime">
+                Time <span class="text-danger">*</span>
+              </label>
+              <input type="time" class="form-control" id="createTime" value="09:00"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="createTitle">
+                Title <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="createTitle"
+                placeholder="e.g., Morning Workout"/>
+              <div class="invalid-feedback">Please enter a title.</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="createMessage">
+                Message <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-control" id="createMessage" rows="3"
+                placeholder="e.g., Time for your morning workout!"></textarea>
+              <div class="invalid-feedback">Please enter a message.</div>
+            </div>
+
+            <div class="mb-3">
+              <p class="modal-label fw-semibold mb-2">Repeat On</p>
+              <div class="row g-2">
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cMon" value="Mon" checked>
+                  <label class="form-check-label" for="cMon">Mon</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cTue" value="Tue" checked>
+                  <label class="form-check-label" for="cTue">Tue</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cWed" value="Wed" checked>
+                  <label class="form-check-label" for="cWed">Wed</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cThu" value="Thu" checked>
+                  <label class="form-check-label" for="cThu">Thu</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cFri" value="Fri" checked>
+                  <label class="form-check-label" for="cFri">Fri</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cSat" value="Sat">
+                  <label class="form-check-label" for="cSat">Sat</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="cSun" value="Sun">
+                  <label class="form-check-label" for="cSun">Sun</label>
+                </div></div>
+              </div>
+              <p class="text-muted mt-2 mb-0 days-hint">
+                Select the days when this reminder should repeat
+              </p>
+            </div>
+
+          </div>
+
+          <div class="modal-footer border-0 px-4 pb-4 gap-2">
+            <button type="button" class="btn btn-cancel"
+              data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-dark-custom"
+              id="btnSaveCreate">Create Reminder</button>
+          </div>
+
+        </div>
       </div>
     </div>
 
+
+    <!-- ══════════════════════════════════════════
+         EDIT REMINDER MODAL
+    ══════════════════════════════════════════ -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+
+          <div class="modal-header border-0 px-4 pt-4 pb-1">
+            <div>
+              <h5 class="modal-title fw-bold">Edit Reminder</h5>
+              <p class="text-muted mb-0 modal-subtitle">Update your reminder details</p>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body px-4 pb-0">
+
+            <input type="hidden" id="editId"/>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="editType">
+                Reminder Type <span class="text-danger">*</span>
+              </label>
+              <select class="form-select" id="editType">
+                <option value="workout">Workout</option>
+                <option value="meal">Meal</option>
+                <option value="water">Water Intake</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="editTime">
+                Time <span class="text-danger">*</span>
+              </label>
+              <input type="time" class="form-control" id="editTime"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="editTitle">
+                Title <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editTitle"/>
+              <div class="invalid-feedback">Please enter a title.</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label modal-label" for="editMessage">
+                Message <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-control" id="editMessage" rows="3"></textarea>
+              <div class="invalid-feedback">Please enter a message.</div>
+            </div>
+
+            <div class="mb-3">
+              <p class="modal-label fw-semibold mb-2">Repeat On</p>
+              <div class="row g-2">
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eMon" value="Mon">
+                  <label class="form-check-label" for="eMon">Mon</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eTue" value="Tue">
+                  <label class="form-check-label" for="eTue">Tue</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eWed" value="Wed">
+                  <label class="form-check-label" for="eWed">Wed</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eThu" value="Thu">
+                  <label class="form-check-label" for="eThu">Thu</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eFri" value="Fri">
+                  <label class="form-check-label" for="eFri">Fri</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eSat" value="Sat">
+                  <label class="form-check-label" for="eSat">Sat</label>
+                </div></div>
+                <div class="col-3"><div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="eSun" value="Sun">
+                  <label class="form-check-label" for="eSun">Sun</label>
+                </div></div>
+              </div>
+              <p class="text-muted mt-2 mb-0 days-hint">
+                Select the days when this reminder should repeat
+              </p>
+            </div>
+
+          </div>
+
+          <div class="modal-footer border-0 px-4 pb-4 gap-2">
+            <button type="button" class="btn btn-cancel"
+              data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-dark-custom"
+              id="btnSaveEdit">Update Reminder</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         DELETE CONFIRMATION MODAL
+    ══════════════════════════════════════════ -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content modal-custom">
+
+          <div class="modal-body px-4 pt-4 pb-2">
+            <h5 class="fw-bold mb-1">Are you sure?</h5>
+            <p class="text-muted mb-0" style="font-size:0.9rem;">
+              This will permanently delete the reminder.
+            </p>
+          </div>
+
+          <div class="modal-footer border-0 px-4 pb-4 pt-2 gap-2 justify-content-end">
+            <button type="button" class="btn btn-cancel"
+              data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-dark-custom"
+              id="btnConfirmDelete">Delete</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Sidebar toggle -->
     <script>
-      const offcanvas = document.getElementById("offcanvasNavbar");
-      const body = document.body;
-
-      offcanvas.addEventListener("show.bs.offcanvas", () => {
-        body.classList.add("sidebar-open");
+      var offcanvasEl = document.getElementById('offcanvasNavbar');
+      offcanvasEl.addEventListener('show.bs.offcanvas', function () {
+        document.body.classList.add('sidebar-open');
       });
-
-      offcanvas.addEventListener("hidden.bs.offcanvas", () => {
-        body.classList.remove("sidebar-open");
+      offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+        document.body.classList.remove('sidebar-open');
       });
     </script>
+
+    <!-- Main reminders logic -->
+    <script src="reminders.js"></script>
+
   </body>
 </html>
