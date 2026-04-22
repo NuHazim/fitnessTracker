@@ -32,73 +32,51 @@
       </div>
     </nav>
 
-
     <!-- ══════════════ SIDEBAR ══════════════ -->
-<div class="offcanvas offcanvas-start show"
-  tabindex="-1"
-  id="offcanvasNavbar"
-  data-bs-backdrop="false"
-  data-bs-scroll="true">
-
-  <div class="offcanvas-body">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="Dashboard.html">
-          <i class="fa-solid fa-house"></i>Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="FitnessTracker.html">
-          <i class="fa-solid fa-dumbbell"></i>Fitness Tracker
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ProgressCharts.html">
-          <i class="fa-solid fa-arrow-trend-up"></i>Progress Charts
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="NutritionPlanner.html">
-          <i class="fa-solid fa-calendar"></i>Nutrition Planner
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" href="Reminders.html">
-          <i class="fa-solid fa-clock"></i>Reminders
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="Profile.html">
-          <i class="fa-solid fa-user"></i>Profile
-        </a>
-      </li>
-    </ul>
-  </div>
-
-    <div
-      class="offcanvas offcanvas-start show"
+    <div class="offcanvas offcanvas-start show"
       tabindex="-1"
       id="offcanvasNavbar"
       data-bs-backdrop="false"
-      data-bs-scroll="true"
-    >
+      data-bs-scroll="true">
 
       <div class="offcanvas-body">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
-          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
-          <li class="nav-item"><a class="nav-link" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
-          <li class="nav-item"><a class="nav-link active" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
-
+          <li class="nav-item">
+            <a class="nav-link" href="Dashboard.html">
+              <i class="fa-solid fa-house"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="FitnessTracker.html">
+              <i class="fa-solid fa-dumbbell"></i>Fitness Tracker
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ProgressCharts.html">
+              <i class="fa-solid fa-arrow-trend-up"></i>Progress Charts
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="NutritionPlanner.html">
+              <i class="fa-solid fa-calendar"></i>Nutrition Planner
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="Reminders.html">
+              <i class="fa-solid fa-clock"></i>Reminders
+            </a>
+          </li>
+          
         </ul>
       </div>
+
       <div class="mt-auto sidebar-user">
         <hr>
         <p id="sidebarUsername" class="m-0 fw-bold">Username</p>
         <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em;">email@example.com</p>
       </div>
-    </div>
+
+    </div><!-- /offcanvasNavbar -->
 
     <!-- ══════════════ MAIN CONTENT ══════════════ -->
     <div id="mainContent">
@@ -272,41 +250,41 @@
             </div>
 
             <div class="mb-3">
-              <p class="modal-label fw-semibold mb-2">Repeat On</p>
-              <div class="row g-2">
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cMon" value="Mon" checked>
-                  <label class="form-check-label" for="cMon">Mon</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cTue" value="Tue" checked>
-                  <label class="form-check-label" for="cTue">Tue</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cWed" value="Wed" checked>
-                  <label class="form-check-label" for="cWed">Wed</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cThu" value="Thu" checked>
-                  <label class="form-check-label" for="cThu">Thu</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cFri" value="Fri" checked>
-                  <label class="form-check-label" for="cFri">Fri</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cSat" value="Sat">
-                  <label class="form-check-label" for="cSat">Sat</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="cSun" value="Sun">
-                  <label class="form-check-label" for="cSun">Sun</label>
-                </div></div>
-              </div>
-              <p class="text-muted mt-2 mb-0 days-hint">
-                Select the days when this reminder should repeat
-              </p>
-            </div>
+  <p class="modal-label fw-semibold mb-2">Repeat On</p>
+  <div class="d-flex flex-wrap gap-3">
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cMon" value="Mon" checked>
+      <label for="cMon">Mon</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cTue" value="Tue" checked>
+      <label for="cTue">Tue</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cWed" value="Wed" checked>
+      <label for="cWed">Wed</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cThu" value="Thu" checked>
+      <label for="cThu">Thu</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cFri" value="Fri" checked>
+      <label for="cFri">Fri</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cSat" value="Sat">
+      <label for="cSat">Sat</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="cSun" value="Sun">
+      <label for="cSun">Sun</label>
+    </div>
+  </div>
+  <p class="text-muted mt-2 mb-0 days-hint">
+    Select the days when this reminder should repeat
+  </p>
+</div>
 
           </div>
 
@@ -378,41 +356,41 @@
             </div>
 
             <div class="mb-3">
-              <p class="modal-label fw-semibold mb-2">Repeat On</p>
-              <div class="row g-2">
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eMon" value="Mon">
-                  <label class="form-check-label" for="eMon">Mon</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eTue" value="Tue">
-                  <label class="form-check-label" for="eTue">Tue</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eWed" value="Wed">
-                  <label class="form-check-label" for="eWed">Wed</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eThu" value="Thu">
-                  <label class="form-check-label" for="eThu">Thu</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eFri" value="Fri">
-                  <label class="form-check-label" for="eFri">Fri</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eSat" value="Sat">
-                  <label class="form-check-label" for="eSat">Sat</label>
-                </div></div>
-                <div class="col-3"><div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="eSun" value="Sun">
-                  <label class="form-check-label" for="eSun">Sun</label>
-                </div></div>
-              </div>
-              <p class="text-muted mt-2 mb-0 days-hint">
-                Select the days when this reminder should repeat
-              </p>
-            </div>
+  <p class="modal-label fw-semibold mb-2">Repeat On</p>
+  <div class="d-flex flex-wrap gap-3">
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eMon" value="Mon">
+      <label for="eMon">Mon</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eTue" value="Tue">
+      <label for="eTue">Tue</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eWed" value="Wed">
+      <label for="eWed">Wed</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eThu" value="Thu">
+      <label for="eThu">Thu</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eFri" value="Fri">
+      <label for="eFri">Fri</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eSat" value="Sat">
+      <label for="eSat">Sat</label>
+    </div>
+    <div class="day-check">
+      <input class="day-check-input" type="checkbox" id="eSun" value="Sun">
+      <label for="eSun">Sun</label>
+    </div>
+  </div>
+  <p class="text-muted mt-2 mb-0 days-hint">
+    Select the days when this reminder should repeat
+  </p>
+</div>
 
           </div>
 

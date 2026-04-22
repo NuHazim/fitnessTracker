@@ -266,3 +266,53 @@ body {
   box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
   background: #fff;
 }
+/* ═══════════════════════════
+   DAY CHECKBOXES ONLY
+═══════════════════════════ */
+.day-check-input {
+  width: 1.3em;
+  height: 1.3em;
+  cursor: pointer;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+.day-check-input:checked {
+  background-color: #1a1a1a;
+  border-color: #1a1a1a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M4 10l4 4 8-8'/%3E%3C/svg%3E");
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.day-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.15);
+  outline: none;
+}
+.day-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 0;
+}
+.day-check label {
+  font-size: 0.88rem;
+  color: #374151;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Restore toggle switch to original */
+.form-check-input[type="checkbox"] {
+  width: 2.6em;
+  height: 1.35em;
+  cursor: pointer;
+}

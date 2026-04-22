@@ -92,6 +92,15 @@ function escHtml(str) {
     .replace(/>/g,  '&gt;')
     .replace(/"/g,  '&quot;');
 }
+function formatTime(time24) {
+  var parts  = time24.split(':');
+  var hour   = parseInt(parts[0], 10);
+  var minute = parts[1];
+  var ampm   = hour >= 12 ? 'PM' : 'AM';
+  var hour12 = hour % 12;
+  if (hour12 === 0) hour12 = 12;
+  return hour12 + ':' + minute + ' ' + ampm;
+}
 
 /* ══════════════════════════════════════════════
    RENDER REMINDER LIST
@@ -149,7 +158,7 @@ function renderReminders() {
           '<div class="reminder-msg">' + escHtml(r.message) + '</div>' +
           '<div class="reminder-meta">' +
             '<span class="meta-time">' +
-              '<i class="fa-regular fa-clock"></i> ' + escHtml(r.time) +
+              '<i class="fa-regular fa-clock"></i> ' + formatTime(r.time) +
             '</span>' +
             '<span class="badge-type">' + meta.label + '</span>' +
             daysHtml +
