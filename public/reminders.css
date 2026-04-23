@@ -82,7 +82,7 @@ body {
    REMINDER ITEMS
 ═══════════════════════════ */
 .reminder-item {
-  border: 1px solid #ebebeb;
+  border: 1px solid #d1d5db;
   border-radius: 12px;
   padding: 16px 20px;
   margin-bottom: 12px;
@@ -93,7 +93,7 @@ body {
   transition: opacity 0.25s ease;
 }
 .reminder-item:last-child { margin-bottom: 0; }
-.reminder-item.is-disabled { opacity: 0.4; }
+.reminder-item.is-disabled { opacity: 0.8; }
 
 /* icon circle */
 .reminder-icon {
