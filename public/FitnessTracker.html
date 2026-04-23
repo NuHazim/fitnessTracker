@@ -56,8 +56,10 @@
   <!-- Main Content -->
   <div class="fitnessContainer" id="mainContent">
     <h1 style="margin-left: 1rem;">Fitness Tracker</h1>
-    <p style="margin-left: 1rem;">Log and track your workouts and activities</p> <button class="logWorkoutButton"
-      data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Workout</button>
+    <p style="margin-left: 1rem;">Log and track your workouts and activities</p> 
+    <button class="logWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <i class="fa-solid fa-plus"></i>Log Workout
+    </button>
     <div class="sumWorkBoxes">
       <div class="sumWorkBox">
         <p>Total Workouts<br><span id="totalWorks">0</span></p> <i style="color:lightskyblue;"
@@ -77,21 +79,38 @@
     </div>
     <div id="workHisBox" class="workHisBox">
       <p style="font-weight: bold;">Workout History</p>
-      <p>All your logged activities</p> <!-- template is the goat --> <template id="templateWorkBox">
+      <p>All your logged activities</p> 
+      <div id="workHisContainer"></div>
+      <!-- template is the goat --> 
+      <template id="templateWorkBox">
         <div class="workBox">
-          <div style="display: flex;"> <i class="fa-solid fa-person-running workBoxLogo"></i>
+          <div style="display: flex;"> 
+            <i class="fa-solid fa-person-running workBoxLogo"></i>
             <div class="workDetails">
               <p style="font-weight: bolder;" id="workoutName"></p>
-              <p> <span id="dateWork"></span> <span id="timeWork"></span> <span id="minWork"></span> <span
-                  id="stepsWork"></span> <span id="calWork"></span> </p>
+              <p> 
+                <span id="dateWork"></span> 
+                <span id="timeWork"></span> 
+                <span id="minWork"></span> 
+                <span id="stepsWork"></span> 
+                <span id="calWork"></span> 
+              </p>
               <p id="notesWork"></p>
             </div>
           </div>
-          <div class="workBoxButtons"> <button><i class="fa-solid fa-pen"></i></button> <button><i
-                class="fa-solid fa-trash"></i></button> </div>
+          <div class="workBoxButtons"> 
+            <button class="editButton"><i class="fa-solid fa-pen editButton"></i></button> 
+            <button class="deleteButton"><i class="fa-solid fa-trash deleteButton"></i></button> </div>
         </div>
       </template>
-      <!-- <div class="noWorkBox"> <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i> <p style="color:grey;">No workouts logged yet</p> <button class="logFirstWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i>Log Your First Workout</button> </div> -->
+      <div id="noWorkBox" class="noWorkBox"> 
+        <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i> 
+        <p style="color:grey;">No workouts logged yet</p> 
+        <button class="logFirstWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <i class="fa-solid fa-plus"></i>
+          Log Your First Workout
+        </button> 
+      </div>
     </div> <!-- Button trigger modal --> <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -104,7 +123,9 @@
           </div>
           <div class="modal-body">
             <form id="workForm" class="workForm">
-              <div class="QuestionBox"> <label>Workout Type<span>*</span></label> <select id="workType" required
+              <div class="QuestionBox"> 
+                <label>Workout Type<span>*</span></label> 
+                <select id="workType" required
                   placeholder="Select workout type">
                   <option>Running</option>
                   <option>Walking</option>
@@ -117,26 +138,47 @@
                   <option>Strength Training</option>
                   <option>Sports</option>
                   <option>Other</option>
-                </select> </div>
-              <div class="QuestionBox"> <label>Date<span>*</span></label> <input id="workDate" type="date" required>
+                </select> 
               </div>
-              <div class="QuestionBox"> <label>Time<span>*</span></label> <input id="workTime" type="time" required>
+              <div class="QuestionBox">
+                <label>Date<span>*</span></label> 
+                <input id="workDate" type="date" required>
               </div>
-              <div class="QuestionBox"> <label>Duration(minutes)<span>*</span></label> <input id="workMin" type="number"
-                  placeholder="30" required> </div>
-              <div class="QuestionBox"> <label>Steps(optional)</label> <input id="workSteps" type="number"
-                  placeholder="5000"> </div>
-              <div class="QuestionBox"> <label>Calories Burned(optional)</label> <input id="workCal" type="number"
-                  placeholder="200"> </div>
-              <div class="QuestionBox"> <label>Notes(optional)</label> <textarea id="workNotes"
-                  placeholder="How did the workout feel?"></textarea> </div>
+              <div class="QuestionBox">
+                <label>Time<span>*</span></label> 
+                <input id="workTime" type="time" required>
+              </div>
+              <div class="QuestionBox">
+                <label>Duration(minutes)<span>*</span></label> 
+                <input id="workMin" type="number" placeholder="30" required> 
+              </div>
+              <div class="QuestionBox">
+                <label>Steps(optional)</label> 
+                <input id="workSteps" type="number" placeholder="5000"> 
+              </div>
+              <div class="QuestionBox">
+                <label>Calories Burned(optional)</label>
+                  <input id="workCal" type="number" placeholder="200"> 
+              </div>
+              <div class="QuestionBox"> 
+                <label>Notes(optional)</label> 
+                <textarea id="workNotes" placeholder="How did the workout feel?"></textarea>
+              </div>
             </form>
           </div>
-          <div class="modal-footer"> <button type="button"
+          <div class="modal-footer"> 
+            <button type="button"
               style="background-color: white;border:1px solid rgb(229, 229, 229);color:black;font-size: 0.9em;"
-              id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <button
+              id="cancelButton" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+            </button> 
+            <button id="updateWorkButton" class="btn btn-primary" style="display:none;background-color: black;border:none;font-size: 0.9em;">
+              Update Workout
+            </button>
+            <button
               id="saveWorkButton" type="button" style="background-color: black;border:none;font-size: 0.9em;"
-              class="btn btn-primary" onclick="validateAndSubmit()">Save Workout</button> </div>
+              class="btn btn-primary" onclick="validateAndSubmit()">Save Workout
+            </button> 
+          </div>
         </div>
       </div>
     </div>
