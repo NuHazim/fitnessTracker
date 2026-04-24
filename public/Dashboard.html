@@ -8,10 +8,7 @@
       rel="stylesheet"
     />
     <title>Fitness Tracker</title>
-
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="Dashboard.css">
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   </head>
@@ -69,15 +66,89 @@
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent">
-      <h1>Dashboard</h1>
-      <div>
-        bruh
+    <div class="dashboardContainer" id="mainContent">
+      <h1 style="margin-left:1.8rem;">Welcome back, <span id="usernameBox"></span></h1>
+       <p style="margin-left:1.8rem;">Here's your fitness overview</p>
+      <div class="pagesSummaryBox">
+        <div class="pageBox">
+          <p>
+            Total Workouts<br><br>
+            <span id="totalWorks">0</span><br>
+            <a href="FitnessTracker.html">View details -></a>
+          </p>
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="pageBox">
+          <p>
+            This Week<br><br>
+            <span id="totalProgress">0</span><br>
+            <a href="ProgressCharts.html">View details -></a>
+          </p>
+          <i class="fa-regular fa-calendar"></i>
+        </div>
+        <div class="pageBox">
+          <p>
+            Favourite Meals<br><br>
+            <span id="favMeals">0</span><br>
+            <a href="NutritionPlanner.html">View details -></a>
+          </p>
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div class="pageBox">
+          <p>
+            Active Reminders<br><br>
+            <span id="totalReminders">0</span><br>
+            <a href="Reminders.html">View details -></a>
+          </p>
+          <i class="fa-regular fa-bell"></i>
+        </div>
+      </div>
+      <div class="todaysActivities">
+        <p style="font-weight: bolder;">Today's Activity</p>
+        <p>Your fitness stats for today</p>
+        <div class="activitiesBox">
+          <div class="activityBox">
+            <p>Steps<br><span id="todaysSteps">0</span></p>
+          </div>
+          <div class="activityBox">
+            <p>Calories Burned<br><span id="todaysCalories">0</span></p>
+          </div>
+          <div class="activityBox">
+            <p>Active Minutes<br><span id="todaysMinutes">0</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="recentWorkouts">
+        <p style="font-weight: bold;">Recent Workouts</p>
+        <p>Your latest fitness activities</p> 
+        <div id="workHisContainer"></div>
+        <div class="noWorkBox"> 
+          <i style="font-size: 5em;margin:1.5rem;color:grey;" class="fa-brands fa-strava"></i> 
+          <p style="color:grey;">No workouts logged yet</p> 
+          <a href="FitnessTracker.html" class="logWork">Log Your First Workout</a>
+        </div>
+      </div>
+      <a id="viewAllWorkouts" href="FitnessTracker.html" style="display:none;">
+        View All Workouts <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <div class="shortcuts">
+        <div id="logBox" class="shortcut">
+          <i class="fa-solid fa-dumbbell"></i>
+          <p><span style="font-weight: bolder;">Log Workout</span><br>Track your activity</p>
+        </div>
+        <div id="planBox" class="shortcut">
+          <i class="fa-solid fa-calendar"></i>
+          <p><span style="font-weight: bolder;">Plan Meals</span><br>Get nutrition insights</p>
+        </div>
+        <div id="progressBox" class="shortcut">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          <p><span style="font-weight: bolder;">View Progress</span><br>Track your journey</p>
+        </div>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="Dashboard.js"></script>
     <script>
       const offcanvas = document.getElementById("offcanvasNavbar");
       const body = document.body;
