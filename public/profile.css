@@ -1,0 +1,144 @@
+/* Scope everything inside mainContent ONLY */
+#mainContent {
+  background: #f8f9fb;
+  min-height: 100vh;
+}
+
+/* Tabs */
+#mainContent .custom-tabs {
+  background: #e9ecef;
+  padding: 5px;
+  border-radius: 12px;
+}
+
+#mainContent .tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  border-radius: 10px;
+  color: #555;
+  transition: 0.2s;
+}
+
+#mainContent .tab-btn.active {
+  background: white;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Cards */
+#mainContent .card-box {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid #eee;
+}
+
+/* Danger card */
+#mainContent .card-box.danger {
+  border: 1px solid #f5c2c7;
+  background: #fff;
+}
+
+/* Inputs */
+#mainContent .form-control {
+  background: #f1f3f5;
+  border: none;
+}
+
+#mainContent .form-control:focus {
+  box-shadow: none;
+  background: #f1f3f5;
+}
+
+/* Tabs content */
+#mainContent .tab-content {
+  display: none;
+}
+
+#mainContent .tab-content.active {
+  display: block;
+}
+
+#mainContent .tab-btn.active {
+    background: #fff !important;
+    color: #000 !important;
+}
+
+/* Remove Bootstrap glow */
+#mainContent .form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+/* Fix input + button alignment */
+#mainContent .input-group .form-control {
+  border-right: 0;
+}
+
+#mainContent .input-group .btn {
+  border-left: 0;
+}
+
+/* Optional: smoother look */
+#mainContent .input-group {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#mainContent .input-group .form-control,
+#mainContent .input-group .btn {
+  border: none;
+}
+
+#mainContent .fade-btn {
+  transition: all 0.25s ease;
+}
+
+/* hidden state */
+#mainContent .fade-btn.hide {
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+}
+
+#mainContent .fade-btn.show {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+#mainContent #saveBtn {
+  opacity: 0;
+  transform: translateY(-5px);
+  pointer-events: none;
+}
+
+#mainContent .btn:focus {
+  box-shadow: none !important;
+}
+
+#mainContent .btn:focus-visible {
+  box-shadow: none !important;
+}
+
+#mainContent .btn:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+#mainContent .btn-dark:focus,
+#mainContent .btn-dark:focus-visible,
+#mainContent .btn-dark:active {
+  box-shadow: none !important;
+  background-color: #212529 !important; /* default btn-dark */
+}
+
+#mainContent .fade-btn.show {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+  background-color: #212529 !important;
+}

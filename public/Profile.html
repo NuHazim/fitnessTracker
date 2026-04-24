@@ -12,6 +12,7 @@
     <style>
 
     </style>
+    <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   </head>
@@ -57,15 +58,191 @@
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent">
-      <h1>Profile</h1>
-      <div>
-        bruh
+    <div id="mainContent" class="p-4">
+      <div class="container" style="max-width: 900px;">
+        
+        <!-- Title -->
+        <h3 class="fw-bold mb-1">Profile Management</h3>
+        <p class="text-muted mb-4">Manage your account settings and preferences</p>
+
+        <!-- Tabs -->
+        <div class="custom-tabs d-flex mb-4">
+          <button class="tab-btn active" data-tab="profile">
+            <i class="fa-regular fa-user me-2"></i>Profile
+          </button>
+          <button class="tab-btn" data-tab="password">
+            <i class="fa-solid fa-lock me-2"></i>Password
+          </button>
+          <button class="tab-btn" data-tab="danger">
+            <i class="fa-regular fa-trash-can me-2"></i>Danger Zone
+          </button>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="tab-content active" id="profile">
+          <div class="card-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h5 class="fw-bold">Personal Information</h5>
+                <p class="text-muted small mb-0">Update your profile details</p>
+              </div>
+
+              <button id="editBtn" class="btn btn-light fade-btn">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Full Name *</label>
+                <input type="text" id="name" class="form-control" value="john doe" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" placeholder="your@gmail.com" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Age</label>
+                <input type="number" id="age" class="form-control" value="25" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Weight (kg)</label>
+                <input type="number" id="weight" class="form-control" value="70" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Height (cm)</label>
+                <input type="number" id="height" class="form-control" value="175" readonly>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Fitness Goal</label>
+                <input type="text" id="goal" class="form-control" placeholder="Lose weight, build muscle, etc." readonly>
+              </div>
+            </div>
+
+            <button id="saveBtn" class="btn btn-dark mt-4 px-4 fade-btn">
+              Save Changes
+            </button>
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="tab-content" id="password">
+          <div class="card-box">
+            <h5 class="fw-bold">Change Password</h5>
+            <p class="text-muted small mb-4">Update your password to keep your account secure</p>
+
+            <div class="mb-3">
+              <label class="form-label">Current Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control password-field">
+                <button class="btn btn-outline-secondary toggle-password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <small class="text-danger d-none error-msg"></small>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">New Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control password-field">
+                <button class="btn btn-outline-secondary toggle-password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <small class="text-danger d-none error-msg"></small>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Confirm New Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control password-field">
+                <button class="btn btn-outline-secondary toggle-password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <small class="text-danger d-none error-msg"></small>
+            </div>
+
+            <button class="btn btn-dark px-4">Update Password</button>
+          </div>
+        </div>
+
+        <!-- DANGER -->
+        <div class="tab-content" id="danger">
+          <div class="card-box danger">
+            <h5 class="fw-bold text-danger">Danger Zone</h5>
+            <p class="text-muted small">Irreversible actions that affect your account</p>
+
+            <div class="alert alert-danger mt-3">
+              Deleting your account will permanently remove all your data including workouts, meal plans, and progress history.
+            </div>
+
+            <button class="btn btn-danger px-4" data-bs-toggle="modal" data-bs-target="#deleteModal">
+              <i class="fa-solid fa-trash me-2"></i>Delete Account
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!--Window update password-->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="passwordToast" class="toast align-items-center text-bg-success border-0" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">
+            Password updated successfully!
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+
+    <!--Window update profile-->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="profileToast" class="toast align-items-center text-bg-success border-0" role="alert">
+        <div class="d-flex">
+          <div class="toast-body">
+            Profile updated successfully!
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window delete acc-->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+
+          <h5 class="fw-bold">Are you absolutely sure?</h5>
+
+          <p class="text-muted mt-2">
+            This action cannot be undone. This will permanently delete your account
+            and remove all your data from our servers.
+          </p>
+
+          <div class="d-flex justify-content-end mt-3">
+            <button class="btn btn-light me-2" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button id="confirmDelete" class="btn btn-danger">
+              Yes, delete my account
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="profile.js"></script>
     <script>
       const offcanvas = document.getElementById("offcanvasNavbar");
       const body = document.body;
