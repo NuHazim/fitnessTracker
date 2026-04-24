@@ -1,6 +1,7 @@
 .fitnessContainer{
     background-color: #eef3ff;
-    height:100vh;
+    min-height:100vh;
+    margin: 0;
 }
 .logWorkoutButton{
     position: absolute;
