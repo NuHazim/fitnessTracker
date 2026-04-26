@@ -1,152 +1,112 @@
-const tabs = document.querySelectorAll(".tab-btn");
-const contents = document.querySelectorAll(".tab-content");
+// Profile Modal
+const modal    = document.getElementById('profileModal');
+const openBtn  = document.querySelector('.profileButton');
+const closeBtn = document.getElementById('closeProfileModal');
+const toast    = document.getElementById('toast');
 
-tabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-    tabs.forEach(b => b.classList.remove("active"));
-    contents.forEach(c => c.classList.remove("active"));
-
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.add("active");
-    });
-});
-
-const fields = ["name","email","age","weight","height","goal"];
-const editBtn = document.getElementById("editBtn");
-const saveBtn = document.getElementById("saveBtn");
-
-// Load from localStorage
-function loadProfile() {
-  const data = JSON.parse(localStorage.getItem("profile")) || {
-    name: "john doe",
-    email: "your@gmail.com",
-    age: 25,
-    weight: 70,
-    height: 175,
-    goal: "Lose weight"
-  };
-
-  fields.forEach(id => {
-    document.getElementById(id).value = data[id];
-  });
+function showToast(msg, type = 'success') {
+  const el = document.getElementById('pm-inline-msg');
+  el.textContent = msg;
+  el.style.display = 'flex';
+  el.style.background = type === 'error' ? '#fff5f5' : '#f0fdf4';
+  el.style.color = type === 'error' ? '#7f1d1d' : '#065f46';
+  el.style.border = type === 'error' ? '1px solid #fecaca' : '1px solid #bbf7d0';
+  // prepend a small icon
+  el.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> ${msg}`;
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
 }
 
-// Enable editing
-editBtn.addEventListener("click", () => {
-    editBtn.blur();
-  fields.forEach(id => {
-    document.getElementById(id).removeAttribute("readonly");
-  });
-
-  saveBtn.classList.add("show");
-  saveBtn.classList.remove("hide");   // ✅ important
-
-  editBtn.classList.add("hide");
-  editBtn.classList.remove("show");
+openBtn.addEventListener('click', () => {
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const saved = JSON.parse(localStorage.getItem('pm_profile') || '{}');
+  if (saved.name)        document.getElementById('fullName').value    = saved.name;
+  if (saved.email)       document.getElementById('email').value       = saved.email;
+  if (saved.age)         document.getElementById('age').value         = saved.age;
+  if (saved.weight)      document.getElementById('weight').value      = saved.weight;
+  if (saved.height)      document.getElementById('height').value      = saved.height;
+  if (saved.fitnessGoal) document.getElementById('fitnessGoal').value = saved.fitnessGoal;
 });
 
-// Save changes
-saveBtn.addEventListener("click", () => {
-  saveBtn.blur();
+function closeModal() {
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+closeBtn.addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  const data = {};
-
-  fields.forEach(id => {
-    const input = document.getElementById(id);
-    data[id] = input.value;
-    input.setAttribute("readonly", true);
+document.querySelectorAll('.pm-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    document.querySelectorAll('.pm-tab').forEach(t => t.className = 'pm-tab');
+    document.querySelectorAll('.pm-panel').forEach(p => p.classList.remove('active'));
+    tab.className = target === 'danger' ? 'pm-tab active-danger' : 'pm-tab active';
+    document.getElementById('panel-' + target).classList.add('active');
   });
-
-  localStorage.setItem("profile", JSON.stringify(data));
-
-  saveBtn.classList.remove("show");
-  saveBtn.classList.add("hide");
-
-  editBtn.classList.remove("hide");
-
-  // 🔥 show toast
-  const toastEl = document.getElementById("profileToast");
-  const toast = new bootstrap.Toast(toastEl);
-  toast.show();
 });
 
-document.querySelectorAll(".toggle-password").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const input = btn.previousElementSibling;
-    const icon = btn.querySelector("i");
-
-    if (input.type === "password") {
-      input.type = "text";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
+document.querySelectorAll('.pw-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = document.getElementById(btn.dataset.target);
+    const icon  = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-regular fa-eye-slash';
     } else {
-      input.type = "password";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
+      input.type = 'password';
+      icon.className = 'fa-regular fa-eye';
     }
   });
 });
 
-document.getElementById("confirmDelete").addEventListener("click", () => {
-  localStorage.clear(); // optional (simulate account deletion)
-  window.location.href = "index.html";
+document.getElementById('saveProfile').addEventListener('click', () => {
+  const name = document.getElementById('fullName').value.trim();
+  if (!name) { showToast('Full name is required.', 'error'); return; }
+  const data = {
+    name,
+    email:       document.getElementById('email').value.trim(),
+    age:         document.getElementById('age').value,
+    weight:      document.getElementById('weight').value,
+    height:      document.getElementById('height').value,
+    fitnessGoal: document.getElementById('fitnessGoal').value.trim(),
+  };
+  localStorage.setItem('pm_profile', JSON.stringify(data));
+  showToast('Profile saved successfully!', 'success');
 });
 
-const passwordFields = document.querySelectorAll(".password-field");
-const errorMsgs = document.querySelectorAll(".error-msg");
-const updatePasswordBtn = document.querySelector("#password button.btn-dark");
-
-function showError(index, message) {
-  errorMsgs[index].textContent = message;
-  errorMsgs[index].classList.remove("d-none");
-}
-
-function clearErrors() {
-  errorMsgs.forEach(el => {
-    el.textContent = "";
-    el.classList.add("d-none");
-  });
-}
-
-updatePasswordBtn.addEventListener("click", () => {
-  clearErrors();
-
-  const current = passwordFields[0].value.trim();
-  const newPass = passwordFields[1].value.trim();
-  const confirm = passwordFields[2].value.trim();
-
-  let hasError = false;
-
-  if (!current) {
-    showError(0, "Please enter your current password");
-    hasError = true;
-  }
-
-  if (!newPass) {
-    showError(1, "Please enter a new password");
-    hasError = true;
-  } else if (newPass.length < 6) {
-    showError(1, "Password must be at least 6 characters");
-    hasError = true;
-  }
-
-  if (!confirm) {
-    showError(2, "Please confirm your new password");
-    hasError = true;
-  } else if (newPass !== confirm) {
-    showError(2, "Passwords do not match");
-    hasError = true;
-  }
-
-  if (hasError) return;
-
-  // success toast
-  const toastEl = document.getElementById("passwordToast");
-  const toast = new bootstrap.Toast(toastEl);
-  toast.show();
-
-  passwordFields.forEach(input => input.value = "");
+document.getElementById('updatePassword').addEventListener('click', () => {
+  const cur  = document.getElementById('currentPw').value;
+  const nw   = document.getElementById('newPw').value;
+  const conf = document.getElementById('confirmPw').value;
+  if (!cur || !nw || !conf) { showToast('Please fill in all password fields.', 'error'); return; }
+  if (nw.length < 8)        { showToast('New password must be at least 8 characters.', 'error'); return; }
+  if (nw !== conf)          { showToast('Passwords do not match.', 'error'); return; }
+  document.getElementById('currentPw').value = document.getElementById('newPw').value = document.getElementById('confirmPw').value = '';
+  showToast('Password updated successfully!', 'success');
 });
 
-// init
-loadProfile();
+// Delete Account
+const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+const deleteCancelBtn   = document.getElementById('deleteCancelBtn');
+const deleteConfirmBtn  = document.getElementById('deleteConfirmBtn');
+
+document.getElementById('deleteAccount').addEventListener('click', () => {
+  deleteConfirmModal.style.display = 'flex';
+});
+
+deleteCancelBtn.addEventListener('click', () => {
+  deleteConfirmModal.style.display = 'none';
+});
+
+deleteConfirmBtn.addEventListener('click', () => {
+  deleteConfirmModal.style.display = 'none';
+  localStorage.clear();
+  showToast('Account deleted. Redirecting…', 'error');
+  setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+});
+
+// close on backdrop click
+deleteConfirmModal.addEventListener('click', e => {
+  if (e.target === deleteConfirmModal) deleteConfirmModal.style.display = 'none';
+});

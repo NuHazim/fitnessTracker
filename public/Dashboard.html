@@ -10,6 +10,7 @@
     <title>Fitness Tracker</title>
     <link rel="stylesheet" href="Dashboard.css">
     <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   </head>
 
@@ -147,6 +148,129 @@
       </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div class="pm-overlay" id="profileModal" role="dialog" aria-modal="true">
+      <div class="pm-modal">
+        <div class="pm-header">
+          <div>
+            <h2>Profile Management</h2>
+            <p>Manage your account settings and preferences</p>
+            <div id="pm-inline-msg" style="display:none; margin-top:.6rem; padding:.5rem .75rem; border-radius:8px; font-size:.82rem; display:none; align-items:center; gap:.5rem;"></div>
+          </div>
+          <button class="pm-close" id="closeProfileModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="pm-tabs">
+          <button class="pm-tab active" data-tab="profile"><i class="fa-regular fa-user"></i> Profile</button>
+          <button class="pm-tab" data-tab="password"><i class="fa-solid fa-lock"></i> Password</button>
+          <button class="pm-tab" data-tab="danger"><i class="fa-solid fa-trash-can"></i> Danger Zone</button>
+        </div>
+        <div class="pm-body">
+          <div class="pm-panel active" id="panel-profile">
+            <div class="pm-section-title">Personal Information</div>
+            <div class="pm-section-sub">Update your profile details</div>
+            <div class="pm-grid">
+              <div class="pm-field">
+                <label>Full Name <span class="req">*</span></label>
+                <input type="text" id="fullName" placeholder="Your name"/>
+              </div>
+              <div class="pm-field">
+                <label>Email (Read-only)</label>
+                <input type="email" id="email" placeholder="your@gmail.com" readonly/>
+              </div>
+              <div class="pm-field">
+                <label>Age</label>
+                <input type="number" id="age" placeholder="25" min="1" max="120"/>
+              </div>
+              <div class="pm-field">
+                <label>Weight (kg)</label>
+                <input type="number" id="weight" placeholder="70" min="1"/>
+              </div>
+              <div class="pm-field">
+                <label>Height (cm)</label>
+                <input type="number" id="height" placeholder="175" min="1"/>
+              </div>
+              <div class="pm-field">
+                <label>Fitness Goal</label>
+                <input type="text" id="fitnessGoal" placeholder="Lose weight, build muscle, etc."/>
+              </div>
+            </div>
+            <div class="pm-actions">
+              <button class="pm-btn pm-btn-primary" id="saveProfile">Save Changes</button>
+            </div>
+          </div>
+          <div class="pm-panel" id="panel-password">
+            <div class="pm-section-title">Change Password</div>
+            <div class="pm-section-sub">Update your password to keep your account secure</div>
+            <div class="pm-grid" style="grid-template-columns:1fr;">
+              <div class="pm-field">
+                <label>Current Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="currentPw"/>
+                  <button class="pw-toggle" data-target="currentPw"><i class="fa-regular fa-eye"></i></button>
+                </div>
+              </div>
+              <div class="pm-field">
+                <label>New Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="newPw"/>
+                  <button class="pw-toggle" data-target="newPw"><i class="fa-regular fa-eye"></i></button>
+                </div>
+              </div>
+              <div class="pm-field">
+                <label>Confirm New Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="confirmPw"/>
+                  <button class="pw-toggle" data-target="confirmPw"><i class="fa-regular fa-eye"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="pm-actions">
+              <button class="pm-btn pm-btn-primary" id="updatePassword">Update Password</button>
+            </div>
+          </div>
+          <div class="pm-panel" id="panel-danger">
+            <div class="pm-section-title" style="color:#dc2626;">Danger Zone</div>
+            <div class="pm-section-sub">Irreversible actions that affect your account</div>
+            <div class="danger-warning">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <p>Deleting your account will permanently remove all your data including workouts, meal plans, and progress history. This action cannot be undone.</p>
+            </div>
+            <button class="pm-btn pm-btn-danger" id="deleteAccount">
+              <i class="fa-solid fa-trash-can"></i> Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Delete Confirm Modal -->
+      <div id="deleteConfirmModal" style="
+        position:fixed; inset:0; z-index:1100;
+        background:rgba(0,0,0,.5); backdrop-filter:blur(2px);
+        display:none; align-items:center; justify-content:center;
+      ">
+        <div style="
+          background:#fff; border-radius:16px; width:min(420px,90vw);
+          padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,.2);
+        ">
+          <h3 style="font-size:1.1rem; font-weight:700; color:#111; margin-bottom:.5rem;">Are you absolutely sure?</h3>
+          <p style="font-size:.875rem; color:#6b7280; line-height:1.6; margin-bottom:1.5rem;">
+            This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+          </p>
+          <div style="display:flex; gap:.75rem; justify-content:flex-end;">
+            <button id="deleteCancelBtn" style="
+              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
+              cursor:pointer; border:1.5px solid #e5e7eb; background:#fff; color:#374151;
+              transition:background .15s;
+            ">Cancel</button>
+            <button id="deleteConfirmBtn" style="
+              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
+              cursor:pointer; border:none; background:#dc2626; color:#fff;
+              transition:background .15s;
+            ">Yes, delete my account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="Dashboard.js"></script>
     <script>
@@ -161,5 +285,6 @@
         body.classList.remove("sidebar-open");
       });
     </script>
+    <script src="profile.js"></script>
   </body>
 </html>
