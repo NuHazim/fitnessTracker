@@ -140,8 +140,7 @@ function renderReminders() {
         '</span>';
     }
 
-    var checkIcon     = r.enabled
-      ? '<i class="fa-solid fa-circle-check active-dot"></i>' : '';
+    var checkIcon     = '<i class="fa-solid fa-circle-check active-dot' + (r.enabled ? '' : ' active-dot-hidden') + '"></i>';
     var disabledClass = r.enabled ? '' : ' is-disabled';
 
     html +=
