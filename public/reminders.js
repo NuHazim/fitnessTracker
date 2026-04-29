@@ -48,6 +48,16 @@ function getMeta(type) {
   return TYPE_META[type] || TYPE_META.custom;
 }
 
+function getNotificationIcon(type) {
+  var icons = {
+    workout: 'https://cdn-icons-png.flaticon.com/512/2936/2936886.png',
+    meal: 'https://cdn-icons-png.flaticon.com/512/2771/2771406.png',
+    water:   'https://cdn-icons-png.flaticon.com/512/824/824239.png',
+    custom:  'https://cdn-icons-png.flaticon.com/512/1827/1827312.png'
+  };
+  return icons[type] || icons.custom;
+}
+
 /* ══════════════════════════════════════════════
    HELPERS
 ══════════════════════════════════════════════ */
@@ -389,7 +399,7 @@ function checkAndFireNotifications() {
 
     new Notification(r.title, {
       body: r.message,
-      icon: 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
+      icon: getNotificationIcon(r.type)
     });
     firedArr.push(fireId);
   }
