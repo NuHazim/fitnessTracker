@@ -1,0 +1,150 @@
+/* ProgressCharts.css */
+
+.progressContainer {
+    background-color: #f0fdf4; /* Light mint background from your design */
+    min-height: 100vh;
+    padding: 2rem;
+    margin: 0;
+    transition: margin-left 0.3s;
+}
+
+/* Adjust padding for sidebar layout */
+@media (min-width: 768px) {
+    body.sidebar-open .progressContainer {
+        margin-left: 250px;
+    }
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.2rem;
+    color: #111;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgb(229, 229, 229);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stat-title {
+    font-weight: 600;
+    color: #111;
+    font-size: 0.95rem;
+}
+
+.stat-icon {
+    font-size: 1.1rem;
+}
+
+/* Icon Colors */
+.text-primary { color: #3b82f6; }
+.text-success { color: #22c55e; }
+.text-purple  { color: #a855f7; }
+.text-warning { color: #f97316; }
+
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: #111;
+    margin-bottom: 0.2rem;
+    line-height: 1;
+}
+
+.stat-subtitle {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* Chart Area */
+.chart-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid rgb(229, 229, 229);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 400px;
+    position: relative;
+}
+
+#activityChart {
+    width: 100% !important;
+    max-height: 350px !important;
+}
+
+.chart-empty-icon {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+#emptyChartState h4 {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+#emptyChartState p {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+/* Add to bottom of ProgressCharts.css */
+
+.streak-badge {
+    background: linear-gradient(135deg, #ffedd5, #ffedd5);
+    color: #ea580c;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid #fed7aa;
+    box-shadow: 0 2px 4px rgba(234, 88, 12, 0.1);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Ensure the dropdown matches the clean aesthetic */
+#timeframeFilter {
+    background-color: #ffffff;
+    color: #111;
+    border-radius: 8px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+}

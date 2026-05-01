@@ -28,9 +28,11 @@ body {
   border: 1px solid #d1d5db;
   background: #fff;
   color: #374151;
-  border-radius: 8px;
-  padding: 8px 20px;
-  font-weight: 500;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
   cursor: pointer;
 }
 .btn-cancel:hover { background: #f9fafb; }
@@ -93,7 +95,7 @@ body {
   transition: opacity 0.25s ease;
 }
 .reminder-item:last-child { margin-bottom: 0; }
-.reminder-item.is-disabled { opacity: 0.8; }
+.reminder-item.is-disabled { opacity: 0.75; }
 
 /* icon circle */
 .reminder-icon {
@@ -122,8 +124,18 @@ body {
   align-items: center;
   gap: 6px;
   margin-bottom: 2px;
+  min-height: 1.5rem;
 }
-.active-dot { color: #22c55e; font-size: 0.75rem; }
+.active-dot {
+  color: #22c55e;
+  font-size: 0.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+  visibility: visible;
+}
+.active-dot-hidden {
+  visibility: hidden;
+}
 
 .reminder-msg {
   color: #777;
@@ -252,13 +264,27 @@ body {
 }
 .days-hint { font-size: 0.78rem; }
 
-.modal .form-control,
+.modal .form-control {
+  border-radius: 8px;
+  border: 1px solid #e2e5ea;
+  font-size: 0.92rem;
+  padding: 10px 14px;
+  background: #f9fafb;
+}
 .modal .form-select {
   border-radius: 8px;
   border: 1px solid #e2e5ea;
   font-size: 0.92rem;
   padding: 10px 14px;
   background: #f9fafb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+  padding-right: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
 }
 .modal .form-control:focus,
 .modal .form-select:focus {
