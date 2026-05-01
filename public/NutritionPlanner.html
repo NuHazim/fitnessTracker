@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -9,12 +9,14 @@
     />
     <title>Fitness Tracker</title>
 
-    <style>
-
-    </style>
-    <link rel="stylesheet" href="sidebar.css">
-    <link rel="stylesheet" href="profile.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style></style>
+    <link rel="stylesheet" href="sidebar.css" />
+    <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="NutritionPlanner.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
   </head>
 
   <body>
@@ -30,9 +32,7 @@
             ☰
           </button>
 
-          <a class="navbar-brand m-0 p-0" href="#">
-            Health & Fitness
-          </a>
+          <a class="navbar-brand m-0 p-0" href="#"> Health & Fitness </a>
         </div>
         <div class="ms-auto d-flex align-items-center gap-2">
           <button class="logoutButton">
@@ -52,28 +52,219 @@
       data-bs-backdrop="false"
       data-bs-scroll="true"
     >
-
       <div class="offcanvas-body">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="FitnessTracker.html"><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a></li>
-          <li class="nav-item"><a class="nav-link" href="ProgressCharts.html"><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a></li>
-          <li class="nav-item"><a class="nav-link active" href="NutritionPlanner.html"><i class="fa-solid fa-calendar"></i>Nutrition Planner</a></li>
-          <li class="nav-item"><a class="nav-link" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="Dashboard.html"
+              ><i class="fa-solid fa-house"></i>Dashboard</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="FitnessTracker.html"
+              ><i class="fa-solid fa-dumbbell"></i>Fitness Tracker</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ProgressCharts.html"
+              ><i class="fa-solid fa-arrow-trend-up"></i>Progress Charts</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="NutritionPlanner.html"
+              ><i class="fa-solid fa-calendar"></i>Nutrition Planner</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Reminders.html"
+              ><i class="fa-solid fa-clock"></i>Reminders</a
+            >
+          </li>
         </ul>
       </div>
       <div class="mt-auto sidebar-user">
-        <hr>
+        <hr />
         <p id="sidebarUsername" class="m-0 fw-bold">Username</p>
-        <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em;">email@example.com</p>
+        <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em">
+          email@example.com
+        </p>
       </div>
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent">
-      <h1>Nutrition Planner</h1>
-      <div>
-        bruh
+    <div
+      id="mainContent"
+      class="p-4"
+      style="background: #f5efe2; min-height: 100vh"
+    >
+      <h1 class="mb-1">Nutrition Planner</h1>
+      <p class="text-muted mb-4">
+        Discover meals and calculate your caloric needs
+      </p>
+
+      <!-- Tabs -->
+      <div class="tab-wrapper mb-4">
+        <div class="tab-container d-flex">
+          <button
+            class="tab-btn active flex-fill"
+            onclick="showTab('search', this)"
+          >
+            <i class="fa fa-search me-2"></i>Search Meals
+          </button>
+
+          <button
+            class="tab-btn flex-fill"
+            onclick="showTab('favorites', this)"
+          >
+            <i class="fa fa-heart me-2"></i>Favorites
+          </button>
+
+          <button
+            class="tab-btn flex-fill"
+            onclick="showTab('calculator', this)"
+          >
+            <i class="fa fa-calculator me-2"></i>Calorie Calculator
+          </button>
+        </div>
+      </div>
+
+      <!-- SEARCH MEALS -->
+      <div id="searchTab">
+        <div class="card p-4 mb-4">
+          <h5>Search Meals</h5>
+          <p class="text-muted">
+            Find nutritious meal suggestions with recipes
+          </p>
+
+          <div class="input-group mb-4">
+            <span class="input-group-text bg-light"
+              ><i class="fa fa-search"></i
+            ></span>
+            <input
+              type="text"
+              id="searchInput"
+              class="form-control"
+              placeholder="Search for meals..."
+            />
+            <button id="searchBtn" class="btn btn-search">Search</button>
+          </div>
+
+          <div id="mealContainer" class="row g-4">
+            <!-- Meal Card -->
+          </div>
+        </div>
+      </div>
+
+      <!-- FAVORITES -->
+      <div id="favoritesTab" class="d-none">
+        <div class="card p-4">
+          <h5>Favorite Meals</h5>
+          <div id="favoritesContainer" class="row g-4 mt-2"></div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR -->
+      <div id="calculatorTab" class="d-none">
+        <div class="card p-4">
+          <h5>Calorie Calculator</h5>
+          <p class="text-muted">Estimate your daily calorie needs</p>
+
+          <div class="row g-3">
+            <!-- Age -->
+            <div class="col-md-4">
+              <label class="form-label">Age</label>
+              <input
+                type="number"
+                id="calcAge"
+                class="form-control"
+                placeholder="e.g. 21"
+              />
+            </div>
+
+            <!-- Gender -->
+            <div class="col-md-4">
+              <label class="form-label">Gender</label>
+              <select id="gender" class="form-select">
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <!-- Weight -->
+            <div class="col-md-4">
+              <label class="form-label">Weight (kg)</label>
+              <input
+                type="number"
+                id="calcWeight"
+                class="form-control"
+                placeholder="e.g. 70"
+              />
+            </div>
+
+            <!-- Height -->
+            <div class="col-md-4">
+              <label class="form-label">Height (cm)</label>
+              <input
+                type="number"
+                id="calcHeight"
+                class="form-control"
+                placeholder="e.g. 175"
+              />
+            </div>
+
+            <!-- Activity -->
+            <div class="col-md-4">
+              <label class="form-label">Activity Level</label>
+              <select id="activity" class="form-select">
+                <option value="">Select activity</option>
+                <option value="1.2">Sedentary (little or no exercise)</option>
+                <option value="1.375">Lightly active (1–3 days/week)</option>
+                <option value="1.55">Moderately active (3–5 days/week)</option>
+                <option value="1.725">Very active (6–7 days/week)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-search mt-4" onclick="calculateCalories()">
+            Calculate Calories
+          </button>
+
+          <div id="calorieResultSection" class="mt-4 d-none">
+            <h5 class="mb-3">Your Daily Calorie Needs</h5>
+
+            <div class="row g-3">
+              <!-- Maintain -->
+              <div class="col-md-4">
+                <div class="card text-center p-4 border-0 shadow-sm">
+                  <h6 class="text-muted">Maintain Weight</h6>
+                  <h2 id="maintainCalories" class="fw-bold text-dark">-</h2>
+                </div>
+              </div>
+
+              <!-- Lose -->
+              <div class="col-md-4">
+                <div class="card text-center p-4 border-0 shadow-sm">
+                  <h6 class="text-muted">Lose Weight</h6>
+                  <h2 id="loseCalories" class="fw-bold text-danger">-</h2>
+                  <small class="text-muted">~500 kcal deficit</small>
+                </div>
+              </div>
+
+              <!-- Gain -->
+              <div class="col-md-4">
+                <div class="card text-center p-4 border-0 shadow-sm">
+                  <h6 class="text-muted">Gain Weight</h6>
+                  <h2 id="gainCalories" class="fw-bold text-success">-</h2>
+                  <small class="text-muted">~500 kcal surplus</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <h5 id="result"></h5>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -84,14 +275,34 @@
           <div>
             <h2>Profile Management</h2>
             <p>Manage your account settings and preferences</p>
-            <div id="pm-inline-msg" style="display:none; margin-top:.6rem; padding:.5rem .75rem; border-radius:8px; font-size:.82rem; display:none; align-items:center; gap:.5rem;"></div>
+            <div
+              id="pm-inline-msg"
+              style="
+                display: none;
+                margin-top: 0.6rem;
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                font-size: 0.82rem;
+                display: none;
+                align-items: center;
+                gap: 0.5rem;
+              "
+            ></div>
           </div>
-          <button class="pm-close" id="closeProfileModal"><i class="fa-solid fa-xmark"></i></button>
+          <button class="pm-close" id="closeProfileModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
         <div class="pm-tabs">
-          <button class="pm-tab active" data-tab="profile"><i class="fa-regular fa-user"></i> Profile</button>
-          <button class="pm-tab" data-tab="password"><i class="fa-solid fa-lock"></i> Password</button>
-          <button class="pm-tab" data-tab="danger"><i class="fa-solid fa-trash-can"></i> Danger Zone</button>
+          <button class="pm-tab active" data-tab="profile">
+            <i class="fa-regular fa-user"></i> Profile
+          </button>
+          <button class="pm-tab" data-tab="password">
+            <i class="fa-solid fa-lock"></i> Password
+          </button>
+          <button class="pm-tab" data-tab="danger">
+            <i class="fa-solid fa-trash-can"></i> Danger Zone
+          </button>
         </div>
         <div class="pm-body">
           <div class="pm-panel active" id="panel-profile">
@@ -100,69 +311,104 @@
             <div class="pm-grid">
               <div class="pm-field">
                 <label>Full Name <span class="req">*</span></label>
-                <input type="text" id="fullName" placeholder="Your name"/>
+                <input type="text" id="fullName" placeholder="Your name" />
               </div>
               <div class="pm-field">
                 <label>Email (Read-only)</label>
-                <input type="email" id="email" placeholder="your@gmail.com" readonly/>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="your@gmail.com"
+                  readonly
+                />
               </div>
               <div class="pm-field">
                 <label>Age</label>
-                <input type="number" id="age" placeholder="25" min="1" max="120"/>
+                <input
+                  type="number"
+                  id="age"
+                  placeholder="25"
+                  min="1"
+                  max="120"
+                />
               </div>
               <div class="pm-field">
                 <label>Weight (kg)</label>
-                <input type="number" id="weight" placeholder="70" min="1"/>
+                <input type="number" id="weight" placeholder="70" min="1" />
               </div>
               <div class="pm-field">
                 <label>Height (cm)</label>
-                <input type="number" id="height" placeholder="175" min="1"/>
+                <input type="number" id="height" placeholder="175" min="1" />
               </div>
               <div class="pm-field">
                 <label>Fitness Goal</label>
-                <input type="text" id="fitnessGoal" placeholder="Lose weight, build muscle, etc."/>
+                <input
+                  type="text"
+                  id="fitnessGoal"
+                  placeholder="Lose weight, build muscle, etc."
+                />
               </div>
             </div>
             <div class="pm-actions">
-              <button class="pm-btn pm-btn-primary" id="saveProfile">Save Changes</button>
+              <button class="pm-btn pm-btn-primary" id="saveProfile">
+                Save Changes
+              </button>
             </div>
           </div>
           <div class="pm-panel" id="panel-password">
             <div class="pm-section-title">Change Password</div>
-            <div class="pm-section-sub">Update your password to keep your account secure</div>
-            <div class="pm-grid" style="grid-template-columns:1fr;">
+            <div class="pm-section-sub">
+              Update your password to keep your account secure
+            </div>
+            <div class="pm-grid" style="grid-template-columns: 1fr">
               <div class="pm-field">
                 <label>Current Password</label>
                 <div class="pw-wrap">
-                  <input type="password" id="currentPw"/>
-                  <button class="pw-toggle" data-target="currentPw"><i class="fa-regular fa-eye"></i></button>
+                  <input type="password" id="currentPw" />
+                  <button class="pw-toggle" data-target="currentPw">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
                 </div>
               </div>
               <div class="pm-field">
                 <label>New Password</label>
                 <div class="pw-wrap">
-                  <input type="password" id="newPw"/>
-                  <button class="pw-toggle" data-target="newPw"><i class="fa-regular fa-eye"></i></button>
+                  <input type="password" id="newPw" />
+                  <button class="pw-toggle" data-target="newPw">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
                 </div>
               </div>
               <div class="pm-field">
                 <label>Confirm New Password</label>
                 <div class="pw-wrap">
-                  <input type="password" id="confirmPw"/>
-                  <button class="pw-toggle" data-target="confirmPw"><i class="fa-regular fa-eye"></i></button>
+                  <input type="password" id="confirmPw" />
+                  <button class="pw-toggle" data-target="confirmPw">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
                 </div>
               </div>
             </div>
             <div class="pm-actions">
-              <button class="pm-btn pm-btn-primary" id="updatePassword">Update Password</button>
+              <button class="pm-btn pm-btn-primary" id="updatePassword">
+                Update Password
+              </button>
             </div>
           </div>
           <div class="pm-panel" id="panel-danger">
-            <div class="pm-section-title" style="color:#dc2626;">Danger Zone</div>
-            <div class="pm-section-sub">Irreversible actions that affect your account</div>
+            <div class="pm-section-title" style="color: #dc2626">
+              Danger Zone
+            </div>
+            <div class="pm-section-sub">
+              Irreversible actions that affect your account
+            </div>
             <div class="danger-warning">
               <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Deleting your account will permanently remove all your data including workouts, meal plans, and progress history. This action cannot be undone.</p>
+              <p>
+                Deleting your account will permanently remove all your data
+                including workouts, meal plans, and progress history. This
+                action cannot be undone.
+              </p>
             </div>
             <button class="pm-btn pm-btn-danger" id="deleteAccount">
               <i class="fa-solid fa-trash-can"></i> Delete Account
@@ -171,30 +417,82 @@
         </div>
       </div>
       <!-- Delete Confirm Modal -->
-      <div id="deleteConfirmModal" style="
-        position:fixed; inset:0; z-index:1100;
-        background:rgba(0,0,0,.5); backdrop-filter:blur(2px);
-        display:none; align-items:center; justify-content:center;
-      ">
-        <div style="
-          background:#fff; border-radius:16px; width:min(420px,90vw);
-          padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,.2);
-        ">
-          <h3 style="font-size:1.1rem; font-weight:700; color:#111; margin-bottom:.5rem;">Are you absolutely sure?</h3>
-          <p style="font-size:.875rem; color:#6b7280; line-height:1.6; margin-bottom:1.5rem;">
-            This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+      <div
+        id="deleteConfirmModal"
+        style="
+          position: fixed;
+          inset: 0;
+          z-index: 1100;
+          background: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(2px);
+          display: none;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            background: #fff;
+            border-radius: 16px;
+            width: min(420px, 90vw);
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+          "
+        >
+          <h3
+            style="
+              font-size: 1.1rem;
+              font-weight: 700;
+              color: #111;
+              margin-bottom: 0.5rem;
+            "
+          >
+            Are you absolutely sure?
+          </h3>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: #6b7280;
+              line-height: 1.6;
+              margin-bottom: 1.5rem;
+            "
+          >
+            This action cannot be undone. This will permanently delete your
+            account and remove all your data from our servers.
           </p>
-          <div style="display:flex; gap:.75rem; justify-content:flex-end;">
-            <button id="deleteCancelBtn" style="
-              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
-              cursor:pointer; border:1.5px solid #e5e7eb; background:#fff; color:#374151;
-              transition:background .15s;
-            ">Cancel</button>
-            <button id="deleteConfirmBtn" style="
-              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
-              cursor:pointer; border:none; background:#dc2626; color:#fff;
-              transition:background .15s;
-            ">Yes, delete my account</button>
+          <div style="display: flex; gap: 0.75rem; justify-content: flex-end">
+            <button
+              id="deleteCancelBtn"
+              style="
+                padding: 0.55rem 1.2rem;
+                border-radius: 9px;
+                font-size: 0.88rem;
+                font-weight: 600;
+                cursor: pointer;
+                border: 1.5px solid #e5e7eb;
+                background: #fff;
+                color: #374151;
+                transition: background 0.15s;
+              "
+            >
+              Cancel
+            </button>
+            <button
+              id="deleteConfirmBtn"
+              style="
+                padding: 0.55rem 1.2rem;
+                border-radius: 9px;
+                font-size: 0.88rem;
+                font-weight: 600;
+                cursor: pointer;
+                border: none;
+                background: #dc2626;
+                color: #fff;
+                transition: background 0.15s;
+              "
+            >
+              Yes, delete my account
+            </button>
           </div>
         </div>
       </div>
@@ -215,5 +513,13 @@
       });
     </script>
     <script src="profile.js"></script>
+
+    <script src="NutritionPlanner.js"></script>
+
+    <div class="modal fade" id="mealModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="mealDetails"></div>
+      </div>
+    </div>
   </body>
 </html>
