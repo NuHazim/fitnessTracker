@@ -3,56 +3,32 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <title>Fitness Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Progress Charts - Fitness Tracker</title>
 
-    <style>
-
-    </style>
     <link rel="stylesheet" href="sidebar.css">
     <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="ProgressCharts.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   </head>
 
   <body>
+    <!-- Navbar -->
     <nav class="navbar bg-light shadow-sm">
       <div class="container-fluid">
         <div class="d-flex align-items-center">
-          <button
-            class="btn"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-          >
-            ☰
-          </button>
-
-          <a class="navbar-brand m-0 p-0" href="#">
-            Health & Fitness
-          </a>
+          <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">☰</button>
+          <a class="navbar-brand m-0 p-0" href="#">Health & Fitness</a>
         </div>
         <div class="ms-auto d-flex align-items-center gap-2">
-          <button class="logoutButton" onclick="openLogoutModal()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>Logout
-          </button>
-          <button class="profileButton">
-            <i class="fa-solid fa-user"></i>
-          </button>
+          <button class="logoutButton" onclick="openLogoutModal()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</button>
+          <button class="profileButton"><i class="fa-solid fa-user"></i></button>
         </div>
       </div>
     </nav>
 
-    <div
-      class="offcanvas offcanvas-start show"
-      tabindex="-1"
-      id="offcanvasNavbar"
-      data-bs-backdrop="false"
-      data-bs-scroll="true"
-    >
-
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start show" tabindex="-1" id="offcanvasNavbar" data-bs-backdrop="false" data-bs-scroll="true">
       <div class="offcanvas-body">
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fa-solid fa-house"></i>Dashboard</a></li>
@@ -62,175 +38,86 @@
           <li class="nav-item"><a class="nav-link" href="Reminders.html"><i class="fa-solid fa-clock"></i>Reminders</a></li>
         </ul>
       </div>
-      <div class="mt-auto sidebar-user">
-        <hr>
-        <p id="sidebarUsername" class="m-0 fw-bold">Username</p>
-        <p id="sidebarEmail" class="m-0 text-muted" style="font-size: 0.9em;">email@example.com</p>
-      </div>
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent">
-      <h1>Progress Charts</h1>
-      <div>
-        bruh
+    <div id="mainContent" class="progressContainer">
+      
+      <!-- UPDATED HEADER WITH FILTERS AND STREAKS -->
+      <div class="page-header d-flex justify-content-between align-items-end flex-wrap gap-3">
+        <div>
+          <h1>Progress Charts</h1>
+          <p class="text-muted mb-0">Visual representation of your fitness journey</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Hidden by default, shown via JS if streak > 0 -->
+          <div id="streakBadge" class="streak-badge d-none">
+            <i class="fa-solid fa-fire"></i> <span id="streakCount">0</span> Day Streak!
+          </div>
+          <!-- Timeframe Filter -->
+          <select id="timeframeFilter" class="form-select w-auto fw-medium shadow-sm border-0 cursor-pointer">
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Workouts</span>
+            <i class="fa-solid fa-wave-square stat-icon text-primary"></i>
+          </div>
+          <div class="stat-value" id="pc-total-workouts">0</div>
+          <div class="stat-subtitle timeframe-label">Last 7 Days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Avg Duration</span>
+            <i class="fa-solid fa-arrow-trend-up stat-icon text-success"></i>
+          </div>
+          <div class="stat-value"><span id="pc-avg-duration">0</span> <span style="font-size: 1rem;">min</span></div>
+          <div class="stat-subtitle">Per workout</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Steps</span>
+            <i class="fa-solid fa-shoe-prints stat-icon text-purple"></i>
+          </div>
+          <div class="stat-value" id="pc-total-steps">0</div>
+          <div class="stat-subtitle timeframe-label">Last 7 Days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Calories Burned</span>
+            <i class="fa-solid fa-fire stat-icon text-warning"></i>
+          </div>
+          <div class="stat-value" id="pc-total-calories">0</div>
+          <div class="stat-subtitle timeframe-label">Last 7 Days</div>
+        </div>
+      </div>
+
+      <div class="chart-container" id="chartWrapper">
+        <div id="emptyChartState" style="display: none; text-align: center;">
+          <i class="fa-solid fa-arrow-trend-up chart-empty-icon"></i>
+          <h4>No workout data yet</h4>
+          <p>Start logging workouts to see your progress</p>
+        </div>
+        <canvas id="activityChart" style="display: none;"></canvas>
       </div>
     </div>
     
-    <!-- Profile Modal -->
-    <div class="pm-overlay" id="profileModal" role="dialog" aria-modal="true">
-      <div class="pm-modal">
-        <div class="pm-header">
-          <div>
-            <h2>Profile Management</h2>
-            <p>Manage your account settings and preferences</p>
-            <div id="pm-inline-msg" style="display:none; margin-top:.6rem; padding:.5rem .75rem; border-radius:8px; font-size:.82rem; display:none; align-items:center; gap:.5rem;"></div>
-          </div>
-          <button class="pm-close" id="closeProfileModal"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="pm-tabs">
-          <button class="pm-tab active" data-tab="profile"><i class="fa-regular fa-user"></i> Profile</button>
-          <button class="pm-tab" data-tab="password"><i class="fa-solid fa-lock"></i> Password</button>
-          <button class="pm-tab" data-tab="danger"><i class="fa-solid fa-trash-can"></i> Danger Zone</button>
-        </div>
-        <div class="pm-body">
-          <div class="pm-panel active" id="panel-profile">
-            <div class="pm-section-title">Personal Information</div>
-            <div class="pm-section-sub">Update your profile details</div>
-            <div class="pm-grid">
-              <div class="pm-field">
-                <label>Full Name <span class="req">*</span></label>
-                <input type="text" id="fullName" placeholder="Your name"/>
-              </div>
-              <div class="pm-field">
-                <label>Email (Read-only)</label>
-                <input type="email" id="email" placeholder="your@gmail.com" readonly/>
-              </div>
-              <div class="pm-field">
-                <label>Age</label>
-                <input type="number" id="age" placeholder="25" min="1" max="120"/>
-              </div>
-              <div class="pm-field">
-                <label>Weight (kg)</label>
-                <input type="number" id="weight" placeholder="70" min="1"/>
-              </div>
-              <div class="pm-field">
-                <label>Height (cm)</label>
-                <input type="number" id="height" placeholder="175" min="1"/>
-              </div>
-              <div class="pm-field">
-                <label>Fitness Goal</label>
-                <input type="text" id="fitnessGoal" placeholder="Lose weight, build muscle, etc."/>
-              </div>
-            </div>
-            <div class="pm-actions">
-              <button class="pm-btn pm-btn-primary" id="saveProfile">Save Changes</button>
-            </div>
-          </div>
-          <div class="pm-panel" id="panel-password">
-            <div class="pm-section-title">Change Password</div>
-            <div class="pm-section-sub">Update your password to keep your account secure</div>
-            <div class="pm-grid" style="grid-template-columns:1fr;">
-              <div class="pm-field">
-                <label>Current Password</label>
-                <div class="pw-wrap">
-                  <input type="password" id="currentPw"/>
-                  <button class="pw-toggle" data-target="currentPw"><i class="fa-regular fa-eye"></i></button>
-                </div>
-              </div>
-              <div class="pm-field">
-                <label>New Password</label>
-                <div class="pw-wrap">
-                  <input type="password" id="newPw"/>
-                  <button class="pw-toggle" data-target="newPw"><i class="fa-regular fa-eye"></i></button>
-                </div>
-              </div>
-              <div class="pm-field">
-                <label>Confirm New Password</label>
-                <div class="pw-wrap">
-                  <input type="password" id="confirmPw"/>
-                  <button class="pw-toggle" data-target="confirmPw"><i class="fa-regular fa-eye"></i></button>
-                </div>
-              </div>
-            </div>
-            <div class="pm-actions">
-              <button class="pm-btn pm-btn-primary" id="updatePassword">Update Password</button>
-            </div>
-          </div>
-          <div class="pm-panel" id="panel-danger">
-            <div class="pm-section-title" style="color:#dc2626;">Danger Zone</div>
-            <div class="pm-section-sub">Irreversible actions that affect your account</div>
-            <div class="danger-warning">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              <p>Deleting your account will permanently remove all your data including workouts, meal plans, and progress history. This action cannot be undone.</p>
-            </div>
-            <button class="pm-btn pm-btn-danger" id="deleteAccount">
-              <i class="fa-solid fa-trash-can"></i> Delete Account
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- Delete Confirm Modal -->
-      <div id="deleteConfirmModal" style="
-        position:fixed; inset:0; z-index:1100;
-        background:rgba(0,0,0,.5); backdrop-filter:blur(2px);
-        display:none; align-items:center; justify-content:center;
-      ">
-        <div style="
-          background:#fff; border-radius:16px; width:min(420px,90vw);
-          padding:2rem; box-shadow:0 20px 60px rgba(0,0,0,.2);
-        ">
-          <h3 style="font-size:1.1rem; font-weight:700; color:#111; margin-bottom:.5rem;">Are you absolutely sure?</h3>
-          <p style="font-size:.875rem; color:#6b7280; line-height:1.6; margin-bottom:1.5rem;">
-            This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
-          </p>
-          <div style="display:flex; gap:.75rem; justify-content:flex-end;">
-            <button id="deleteCancelBtn" style="
-              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
-              cursor:pointer; border:1.5px solid #e5e7eb; background:#fff; color:#374151;
-              transition:background .15s;
-            ">Cancel</button>
-            <button id="deleteConfirmBtn" style="
-              padding:.55rem 1.2rem; border-radius:9px; font-size:.88rem; font-weight:600;
-              cursor:pointer; border:none; background:#dc2626; color:#fff;
-              transition:background .15s;
-            ">Yes, delete my account</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="ProgressCharts.js"></script>
+    <script src="profile.js"></script>
+    <script src="Authentication.js"></script>
     <script>
       const offcanvas = document.getElementById("offcanvasNavbar");
-      const body = document.body;
-
-      offcanvas.addEventListener("show.bs.offcanvas", () => {
-        body.classList.add("sidebar-open");
-      });
-
-      offcanvas.addEventListener("hidden.bs.offcanvas", () => {
-        body.classList.remove("sidebar-open");
-      });
+      offcanvas.addEventListener("show.bs.offcanvas", () => document.body.classList.add("sidebar-open"));
+      offcanvas.addEventListener("hidden.bs.offcanvas", () => document.body.classList.remove("sidebar-open"));
     </script>
-
-    <script src="profile.js"></script>
-
-     <!-- Logout Modal  -->
-    <div class="modal-overlay" id="logoutModal" style="display: none; z-index: 1100;">
-      <div class="modal-box">
-          <h3 style="color: #333;">Confirm Logout</h3>
-          <p style="color: #666;">Are you sure you want to log out? You will need to sign in again to access your account.</p>
-          
-          <div class="modal-actions">
-              <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-              <button class="btn-danger" onclick="confirmLogout()">Logout</button>
-          </div>
-      </div>
-    </div>
-
-    <script src="Authentication.js"></script>
-
   </body>
 </html>
