@@ -1,4 +1,4 @@
-const API_KEY = "apikey";
+const API_KEY = "c97d082272484ba5bad8b84d79789329";
 
 function showTab(tab, el) {
   document.getElementById("searchTab").classList.add("d-none");
@@ -14,6 +14,48 @@ function showTab(tab, el) {
 
   // add active
   el.classList.add("active");
+}
+
+async function loadRecommendedMeals() {
+  const container = document.getElementById("mealContainer");
+
+  container.innerHTML = `
+    <div class="text-center w-100">
+      <div class="spinner-border text-dark"></div>
+    </div>
+  `;
+
+  try {
+    // Random category
+    const queries = ["chicken", "healthy", "salad", "breakfast", "vegan"];
+    const randomQuery = queries[Math.floor(Math.random() * queries.length)];
+
+    // Random offset (for different results)
+    const randomOffset = Math.floor(Math.random() * 50);
+
+    const res = await fetch(
+      `https://api.spoonacular.com/recipes/complexSearch?query=${randomQuery}&number=6&offset=${randomOffset}&addRecipeInformation=true&addRecipeNutrition=true&apiKey=${API_KEY}`,
+    );
+
+    const data = await res.json();
+
+    console.log("Recommended meals:", data);
+
+    // Handle API error / quota
+    if (!data.results) {
+      container.innerHTML = `
+        <p class="text-danger text-center">Unable to load meals (API limit or error)</p>
+      `;
+      return;
+    }
+
+    // Display meals
+    displayMeals(data.results);
+  } catch (err) {
+    container.innerHTML = `
+      <p class="text-danger text-center">Failed to load meals</p>
+    `;
+  }
 }
 
 async function searchMeals() {
@@ -376,6 +418,7 @@ function calculateCalories() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderFavorites();
+  loadRecommendedMeals();
 
   document.getElementById("searchBtn").addEventListener("click", () => {
     const query = document.getElementById("searchInput").value;
