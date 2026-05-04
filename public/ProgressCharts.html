@@ -55,10 +55,15 @@
 
     <!-- Main Content -->
     <div id="mainContent" class="progressContainer">
-      <div class="page-header d-flex justify-content-between align-items-end flex-wrap gap-3">
+     <div class="page-header d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1>Progress Charts</h1>
+          <h1 class="fw-bold mb-1">Progress Charts</h1>
           <p class="text-muted mb-0">Visual representation of your fitness journey</p>
+        </div>
+        
+        <!-- Streak Badge Container -->
+        <div id="streakBadge" class="streak-badge d-none">
+          <i class="fa-solid fa-fire"></i> <span id="streakCount">0</span> Day Streak!
         </div>
       </div>
 

@@ -1,8 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // 1. Fetch data from localStorage
     const workouts = JSON.parse(localStorage.getItem("workouts") || "[]");
     let activityChartInstance = null; 
 
-    // Calculate Summary Stats (Top Cards)
+    // --- 2. Calculate and Display Streaks ---
+    function calculateStreak() {
+        if (workouts.length === 0) return 0;
+        
+        // Extract just the dates, remove duplicates, and sort newest first
+        const dates = [...new Set(workouts.map(w => w.date))].sort((a, b) => new Date(b) - new Date(a));
+        
+        let streak = 0;
+        let currentDate = new Date();
+        currentDate.setHours(0,0,0,0);
+        
+        const offset = currentDate.getTimezoneOffset() * 60000;
+        let expectedDateStr = (new Date(currentDate - offset)).toISOString().split('T')[0];
+
+        // Check if they worked out today or yesterday
+        if (dates[0] === expectedDateStr) {
+            streak++;
+        } else {
+            currentDate.setDate(currentDate.getDate() - 1);
+            expectedDateStr = (new Date(currentDate - offset)).toISOString().split('T')[0];
+            if (dates[0] === expectedDateStr) {
+                streak++;
+            } else {
+                return 0; // Streak broken
+            }
+        }
+
+        // Count backwards to find consecutive days
+        for (let i = 1; i < dates.length; i++) {
+            currentDate.setDate(currentDate.getDate() - 1);
+            expectedDateStr = (new Date(currentDate - offset)).toISOString().split('T')[0];
+            if (dates[i] === expectedDateStr) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        return streak;
+    }
+
+    // Apply the streak to the HTML
+    const currentStreak = calculateStreak();
+    if (currentStreak > 0) {
+        document.getElementById("streakCount").textContent = currentStreak;
+        document.getElementById("streakBadge").classList.remove("d-none");
+    }
+
+    // --- 3. Calculate Summary Stats (Top Cards) ---
     let totalMins = 0, totalSteps = 0, totalCals = 0;
     workouts.forEach(w => {
         totalMins += parseInt(w.min) || 0;
@@ -18,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("pc-total-steps").textContent = totalSteps;
     document.getElementById("pc-total-calories").textContent = totalCals;
 
-    // --- Chart Rendering Function ---
+    // --- 4. Chart Rendering Function ---
     function renderChart(activeTab) {
         const emptyState = document.getElementById("emptyChartState");
         const chartCanvas = document.getElementById("activityChart");
@@ -49,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const offset = d.getTimezoneOffset() * 60000;
             const localISOTime = (new Date(d - offset)).toISOString().split('T')[0];
             
-            // Format to "Apr 26"
-            labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            // Format to Day/Month (e.g., 26/4)
+            labels.push(`${d.getDate()}/${d.getMonth() + 1}`);
 
             const dayWorkouts = workouts.filter(w => w.date === localISOTime);
             
@@ -67,12 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Update Text Headers
+        // Update Text Headers dynamically based on the tab
         const titles = {
-            'duration': { title: 'Workout Duration', sub: 'Daily workout minutes for the last 7 days', label: 'Minutes', color: '#3b82f6' },
-            'steps': { title: 'Total Steps', sub: 'Daily steps for the last 7 days', label: 'Steps', color: '#a855f7' },
-            'calories': { title: 'Calories Burned', sub: 'Daily calories burned for the last 7 days', label: 'Calories', color: '#f97316' },
-            'types': { title: 'Workout Sessions', sub: 'Number of sessions logged per day', label: 'Sessions', color: '#22c55e' }
+            'duration': { title: 'Workout Duration', sub: 'Daily workout minutes for the last 7 days', label: 'Minutes', color: '#3b82f6', emoji: '⏱️' },
+            'steps': { title: 'Total Steps', sub: 'Daily steps for the last 7 days', label: 'Steps', color: '#a855f7', emoji: '👟' },
+            'calories': { title: 'Calories Burned', sub: 'Daily calories burned for the last 7 days', label: 'Calories', color: '#f97316', emoji: '🔥' },
+            'types': { title: 'Workout Sessions', sub: 'Number of sessions logged per day', label: 'Sessions', color: '#22c55e', emoji: '💪' }
         };
 
         const config = titles[activeTab];
@@ -86,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Draw Line Chart
         const ctx = chartCanvas.getContext('2d');
         activityChartInstance = new Chart(ctx, {
-            type: 'line', // Switched to Line Chart
+            type: 'line', 
             data: {
                 labels: labels,
                 datasets: [{
@@ -108,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { 
-                        position: 'bottom', // Moved to bottom like the design
+                        position: 'bottom',
                         labels: { 
                             usePointStyle: true,
                             font: { family: "'Inter', sans-serif", size: 13 } 
@@ -119,14 +167,25 @@ document.addEventListener("DOMContentLoaded", () => {
                         padding: 12,
                         cornerRadius: 8,
                         titleFont: { size: 14, family: "'Inter', sans-serif" },
-                        bodyFont: { size: 13, family: "'Inter', sans-serif" }
+                        bodyFont: { size: 13, family: "'Inter', sans-serif" },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + ' ' + config.emoji;
+                                }
+                                return label;
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: { 
                         beginAtZero: true, 
                         grid: { color: '#e2e8f0', borderDash: [5, 5] }, // Dashed grid lines
-                        border: { display: false } 
+                        border: { display: false },
+                        ticks: { precision: 0 } // Prevents decimals on steps/sessions
                     },
                     x: { 
                         grid: { display: true, color: '#e2e8f0', borderDash: [5, 5] }, // Dashed grid lines
@@ -137,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Tab Clicking Logic ---
+    // --- 5. Tab Clicking Logic ---
     const tabs = document.querySelectorAll('.chart-tab');
     tabs.forEach(tab => {
         tab.addEventListener('click', (e) => {
@@ -150,6 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Initialize with Duration tab
+    // --- 6. Initialize on page load ---
     renderChart('duration');
 });
