@@ -1,4 +1,4 @@
-const API_KEY = "c97d082272484ba5bad8b84d79789329";
+const API_KEY = "apikey";
 
 function showTab(tab, el) {
   document.getElementById("searchTab").classList.add("d-none");
