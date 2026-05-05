@@ -59,5 +59,7 @@ npm start
 ```javascript
 const API_KEY = "your-api-key-here";
 ```
+### run ```node server.js```
 ### Open your browser and visit: http://localhost:3000
+### But backend isnt developed yet so run live server
 
