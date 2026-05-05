@@ -30,9 +30,6 @@ A comprehensive web application to help you track workouts, plan nutrition, moni
 
 ---
 
-
----
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -55,12 +52,12 @@ npm install
 npm start
 ```
 ---
-###API Key Setup (Nutrition Planner)
+### API Key Setup (Nutrition Planner)
 - Get a free API key from Spoonacular API
 - Open ```public/NutritionPlanner.js```
 - Replace line 1:
 ```javascript
 const API_KEY = "your-api-key-here";
 ```
-###Open your browser and visit: http://localhost:3000
+### Open your browser and visit: http://localhost:3000
 
