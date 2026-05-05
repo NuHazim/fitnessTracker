@@ -1,4 +1,4 @@
-const API_KEY = "apikey";
+const API_KEY = "apiKey";
 
 function showTab(tab, el) {
   document.getElementById("searchTab").classList.add("d-none");
@@ -227,9 +227,9 @@ async function openMeal(id) {
     </ul>
 
     <h6 class="fw-bold">Instructions</h6>
-    <p class="text-muted">
-      ${meal.instructions?.replace(/<[^>]*>/g, "") || "No instructions available."}
-    </p>
+    <ol class="text-muted">
+      ${formatInstructions(meal.instructions)}
+    </ol>
 
   </div>
 `;
@@ -240,6 +240,31 @@ async function openMeal(id) {
   modal.show();
 }
 
+function formatInstructions(instructions) {
+  if (!instructions) return "<li>No instructions available.</li>";
+
+  // Create temp element to parse HTML
+  const temp = document.createElement("div");
+  temp.innerHTML = instructions;
+
+  // Try to get list items (best case)
+  const steps = temp.querySelectorAll("li");
+
+  if (steps.length > 0) {
+    return Array.from(steps)
+      .map((li) => `<li>${li.textContent.trim()}</li>`)
+      .join("");
+  }
+
+  // Fallback: split sentences
+  return instructions
+    .replace(/<[^>]*>/g, "") // remove HTML
+    .split(". ")
+    .map((step) => step.trim())
+    .filter((step) => step.length > 0)
+    .map((step) => `<li>${step}.</li>`)
+    .join("");
+}
 function getShortDescription(meal, nutrients) {
   const tags = [];
 
