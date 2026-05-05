@@ -11,7 +11,13 @@ progressBox.addEventListener("click", function () { window.location.href = "Prog
 function getWorkouts() {
     return JSON.parse(localStorage.getItem("workouts") || "[]");
 }
+function getFavourites() {
+    return JSON.parse(localStorage.getItem("favorites") || "[]");
+}
 
+function getReminders() {
+    return JSON.parse(localStorage.getItem("hft_reminders") || "[]");
+}
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
 function getTodayStr() {
@@ -35,29 +41,44 @@ function getWeekRange() {
 
 function populateDashboard() {
     const workouts = getWorkouts();
+    const favourites = getFavourites();
+    const reminders = getReminders();
+
     const todayStr  = getTodayStr();
     const { monday, sunday } = getWeekRange();
 
-    // Summary cards
+    // ── Summary cards ─────────────────────────────
+
     document.getElementById("totalWorks").textContent = workouts.length;
 
+    // Favourite meals
+    document.getElementById("favMeals").textContent = favourites.length;
+
+    // Active reminders (FIXED: use enabled)
+    const activeReminders = reminders.filter(r => r.enabled === true);
+    document.getElementById("totalReminders").textContent = activeReminders.length;
+
+    // This week workouts
     const thisWeekCount = workouts.filter(w => {
         const d = new Date(w.date);
         return d >= monday && d <= sunday;
     }).length;
     document.getElementById("totalProgress").textContent = thisWeekCount;
 
-    // Today's activity
+    // ── Today's activity ─────────────────────────
+
     const todaysWorkouts = workouts.filter(w => w.date === todayStr);
-    const todaysSteps   = todaysWorkouts.reduce((sum, w) => sum + (Number(w.steps) || 0), 0);
-    const todaysCals    = todaysWorkouts.reduce((sum, w) => sum + (Number(w.cal)   || 0), 0);
-    const todaysMins    = todaysWorkouts.reduce((sum, w) => sum + (Number(w.min)   || 0), 0);
+
+    const todaysSteps = todaysWorkouts.reduce((sum, w) => sum + (Number(w.steps) || 0), 0);
+    const todaysCals  = todaysWorkouts.reduce((sum, w) => sum + (Number(w.cal)   || 0), 0);
+    const todaysMins  = todaysWorkouts.reduce((sum, w) => sum + (Number(w.min)   || 0), 0);
 
     document.getElementById("todaysSteps").textContent    = todaysSteps;
     document.getElementById("todaysCalories").textContent = todaysCals;
     document.getElementById("todaysMinutes").textContent  = todaysMins;
 
-    // Recent workouts — last 3, newest first
+    // ── Recent workouts ──────────────────────────
+
     const container = document.getElementById("workHisContainer");
     const noWorkBox = document.querySelector(".recentWorkouts .noWorkBox");
 
@@ -65,6 +86,7 @@ function populateDashboard() {
 
     if (workouts.length === 0) {
         noWorkBox.style.display = "flex";
+        document.getElementById("viewAllWorkouts").style.display = "none"; // small fix
         return;
     }
 
@@ -72,9 +94,11 @@ function populateDashboard() {
     document.getElementById("viewAllWorkouts").style.display = "block";
 
     const recent = [...workouts].reverse().slice(0, 3);
+
     recent.forEach(w => {
         const card = document.createElement("div");
         card.className = "workBox";
+
         card.innerHTML = `
             <div style="display:flex;align-items:center;">
                 <i class="fa-solid fa-person-running workBoxLogo"></i>
@@ -84,13 +108,14 @@ function populateDashboard() {
                         <span><i class="fa-regular fa-calendar"></i> ${w.date}</span>
                         <span><i class="fa-regular fa-clock"></i> ${w.time}</span>
                         <span>${w.min} min</span>
-                        ${w.steps !== "" ? `<span>${w.steps} steps</span>` : ""}
-                        ${w.cal   !== "" ? `<span>${w.cal} cal</span>`     : ""}
+                        ${w.steps ? `<span>${w.steps} steps</span>` : ""}
+                        ${w.cal   ? `<span>${w.cal} cal</span>`     : ""}
                     </p>
-                    ${w.notes !== "" ? `<p style="margin-bottom:0;">${w.notes}</p>` : ""}
+                    ${w.notes ? `<p style="margin-bottom:0;">${w.notes}</p>` : ""}
                 </div>
             </div>
         `;
+
         container.appendChild(card);
     });
 }
