@@ -22,6 +22,21 @@ body {
   white-space: nowrap;
   cursor: pointer;
 }
+.btn-outline-custom {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn-outline-custom:hover {
+  background: #f3f4f6;
+  color: #1a1a1a;
+}
 .btn-dark-custom:hover { background: #333; }
 
 .btn-cancel {

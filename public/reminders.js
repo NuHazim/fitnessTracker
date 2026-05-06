@@ -473,6 +473,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var btnAdd = document.getElementById('btnAddReminder');
   if (btnAdd) btnAdd.addEventListener('click', openCreateModal);
+  var btnTest = document.getElementById('btnTestNotification');
+if (btnTest) btnTest.addEventListener('click', function() {
+  if (!('Notification' in window)) {
+    showToast('Your browser does not support notifications.');
+    return;
+  }
+  function fireRandomNotification() {
+  var active = [];
+  var list = loadReminders();
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].enabled) active.push(list[i]);
+  }
+  if (active.length === 0) {
+    showToast('No active reminders to show.');
+    return;
+  }
+  var r = active[Math.floor(Math.random() * active.length)];
+  new Notification(r.title, {
+    body: r.message,
+    icon: getNotificationIcon(r.type)
+  });
+}
+
+if (Notification.permission === 'granted') {
+  fireRandomNotification();
+} else if (Notification.permission === 'default') {
+  Notification.requestPermission().then(function(perm) {
+    if (perm === 'granted') {
+      fireRandomNotification();
+    } else {
+      showToast('Please allow notifications to see the demo.');
+    }
+  });
+} else {
+  showToast('Notifications are blocked. Enable them in your browser settings.');
+}
+});
 
   var btnCreate = document.getElementById('btnSaveCreate');
   if (btnCreate) btnCreate.addEventListener('click', saveNewReminder);
