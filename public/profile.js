@@ -4,6 +4,23 @@ const openBtn  = document.querySelector('.profileButton');
 const closeBtn = document.getElementById('closeProfileModal');
 const toast    = document.getElementById('toast');
 
+document.addEventListener('DOMContentLoaded', () => {
+  const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+
+  if (!activeUser.email) return; // not logged in, do nothing
+
+  // Sidebar (exists on all pages)
+  const sidebarUsername = document.getElementById('sidebarUsername');
+  const sidebarEmail = document.getElementById('sidebarEmail');
+
+  if (sidebarUsername) sidebarUsername.textContent = activeUser.name || 'User';
+  if (sidebarEmail) sidebarEmail.textContent = activeUser.email || '';
+
+  // Dashboard only (safe because we check if it exists)
+  const usernameBox = document.getElementById('usernameBox');
+  if (usernameBox) usernameBox.textContent = activeUser.name || 'User';
+});
+
 function showToast(msg, type = 'success') {
   const el = document.getElementById('pm-inline-msg');
   el.textContent = msg;
@@ -19,13 +36,24 @@ function showToast(msg, type = 'success') {
 openBtn.addEventListener('click', () => {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
-  const saved = JSON.parse(localStorage.getItem('pm_profile') || '{}');
-  if (saved.name)        document.getElementById('fullName').value    = saved.name;
-  if (saved.email)       document.getElementById('email').value       = saved.email;
-  if (saved.age)         document.getElementById('age').value         = saved.age;
-  if (saved.weight)      document.getElementById('weight').value      = saved.weight;
-  if (saved.height)      document.getElementById('height').value      = saved.height;
-  if (saved.fitnessGoal) document.getElementById('fitnessGoal').value = saved.fitnessGoal;
+
+  // Get logged-in user
+  const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+
+  // Get this specific user's profile data
+  const savedProfile = JSON.parse(
+    localStorage.getItem(`profile_${activeUser.email}`) || '{}'
+  );
+
+  // Fill basic info from login
+  if (activeUser.name)  document.getElementById('fullName').value = activeUser.name;
+  if (activeUser.email) document.getElementById('email').value    = activeUser.email;
+
+  // Fill additional profile info
+  if (savedProfile.age)         document.getElementById('age').value         = savedProfile.age;
+  if (savedProfile.weight)      document.getElementById('weight').value      = savedProfile.weight;
+  if (savedProfile.height)      document.getElementById('height').value      = savedProfile.height;
+  if (savedProfile.fitnessGoal) document.getElementById('fitnessGoal').value = savedProfile.fitnessGoal;
 });
 
 function closeModal() {
@@ -63,6 +91,7 @@ document.querySelectorAll('.pw-toggle').forEach(btn => {
 document.getElementById('saveProfile').addEventListener('click', () => {
   const name = document.getElementById('fullName').value.trim();
   if (!name) { showToast('Full name is required.', 'error'); return; }
+
   const data = {
     name,
     email:       document.getElementById('email').value.trim(),
@@ -71,7 +100,27 @@ document.getElementById('saveProfile').addEventListener('click', () => {
     height:      document.getElementById('height').value,
     fitnessGoal: document.getElementById('fitnessGoal').value.trim(),
   };
-  localStorage.setItem('pm_profile', JSON.stringify(data));
+
+  const activeUser = JSON.parse(localStorage.getItem('activeUser'));
+
+  //  Update active user
+  activeUser.name = data.name;
+  localStorage.setItem('activeUser', JSON.stringify(activeUser));
+
+  //  Save profile
+  localStorage.setItem(
+    `profile_${activeUser.email}`,
+    JSON.stringify(data)
+  );
+
+  //  UPDATE UI IMMEDIATELY 
+
+  const sidebarUsername = document.getElementById('sidebarUsername');
+  const usernameBox = document.getElementById('usernameBox');
+
+  if (sidebarUsername) sidebarUsername.textContent = data.name;
+  if (usernameBox) usernameBox.textContent = data.name;
+
   showToast('Profile saved successfully!', 'success');
 });
 
