@@ -20,7 +20,9 @@ const noWorkBox=document.getElementById("noWorkBox");
 
 const updateWorkButton=document.getElementById("updateWorkButton");
 const saveWorkButton=document.getElementById("saveWorkButton");
-
+const connectStravaButton=document.getElementById("connectStravaButton");
+const importStravaButton=document.getElementById("importStravaButton");
+const stravaWorkoutContainer=document.getElementById("stravaWorkoutContainer");
 // ── LocalStorage helpers ──────────────────────────────────────────────────────
 
 function getWorkouts() {
@@ -199,6 +201,117 @@ workHisContainer.addEventListener("click", function (e) {
     }
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
 
+// ── Fake Strava Workouts ─────────────────────────────────────────
+
+const stravaWorkouts = [
+    {
+        type: "Running",
+        date: "2026-05-05",
+        time: "18:30",
+        min: 45,
+        distance: 5,
+        calories: 320
+    },
+    {
+        type: "Walking",
+        date: "2026-05-04",
+        time: "08:15",
+        min: 30,
+        distance: 2.5,
+        calories: 120
+    },
+    {
+        type: "Cycling",
+        date: "2026-05-03",
+        time: "17:00",
+        min: 60,
+        distance: 12,
+        calories: 450
+    }
+];
+
+// ── Connect Strava ───────────────────────────────────────────────
+
+connectStravaButton.addEventListener("click", function(){
+
+    connectStravaButton.innerHTML = `
+        <i class="fa-solid fa-circle-check"></i>
+        Connected
+    `;
+
+    connectStravaButton.disabled = true;
+
+    importStravaButton.style.display = "block";
+});
+
+// ── Open Import Modal ────────────────────────────────────────────
+
+importStravaButton.addEventListener("click", function(){
+
+    stravaWorkoutContainer.innerHTML = "";
+
+    stravaWorkouts.forEach(workout => {
+
+        const estimatedSteps = Math.round(
+            (workout.distance * 1000) /
+            (workout.type === "Running" ? 1 : 0.75)
+        );
+
+        const box = document.createElement("div");
+
+        box.className = "stravaWorkoutBox";
+
+        box.innerHTML = `
+            <div class="stravaWorkoutTop">
+                <div class="stravaWorkoutType">
+                    <i class="fa-brands fa-strava" style="color:orange;"></i>
+                    ${workout.type}
+                </div>
+
+                <div>
+                    ${workout.distance} km
+                </div>
+            </div>
+
+            <div class="stravaWorkoutMeta">
+                ${workout.date} • ${workout.time} •
+                ${workout.min} mins •
+                ${workout.calories} cal
+            </div>
+        `;
+
+        box.addEventListener("click", function(){
+
+            // Auto fill form
+
+            workType.value = workout.type;
+            workDate.value = workout.date;
+            workTime.value = workout.time;
+            workMin.value = workout.min;
+            workCal.value = workout.calories;
+            workSteps.value = estimatedSteps;
+
+            // Close Strava modal
+            bootstrap.Modal.getInstance(
+                document.getElementById("stravaModal")
+            ).hide();
+
+            // Open workout modal
+            new bootstrap.Modal(
+                document.getElementById("exampleModal")
+            ).show();
+
+        });
+
+        stravaWorkoutContainer.appendChild(box);
+
+    });
+
+    new bootstrap.Modal(
+        document.getElementById("stravaModal")
+    ).show();
+
+});
+// ── Init ──────────────────────────────────────────────────────────────────────
 renderAll();

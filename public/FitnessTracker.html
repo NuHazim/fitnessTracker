@@ -58,9 +58,25 @@
   <div class="fitnessContainer" id="mainContent">
     <h1 style="margin-left: 1rem;">Fitness Tracker</h1>
     <p style="margin-left: 1rem;">Log and track your workouts and activities</p> 
-    <button class="logWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      <i class="fa-solid fa-plus"></i>Log Workout
-    </button>
+
+    <div class="topActionButtons">
+
+      <button id="connectStravaButton" class="stravaButton">
+        <i class="fa-brands fa-strava"></i>
+        Connect Strava
+      </button>
+
+      <button id="importStravaButton" class="stravaImportButton" style="display:none;">
+        <i class="fa-solid fa-download"></i>
+        Import Workout
+      </button>
+
+      <button class="logWorkoutButton" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="fa-solid fa-plus"></i>
+        Log Workout
+      </button>
+
+    </div>
     <div class="sumWorkBoxes">
       <div class="sumWorkBox">
         <p>Total Workouts<br><span id="totalWorks">0</span></p> <i style="color:lightskyblue;"
@@ -185,6 +201,33 @@
     </div>
   </div>
 
+  <!-- Strava Import Modal -->
+  <div class="modal fade" id="stravaModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fa-brands fa-strava" style="color:orange;"></i>
+            Import From Strava
+          </h5>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <p style="color:grey;">
+            Recent workouts from the last 3 days
+          </p>
+
+          <div id="stravaWorkoutContainer"></div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
   <!-- Profile Modal -->
     <div class="pm-overlay" id="profileModal" role="dialog" aria-modal="true">
       <div class="pm-modal">

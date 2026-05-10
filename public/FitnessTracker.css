@@ -3,10 +3,8 @@
     min-height:100vh;
     margin: 0;
 }
+
 .logWorkoutButton{
-    position: absolute;
-    top:110px;
-    right:40px;
     background-color: black;
     color:white;
     border:1px solid black;
@@ -14,6 +12,15 @@
     border-radius: 10px;
     font-weight: bold;
 }
+
+.topActionButtons{
+    display:flex;
+    justify-content:flex-end;
+    gap:0.7rem;
+    margin:1rem;
+    flex-wrap:wrap;
+}
+
 .logWorkoutButton:hover{
     background-color: rgb(37, 37, 37);
 }
@@ -119,6 +126,61 @@
 }
 .workBoxButtons button:nth-child(2){
     color:red;
+}
+.stravaButton{
+    background-color:#fc4c02;
+    color:white;
+    border:none;
+    padding:0.3rem 1rem;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.stravaButton:hover{
+    background-color:#e34400;
+}
+
+.stravaImportButton{
+    background-color:white;
+    border:1px solid #fc4c02;
+    color:#fc4c02;
+    padding:0.3rem 1rem;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.stravaImportButton:hover{
+    background-color:#fff3ee;
+}
+
+.stravaWorkoutBox{
+    border:1px solid rgb(230,230,230);
+    border-radius:10px;
+    padding:1rem;
+    margin-bottom:0.8rem;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.stravaWorkoutBox:hover{
+    background-color:#f8f8f8;
+}
+
+.stravaWorkoutTop{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stravaWorkoutType{
+    font-weight:bold;
+    font-size:1.1em;
+}
+
+.stravaWorkoutMeta{
+    color:grey;
+    font-size:0.9em;
+    margin-top:0.3rem;
 }
 
 
