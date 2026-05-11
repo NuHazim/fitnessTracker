@@ -1,186 +1,447 @@
-.fitnessContainer{
-    background-color: #eef3ff;
-    min-height:100vh;
+/* ============================================================
+   FITNESSTRACKER.CSS
+   Background: soft violet-indigo tint
+   ============================================================ */
+
+.fitnessContainer {
+    background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 35%, #f0f4ff 70%, #f8f9ff 100%);
+    min-height: 100vh;
     margin: 0;
+    padding-bottom: 2rem;
 }
 
-.logWorkoutButton{
-    background-color: black;
-    color:white;
-    border:1px solid black;
-    padding:0.3rem 1rem;
+.fitnessContainer h1 {
+    font-weight: 700;
+    color: #1e1b4b;
+    font-size: 1.6rem;
+    padding-top: 1.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.fitnessContainer > p {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* ── Top action buttons ───────────────────────────────────── */
+.topActionButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin: 1rem;
+    flex-wrap: wrap;
+}
+
+.logWorkoutButton {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    padding: 0.45rem 1.1rem;
     border-radius: 10px;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.topActionButtons{
-    display:flex;
-    justify-content:flex-end;
-    gap:0.7rem;
-    margin:1rem;
-    flex-wrap:wrap;
+.logWorkoutButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
-.logWorkoutButton:hover{
-    background-color: rgb(37, 37, 37);
+.logFirstWorkoutButton {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.sumWorkBoxes{
+
+.logFirstWorkoutButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* ── Summary stat boxes ───────────────────────────────────── */
+.sumWorkBoxes {
     display: flex;
     flex-wrap: wrap;
-    justify-content:center ;
+    justify-content: center;
     padding: 1rem;
-    gap:1rem;
+    gap: 1rem;
 }
-.sumWorkBox{
-    flex:1 1 200px;
-    background-color: white;
-    border-radius: 10px;
-    padding:1rem;
+
+.sumWorkBox {
+    flex: 1 1 200px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    padding: 1.1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    border:1px solid rgb(229, 229, 229);
+    align-items: center;
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    transition: box-shadow 0.2s, transform 0.2s;
 }
-.sumWorkBox p span{
+
+.sumWorkBox:hover {
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.12);
+    transform: translateY(-2px);
+}
+
+.sumWorkBox p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.sumWorkBox p span {
     font-size: 2em;
+    font-weight: 700;
+    color: #1e1b4b;
+    display: block;
+    line-height: 1.2;
+    margin-top: 4px;
 }
-.workHisBox{
-    background-color: white;
-    margin:1rem;
-    padding:1.3rem;
-    border-radius: 10px;
-    border:1px solid rgb(229, 229, 229);
+
+/* ── Workout history box ──────────────────────────────────── */
+.workHisBox {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    margin: 1rem;
+    padding: 1.3rem;
+    border-radius: 14px;
+    border: 1px solid rgba(99, 102, 241, 0.12);
 }
-.noWorkBox{
+
+.workHisBox > p:first-child {
+    font-weight: 700;
+    color: #1e1b4b;
+    margin-bottom: 2px;
+}
+
+.workHisBox > p:nth-child(2) {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.noWorkBox {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin:2rem;
+    margin: 2rem;
+    padding: 1rem 0;
 }
-.logFirstWorkoutButton{
-    background-color: black;
-    color:white;
-    border:1px solid black;
-    padding:0.3rem 1rem;
-    border-radius: 10px;
-    font-weight: bold;
-}
-.logFirstWorkoutButton:hover{
-    background-color: rgb(37, 37, 37);
-}
-.workForm{
-    display: flex;
-    flex-wrap: wrap;
-}
-.QuestionBox{
-    display: flex;
-    flex-direction: column;
-    margin:0.5rem;
-    flex:1 1 200px;
-}
-.QuestionBox label span{
-    color:red;
-}
-.QuestionBox input,.QuestionBox select,.QuestionBox textarea{
-    background-color: rgb(234, 234, 234);
-    border-radius: 10px;
-    border: none;
-    padding:0.3rem 1rem;
-}
-.workBox{
-    background-color: rgb(247, 247, 247);
-    border-radius: 10px;
-    padding:1.3rem;
+
+/* ── Workout cards ────────────────────────────────────────── */
+.workBox {
+    background: #f8f9ff;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom:0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.08);
+    transition: background 0.15s, box-shadow 0.15s;
 }
-.workBox:hover{
-    background-color: rgb(239, 239, 239);
+
+.workBox:hover {
+    background: #f0f1ff;
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
 }
-.workBoxLogo{
-    border: 1px solid lightblue;
-    width:3.4rem;
-    height:3.4rem;
-    padding:0.8rem;
-    font-size: 2em;
+
+.workBoxLogo {
+    border: 1.5px solid #c7d2fe;
+    width: 3.2rem;
+    height: 3.2rem;
+    padding: 0.7rem;
+    font-size: 1.7em;
     border-radius: 50%;
-    color:rgb(0, 125, 167);
-    background-color: lightblue;
-    margin-right: 1rem;
+    color: #4f46e5;
+    background: #eef2ff;
+    margin: 0 1rem 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.workDetails p{
+
+.workDetails p {
     margin-bottom: 0.2rem;
+    font-size: 0.875rem;
 }
-.workDetails p span{
+
+.workDetails p span {
     margin-right: 0.5rem;
+    color: #6b7280;
 }
-.workBoxButtons button{
+
+.workBoxButtons button {
     border: none;
-    background:none;
-}
-.workBoxButtons button:nth-child(1){
-    color:rgb(0, 157, 255);
-}
-.workBoxButtons button:nth-child(2){
-    color:red;
-}
-.stravaButton{
-    background-color:#fc4c02;
-    color:white;
-    border:none;
-    padding:0.3rem 1rem;
-    border-radius:10px;
-    font-weight:bold;
+    background: none;
+    padding: 5px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
 }
 
-.stravaButton:hover{
-    background-color:#e34400;
+.workBoxButtons button:nth-child(1) {
+    color: #4f46e5;
 }
 
-.stravaImportButton{
-    background-color:white;
-    border:1px solid #fc4c02;
-    color:#fc4c02;
-    padding:0.3rem 1rem;
-    border-radius:10px;
-    font-weight:bold;
+.workBoxButtons button:nth-child(1):hover {
+    background: #eef2ff;
 }
 
-.stravaImportButton:hover{
-    background-color:#fff3ee;
+.workBoxButtons button:nth-child(2) {
+    color: #ef4444;
 }
 
-.stravaWorkoutBox{
-    border:1px solid rgb(230,230,230);
-    border-radius:10px;
-    padding:1rem;
-    margin-bottom:0.8rem;
-    cursor:pointer;
-    transition:0.2s;
+.workBoxButtons button:nth-child(2):hover {
+    background: #fff1f2;
 }
 
-.stravaWorkoutBox:hover{
-    background-color:#f8f8f8;
+/* ── Strava buttons ───────────────────────────────────────── */
+.stravaButton {
+    background: linear-gradient(135deg, #fc4c02, #e84000);
+    color: white;
+    border: none;
+    padding: 0.45rem 1.1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.stravaWorkoutTop{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.stravaButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
-.stravaWorkoutType{
-    font-weight:bold;
-    font-size:1.1em;
+.stravaImportButton {
+    background: white;
+    border: 1.5px solid #fc4c02;
+    color: #fc4c02;
+    padding: 0.45rem 1.1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.stravaWorkoutMeta{
-    color:grey;
-    font-size:0.9em;
-    margin-top:0.3rem;
+.stravaImportButton:hover {
+    background: #fff3ee;
 }
 
+.stravaWorkoutBox {
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    background: #f8f9ff;
+}
 
+.stravaWorkoutBox:hover {
+    background: #f0f1ff;
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
+}
+
+.stravaWorkoutTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stravaWorkoutType {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #1e1b4b;
+}
+
+.stravaWorkoutMeta {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+/* ── Modal footer buttons ─────────────────────────────────── */
+/* Override the inline black styles from HTML */
+#saveWorkButton,
+#updateWorkButton {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    border: none !important;
+    color: white !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    border-radius: 9px;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+#saveWorkButton:hover,
+#updateWorkButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+#cancelButton {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+    color: #374151 !important;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    border-radius: 9px;
+}
+
+#cancelButton:hover {
+    background: #f9fafb !important;
+}
+
+/* ── Modal form ───────────────────────────────────────────── */
+.workForm {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.QuestionBox {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    flex: 1 1 200px;
+}
+
+.QuestionBox label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.QuestionBox label span {
+    color: #ef4444;
+}
+
+.QuestionBox input,
+.QuestionBox select,
+.QuestionBox textarea {
+    background-color: #f5f3ff;
+    border-radius: 9px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    color: #1e1b4b;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.QuestionBox input:focus,
+.QuestionBox select:focus,
+.QuestionBox textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: #ffffff;
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+body.dark-mode .fitnessContainer {
+    background: linear-gradient(145deg, #0b0817 0%, #100c24 35%, #0a0818 70%, #0d0b20 100%);
+}
+
+body.dark-mode .fitnessContainer h1 { color: #e0e7ff; }
+body.dark-mode .fitnessContainer > p { color: #94a3b8; }
+
+body.dark-mode .sumWorkBox,
+body.dark-mode .workHisBox {
+    background: rgba(30, 27, 74, 0.7);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.dark-mode .sumWorkBox p { color: #94a3b8; }
+body.dark-mode .sumWorkBox p span { color: #e0e7ff; }
+body.dark-mode .workHisBox > p { color: #94a3b8; }
+body.dark-mode .workHisBox > p:first-child { color: #e0e7ff; }
+
+body.dark-mode .workBox {
+    background: rgba(30, 27, 74, 0.5);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+body.dark-mode .workBox:hover {
+    background: rgba(45, 42, 100, 0.6);
+}
+body.dark-mode .workBoxLogo {
+    background: rgba(79, 70, 229, 0.2);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: #a5b4fc;
+}
+body.dark-mode .workDetails p { color: #c7d2fe; }
+body.dark-mode .workDetails p span { color: #94a3b8; }
+
+body.dark-mode .stravaWorkoutBox {
+    background: rgba(30, 27, 74, 0.5);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+body.dark-mode .stravaWorkoutBox:hover {
+    background: rgba(45, 42, 100, 0.6);
+}
+body.dark-mode .stravaWorkoutType { color: #e0e7ff; }
+body.dark-mode .stravaWorkoutMeta { color: #94a3b8; }
+
+body.dark-mode .stravaImportButton {
+    background: rgba(30, 27, 74, 0.7);
+    border-color: rgba(252, 76, 2, 0.5);
+    color: #fc4c02;
+}
+
+body.dark-mode .modal-content {
+    background: #1a1730;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    border-color: rgba(99, 102, 241, 0.15);
+}
+body.dark-mode .modal-title { color: #e0e7ff; }
+body.dark-mode .modal-title span { color: #94a3b8; }
+
+body.dark-mode .QuestionBox label { color: #c7d2fe; }
+body.dark-mode .QuestionBox input,
+body.dark-mode .QuestionBox select,
+body.dark-mode .QuestionBox textarea {
+    background: rgba(30, 27, 74, 0.6);
+    border-color: rgba(99, 102, 241, 0.25);
+    color: #e0e7ff;
+}
+body.dark-mode .QuestionBox input:focus,
+body.dark-mode .QuestionBox select:focus,
+body.dark-mode .QuestionBox textarea:focus {
+    border-color: #6366f1;
+    background: rgba(45, 42, 100, 0.6);
+}
+
+body.dark-mode #cancelButton {
+    background: rgba(30, 27, 74, 0.6) !important;
+    border-color: rgba(99, 102, 241, 0.25) !important;
+    color: #c7d2fe !important;
+}
+
+body.dark-mode #cancelButton:hover {
+    background: rgba(45, 42, 100, 0.7) !important;
+}

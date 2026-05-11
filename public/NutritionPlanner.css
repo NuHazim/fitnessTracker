@@ -1,166 +1,360 @@
+/* ============================================================
+   NUTRITIONPLANNER.CSS
+   Background: cool lavender-indigo tint — sidebar family
+   ============================================================ */
+
 button {
-  font-family: inherit;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.active-tab {
-  background-color: #e0e0e0 !important;
-  font-weight: 500;
+#mainContent[style*="background"] {
+    background: linear-gradient(145deg, #f0f4ff 0%, #e8eeff 35%, #f3f0ff 65%, #f8f6ff 100%) !important;
 }
 
-#nutritionTabs .nav-link {
-  border-radius: 12px;
-  font-weight: 500;
+#mainContent {
+    background: linear-gradient(145deg, #f0f4ff 0%, #e8eeff 35%, #f3f0ff 65%, #f8f6ff 100%);
+    min-height: 100vh;
 }
 
-#nutritionTabs .nav-link.active {
-  background-color: #212529;
-  color: white;
+#mainContent h1 {
+    font-weight: 700;
+    color: #1e1b4b;
+    font-size: 1.6rem;
+    margin-bottom: 0.2rem;
 }
 
-.search-group .form-control {
-  height: 45px;
+#mainContent .text-muted {
+    color: #6b7280;
+    font-size: 0.9rem;
 }
 
-.search-group .btn {
-  height: 45px;
-}
-
+/* ── Tab wrapper ──────────────────────────────────────────── */
 .tab-wrapper {
-  background: #e8dfcf;
-  padding: 6px;
-  border-radius: 14px;
+    background: rgba(238, 242, 255, 0.8);
+    padding: 5px;
+    border-radius: 14px;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    backdrop-filter: blur(4px);
 }
 
-.tab-container {
-  gap: 6px;
-}
+.tab-container { gap: 4px; }
 
 .tab-btn {
-  border: none;
-  background: transparent;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  color: #333;
+    border: none;
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    color: #4338ca;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .tab-btn.active {
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    background: white;
+    color: #312e81;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
 }
 
-.tab-btn:hover {
-  background: rgba(255,255,255,0.6);
+.tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.65);
+    color: #312e81;
 }
 
+/* ── Cards ────────────────────────────────────────────────── */
+.card {
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(99, 102, 241, 0.12) !important;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.06) !important;
+}
+
+.card h5 {
+    font-weight: 700;
+    color: #1e1b4b;
+}
+
+.card .text-muted { color: #9ca3af !important; }
+
+/* ── Meal cards ───────────────────────────────────────────── */
 .meal-card {
-  border-radius: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(99, 102, 241, 0.1) !important;
 }
 
 .meal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.14) !important;
 }
 
 .meal-img {
-  height: 180px;
-  object-fit: cover;
-  border-radius: 16px 16px 0 0;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
 }
 
+/* ── Heart / favorite ─────────────────────────────────────── */
 .heart-outline {
-  color: white;
-  -webkit-text-stroke: 1.5px #dc3545; /* red outline */
+    color: transparent;
+    -webkit-text-stroke: 1.5px #dc3545;
 }
 
-.heart-filled {
-  color: #dc3545;
-}
+.heart-filled { color: #dc3545; }
 
 .fav-btn {
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
-.fav-btn:hover {
-  transform: scale(1.2);
-}
+.fav-btn:hover { transform: scale(1.2); }
 
 .modal-img {
-  max-height: 250px;
-  object-fit: cover;
-  border-radius: 12px;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
 }
 
-.card {
-  border-radius: 16px;
+/* ── Form elements ────────────────────────────────────────── */
+.btn { border-radius: 10px; }
+
+.modal-content { border-radius: 16px; }
+
+.input-group-text {
+    background: rgba(238, 242, 255, 0.7);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: #4338ca;
 }
 
-.btn {
-  border-radius: 10px;
+.form-control {
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 10px;
+    background: #f8f9ff;
+    color: #1e1b4b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.modal-content {
-  border-radius: 16px;
+.form-control:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    background: #ffffff;
+    color: #1e1b4b;
+}
+
+.form-select {
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 10px;
+    background-color: #f8f9ff;
+    color: #1e1b4b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.form-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+#nutritionTabs .nav-link {
+    border-radius: 12px;
+    font-weight: 600;
+    color: #4338ca;
+}
+
+#nutritionTabs .nav-link.active {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
 }
 
 .btn-search {
-  background-color: #0d6efd;
-  color: #fff;
-  border-radius: 10px;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border: none;
-  transition: all 0.2s ease;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .btn-search:hover {
-  background-color: #0b5ed7;
-  color: #fff;
+    opacity: 0.9;
+    transform: translateY(-1px);
+    color: #fff;
 }
 
 .btn-main {
-  background-color: #0d6efd;
-  color: #fff;
-  border-radius: 10px;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border: none;
-  transition: all 0.2s ease;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .btn-main:hover {
-  background-color: #0b5ed7;
-  color: #fff;
+    opacity: 0.9;
+    color: #fff;
 }
 
 .btn-outline-main {
-  border: 1px solid #111;
-  color: #111;
-  border-radius: 10px;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  background: transparent;
+    border: 1.5px solid rgba(99, 102, 241, 0.4);
+    color: #4338ca;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    transition: all 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .btn-outline-main:hover {
-  background-color: #111;
-  color: #fff;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    border-color: transparent;
 }
 
 .btn-danger-soft {
-  border: 1px solid transparent;
-  color: #dc3545;
-  border-radius: 10px;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  background: transparent;
+    border: 1px solid transparent;
+    color: #dc3545;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    transition: background 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .btn-danger-soft:hover {
-  background-color: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
 }
+
+.active-tab {
+    background-color: #e0e7ff !important;
+    font-weight: 600;
+}
+
+/* ── Calorie result cards ─────────────────────────────────── */
+#calorieResultSection .card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(99, 102, 241, 0.12) !important;
+    transition: box-shadow 0.2s;
+}
+
+#calorieResultSection .card:hover {
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+body.dark-mode,
+body.dark-mode #mainContent,
+body.dark-mode #mainContent[style*="background"] {
+    background: linear-gradient(145deg, #0a0818 0%, #0f0d2a 35%, #130f2e 65%, #0d0b1e 100%) !important;
+}
+
+body.dark-mode #mainContent h1 { color: #c7d2fe; }
+body.dark-mode .text-muted { color: #94a3b8 !important; }
+
+body.dark-mode .tab-wrapper {
+    background: rgba(30, 27, 74, 0.5);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.dark-mode .tab-btn { color: #a5b4fc; }
+body.dark-mode .tab-btn.active {
+    background: rgba(30, 27, 74, 0.85);
+    color: #e0e7ff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .card {
+    background: rgba(30, 27, 74, 0.7) !important;
+    border-color: rgba(99, 102, 241, 0.2) !important;
+}
+
+body.dark-mode .card h5 { color: #c7d2fe; }
+body.dark-mode .card .text-muted { color: #6b7280 !important; }
+
+body.dark-mode .meal-card {
+    background: rgba(30, 27, 74, 0.7) !important;
+    border-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+body.dark-mode .input-group-text {
+    background: rgba(30, 27, 74, 0.6);
+    border-color: rgba(99, 102, 241, 0.25);
+    color: #a5b4fc;
+}
+
+body.dark-mode .form-control {
+    background: rgba(30, 27, 74, 0.6);
+    border-color: rgba(99, 102, 241, 0.25);
+    color: #e0e7ff;
+}
+
+body.dark-mode .form-control:focus {
+    background: rgba(45, 42, 100, 0.7);
+    border-color: #6366f1;
+    color: #e0e7ff;
+}
+
+body.dark-mode .form-select {
+    background-color: rgba(30, 27, 74, 0.6);
+    border-color: rgba(99, 102, 241, 0.25);
+    color: #e0e7ff;
+}
+
+body.dark-mode .btn-outline-main {
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #a5b4fc;
+}
+
+/* card body text — all paragraphs and labels inside cards */
+body.dark-mode .card p,
+body.dark-mode .card span:not(.badge),
+body.dark-mode .card small,
+body.dark-mode .card label,
+body.dark-mode .card strong { color: #c7d2fe; }
+
+/* meal card specific text */
+body.dark-mode .meal-card h6 { color: #e0e7ff; }
+body.dark-mode .meal-card .text-muted { color: #94a3b8 !important; }
+body.dark-mode .meal-card small { color: #94a3b8; }
+body.dark-mode .meal-card strong { color: #c7d2fe; }
+
+/* calorie result section */
+body.dark-mode #calorieResultSection .card {
+    background: rgba(30, 27, 74, 0.7) !important;
+    border-color: rgba(99, 102, 241, 0.2) !important;
+}
+body.dark-mode #calorieResultSection h6 { color: #94a3b8; }
+body.dark-mode #calorieResultSection h2 { color: #e0e7ff; }
+body.dark-mode #calorieResultSection small { color: #94a3b8; }
+body.dark-mode #maintainCalories { color: #e0e7ff !important; }
+body.dark-mode #loseCalories     { color: #fca5a5 !important; }
+body.dark-mode #gainCalories     { color: #86efac !important; }
+
+/* form labels and placeholders */
+body.dark-mode .card .form-label { color: #c7d2fe; }
+body.dark-mode .form-control::placeholder { color: #6b7280; }
+body.dark-mode .form-control::-webkit-input-placeholder { color: #6b7280; }
+body.dark-mode .form-select option { background: #1a1730; color: #e0e7ff; }
+
+/* modal body text (recipe popup) */
+body.dark-mode #mealDetails h4,
+body.dark-mode #mealDetails h6 { color: #e0e7ff; }
+body.dark-mode #mealDetails small { color: #94a3b8; }
+body.dark-mode #mealDetails .fw-bold { color: #e0e7ff; }
+body.dark-mode #mealDetails ol,
+body.dark-mode #mealDetails .text-muted { color: #94a3b8 !important; }

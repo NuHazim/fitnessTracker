@@ -1,108 +1,381 @@
+/* ============================================================
+   SIDEBAR.CSS  —  Global layout, navbar, offcanvas sidebar
+   Light mode: clean white sidebar with indigo accents
+   Dark mode:  deep indigo-violet gradient
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Reset & base ─────────────────────────────────────────── */
 body {
     margin: 0;
     overflow: hidden auto !important;
-    /* override Bootstrap's overflow:hidden */
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 body.modal-open {
     padding-right: 0 !important;
 }
 
+/* ── Navbar ───────────────────────────────────────────────── */
 .navbar {
-    height: 60px;
+    height: 64px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1050;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
 }
 
-#offcanvasNavbar {
-    width: 250px;
-    top: 60px;
-    height: calc(100% - 60px);
+.navbar-brand {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #111827 !important;
+    letter-spacing: -0.3px;
 }
-.logoutButton{
-    border:1px solid rgb(192, 192, 192);
+
+/* ── Offcanvas sidebar — LIGHT MODE ───────────────────────── */
+#offcanvasNavbar {
+    width: 256px;
+    top: 64px;
+    height: calc(100% - 64px);
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
+}
+
+/* nav links — light mode */
+#offcanvasNavbar .nav-link {
+    color: #6b7280 !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin: 2px 8px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    transition: background 0.15s, color 0.15s;
+}
+
+#offcanvasNavbar .nav-link:hover {
+    color: #4f46e5 !important;
+    background: #eef2ff !important;
+}
+
+#offcanvasNavbar .nav-link.active {
+    background: linear-gradient(90deg, #eef2ff, #e0e7ff) !important;
+    color: #4338ca !important;
+    font-weight: 600;
+    border-left: 3px solid #6366f1;
+    padding-left: 11px;
+}
+
+#offcanvasNavbar .nav-link .fa-solid,
+#offcanvasNavbar .nav-link .fa-regular,
+#offcanvasNavbar .nav-link .fa-brands {
+    width: 18px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: inherit;
+    opacity: 0.85;
+}
+
+/* sidebar user footer — light mode */
+.sidebar-user {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.sidebar-user p {
+    color: #374151 !important;
+    font-size: 0.875rem;
+}
+
+.sidebar-user .text-muted {
+    color: #9ca3af !important;
+    font-size: 0.78rem !important;
+}
+
+/* ── Navbar buttons ───────────────────────────────────────── */
+.logoutButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #e5e7eb;
     background-color: white;
     border-radius: 10px;
-    padding-right: 1rem;
+    padding: 7px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.logoutButton:hover{
-    border-color: rgb(167, 167, 167);
-    background-color: rgb(227, 227, 227);
+
+.logoutButton:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+    color: #111827;
 }
-.profileButton{
-    width:2.9rem;
-    height:2.9rem;
+
+.logoutButton .fa-solid {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.profileButton {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    color: #374151;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.85rem;
 }
+
+.profileButton:hover {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+    color: #4f46e5;
+}
+
+.profileButton .fa-solid { margin: 0; }
+
+/* ── Dark mode toggle button ──────────────────────────────── */
+.dm-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.dm-toggle-btn:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+/* ── Main content offset ──────────────────────────────────── */
 #mainContent {
-    margin-top: 60px;
-    transition: margin-left 0.3s;
-    padding: 20px;
+    margin-top: 64px;
+    transition: margin-left 0.3s ease;
 }
 
 body.sidebar-open #mainContent {
-    margin-left: 250px;
+    margin-left: 256px;
     margin-right: 0;
 }
 
-.btn {
-    font-size: 1.3em;
+/* ── Hamburger button ─────────────────────────────────────── */
+.navbar .btn {
+    font-size: 1.25em;
+    color: #374151;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    line-height: 1;
 }
 
-.fa-solid {
-    margin: 0.5rem;
-}
-.sidebar-user{
-    padding:1.5rem;
-}
-#offcanvasNavbar .nav-link.active {
-    padding: 10px 15px;
-    background: linear-gradient(90deg, #4a00e0, #8e2de2);
-    border-radius: 10px;
-    color: white;
+.navbar .btn:hover {
+    background: #f3f4f6;
+    color: #111827;
 }
 
-/* Luqman's Logout */
+/* ── Global fa-solid spacing fix ─────────────────────────── */
+.fa-solid, .fa-regular, .fa-brands {
+    margin: 0.4rem;
+}
+
+/* ── Logout modal (shared) ────────────────────────────────── */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.45);
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(2px);
 }
 
 .modal-box {
-    background: #FFFFFF;
-    padding: 30px;
-    border-radius: 12px;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 16px;
     width: 90%;
-    max-width: 400px;
+    max-width: 420px;
     text-align: left;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
-.modal-box h3 { margin-bottom: 10px; }
-.modal-box p { font-size: 14px; margin-bottom: 24px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+.modal-box h3 {
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.modal-box p {
+    font-size: 14px;
+    margin-bottom: 28px;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
 
 .btn-cancel {
     background: white;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 10px 22px;
+    border-radius: 9px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+    transition: background 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+.btn-cancel:hover { background: #f9fafb; }
+
 .btn-danger {
-    background: #E02424;
+    background: #dc2626;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 10px 22px;
+    border-radius: 9px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.15s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
+
+.btn-danger:hover { background: #b91c1c; }
+
+/* ============================================================
+   DARK MODE — sidebar becomes deep indigo-violet gradient
+   ============================================================ */
+body.dark-mode .navbar {
+    background: #0f0e1a !important;
+    border-bottom-color: rgba(99, 102, 241, 0.15) !important;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-mode .navbar-brand { color: #e0e7ff !important; }
+
+body.dark-mode .navbar .btn {
+    color: #a5b4fc;
+}
+
+body.dark-mode .navbar .btn:hover {
+    background: rgba(99, 102, 241, 0.12);
+    color: #c7d2fe;
+}
+
+/* sidebar — dark mode gets the full gradient */
+body.dark-mode #offcanvasNavbar {
+    background: linear-gradient(160deg, #0f0d1f 0%, #1e1b4b 40%, #2d1b69 75%, #3b1f8c 100%) !important;
+    border-right: none !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode #offcanvasNavbar .nav-link {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+body.dark-mode #offcanvasNavbar .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode #offcanvasNavbar .nav-link.active {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    border-left: 3px solid rgba(255, 255, 255, 0.6);
+    box-shadow: none;
+}
+
+body.dark-mode .sidebar-user {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .sidebar-user p {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+body.dark-mode .sidebar-user .text-muted {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+body.dark-mode .logoutButton {
+    background: #1a1730;
+    border-color: #2d2a5a;
+    color: #c7d2fe;
+}
+
+body.dark-mode .logoutButton:hover {
+    background: #2d2a5a;
+    border-color: #4338ca;
+    color: #e0e7ff;
+}
+
+body.dark-mode .logoutButton .fa-solid { color: #a5b4fc; }
+
+body.dark-mode .profileButton {
+    background: #1a1730;
+    border-color: #2d2a5a;
+    color: #a5b4fc;
+}
+
+body.dark-mode .profileButton:hover {
+    background: #2d2a5a;
+    border-color: #4338ca;
+}
+
+body.dark-mode .dm-toggle-btn {
+    background: #1a1730;
+    border-color: #2d2a5a;
+    color: #fbbf24;
+}
+
+body.dark-mode .dm-toggle-btn:hover {
+    background: #2d2a5a;
+}
+
+body.dark-mode .modal-box {
+    background: #1a1730;
+}
+
+body.dark-mode .modal-box h3 { color: #e0e7ff; }
+body.dark-mode .modal-box p  { color: #94a3b8; }
+
+body.dark-mode .btn-cancel {
+    background: #241f45;
+    border-color: #3d3a6a;
+    color: #c7d2fe;
+}
+
+body.dark-mode .btn-cancel:hover { background: #2d2a5a; }

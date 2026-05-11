@@ -1,89 +1,144 @@
-/* ProgressCharts.css */
+/* ============================================================
+   PROGRESSCHARTS.CSS
+   Background: deep violet-purple tint — matches sidebar family
+   ============================================================ */
 
 .progressContainer {
-    background-color: #f0fdf4; /* Light mint background from your design */
+    background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 35%, #f0f4ff 70%, #faf9ff 100%);
     min-height: 100vh;
     padding: 2rem;
     margin: 0;
     transition: margin-left 0.3s;
 }
 
-/* Adjust padding for sidebar layout */
 @media (min-width: 768px) {
     body.sidebar-open .progressContainer {
-        margin-left: 250px;
+        margin-left: 256px;
     }
 }
 
-.page-header {
-    margin-bottom: 2rem;
-}
+.page-header { margin-bottom: 2rem; }
 
 .page-header h1 {
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 1.6rem;
     margin-bottom: 0.2rem;
-    color: #111;
+    color: #2e1065;
 }
 
+.page-header .text-muted {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+body.dark-mode .page-header .text-muted {
+    color: #a5b4fc;
+}
+
+/* ── Stat cards ───────────────────────────────────────────── */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+    gap: 1.2rem;
     margin-bottom: 2rem;
 }
 
 .stat-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid rgb(229, 229, 229);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid rgba(109, 40, 217, 0.12);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.stat-card:hover {
+    box-shadow: 0 6px 20px rgba(109, 40, 217, 0.12);
+    transform: translateY(-2px);
 }
 
 .stat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 .stat-title {
     font-weight: 600;
-    color: #111;
-    font-size: 0.95rem;
+    color: #374151;
+    font-size: 0.88rem;
 }
 
-.stat-icon {
-    font-size: 1.1rem;
-}
+.stat-icon { font-size: 1.1rem; }
 
-/* Icon Colors */
-.text-primary { color: #3b82f6; }
-.text-success { color: #22c55e; }
-.text-purple  { color: #a855f7; }
-.text-warning { color: #f97316; }
+.text-primary { color: #6366f1; }
+.text-success { color: #7c3aed; }
+.text-purple  { color: #8b5cf6; }
+.text-warning { color: #a855f7; }
 
 .stat-value {
-    font-size: 2.2rem;
-    font-weight: 400;
-    color: #111;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #2e1065;
     margin-bottom: 0.2rem;
     line-height: 1;
 }
 
 .stat-subtitle {
-    font-size: 0.8rem;
-    color: #6b7280;
+    font-size: 0.78rem;
+    color: #9ca3af;
 }
 
-/* Chart Area */
+/* ── Chart tabs ───────────────────────────────────────────── */
+.chart-tabs-container {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50px;
+    padding: 5px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(109, 40, 217, 0.15);
+}
+
+.chart-tabs {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.chart-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #6b7280;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.chart-tab.active {
+    background: linear-gradient(135deg, #5b21b6, #7c3aed);
+    color: white;
+    box-shadow: 0 2px 8px rgba(91, 33, 182, 0.3);
+}
+
+.chart-tab:hover:not(.active) {
+    color: #4c1d95;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Chart container ──────────────────────────────────────── */
 .chart-container {
-    background-color: #ffffff;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
     padding: 2rem;
-    border: 1px solid rgb(229, 229, 229);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid rgba(109, 40, 217, 0.1);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -98,114 +153,117 @@
     max-height: 350px !important;
 }
 
+.chart-header {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.chart-header h5 {
+    font-weight: 700;
+    color: #2e1065;
+    margin-bottom: 2px;
+}
+
+.chart-header p {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
 .chart-empty-icon {
-    font-size: 4rem;
-    color: #cbd5e1;
+    font-size: 3.5rem;
+    color: #ddd6fe;
     margin-bottom: 1rem;
 }
 
 #emptyChartState h4 {
-    color: #64748b;
-    font-size: 1.1rem;
+    color: #6b7280;
+    font-size: 1.05rem;
     margin-bottom: 0.3rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 #emptyChartState p {
-    font-size: 0.9rem;
-    color: #94a3b8;
+    font-size: 0.875rem;
+    color: #9ca3af;
 }
-/* Add to bottom of ProgressCharts.css */
 
+/* ── Streak badge ─────────────────────────────────────────── */
 .streak-badge {
-    background: linear-gradient(135deg, #ffedd5, #ffedd5);
-    color: #ea580c;
-    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #ffedd5, #fed7aa);
+    color: #9a3412;
+    padding: 0.5rem 1.1rem;
     border-radius: 50px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    border: 1px solid #fed7aa;
-    box-shadow: 0 2px 4px rgba(234, 88, 12, 0.1);
+    border: 1px solid rgba(234, 88, 12, 0.3);
+    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.2);
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0%   { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
 }
 
-.cursor-pointer {
-    cursor: pointer;
-}
-
-/* Ensure the dropdown matches the clean aesthetic */
 #timeframeFilter {
-    background-color: #ffffff;
-    color: #111;
-    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #1e1b4b;
+    border-radius: 10px;
     padding: 0.5rem 2.5rem 0.5rem 1rem;
-}
-/* --- New Tab Navigation Styles --- */
-.chart-tabs-container {
-    background-color: #f1f5f9;
-    border-radius: 50px;
-    padding: 6px;
-    margin-bottom: 1.5rem;
+    border: 1px solid rgba(109, 40, 217, 0.2);
 }
 
-.chart-tabs {
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+body.dark-mode .progressContainer {
+    background: linear-gradient(145deg, #0b0817 0%, #100c24 35%, #130f2e 70%, #0d0b20 100%);
 }
 
-.chart-tab {
-    flex: 1;
-    background: transparent;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #475569;
-    transition: all 0.2s ease;
-    cursor: pointer;
+body.dark-mode .page-header h1  { color: #c4b5fd; }
+body.dark-mode .text-muted { color: #94a3b8 !important; }
+
+body.dark-mode .stat-card {
+    background: rgba(30, 27, 74, 0.7);
+    border-color: rgba(109, 40, 217, 0.2);
 }
 
-.chart-tab.active {
-    background-color: #ffffff;
-    color: #111;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+body.dark-mode .stat-title    { color: #94a3b8; }
+body.dark-mode .stat-value    { color: #c4b5fd; }
+body.dark-mode .stat-subtitle { color: #6b7280; }
+
+body.dark-mode .text-primary { color: #a5b4fc; }
+body.dark-mode .text-success { color: #c4b5fd; }
+body.dark-mode .text-purple  { color: #d8b4fe; }
+body.dark-mode .text-warning { color: #e879f9; }
+
+body.dark-mode .chart-tabs-container {
+    background: rgba(30, 27, 74, 0.5);
+    border-color: rgba(109, 40, 217, 0.2);
 }
 
-.chart-tab:hover:not(.active) {
-    color: #111;
-    background-color: rgba(255, 255, 255, 0.5);
+body.dark-mode .chart-tab { color: #94a3b8; }
+body.dark-mode .chart-tab:hover:not(.active) {
+    background: rgba(99, 102, 241, 0.1);
+    color: #c4b5fd;
 }
 
-.chart-header {
-    margin-bottom: 2rem;
-}
-/* Streak Badge Styling */
-.streak-badge {
-    background: linear-gradient(135deg, #ffedd5, #ffedd5);
-    color: #ea580c;
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    border: 1px solid #fed7aa;
-    box-shadow: 0 2px 4px rgba(234, 88, 12, 0.1);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+body.dark-mode .chart-container {
+    background: rgba(30, 27, 74, 0.7);
+    border-color: rgba(109, 40, 217, 0.2);
 }
 
-@keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+body.dark-mode .chart-header h5 { color: #c4b5fd; }
+body.dark-mode .chart-header p  { color: #94a3b8; }
+body.dark-mode .chart-empty-icon { color: #4c1d95; }
+
+body.dark-mode .streak-badge {
+    background: linear-gradient(135deg, rgba(234, 88, 12, 0.25), rgba(194, 65, 12, 0.18));
+    color: #fb923c;
+    border-color: rgba(234, 88, 12, 0.35);
+    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.15);
 }

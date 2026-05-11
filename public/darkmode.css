@@ -1,0 +1,149 @@
+/* ============================================================
+   DARKMODE.CSS
+   Global dark mode overrides — profile modal, logout modal,
+   and any shared components not covered by page-specific CSS.
+   Page backgrounds and sidebar are handled in their own files.
+   ============================================================ */
+
+/* ── Profile modal dark mode ──────────────────────────────── */
+body.dark-mode .pm-modal {
+    background-color: #1a1730;
+}
+
+body.dark-mode .pm-header {
+    border-bottom-color: rgba(99, 102, 241, 0.15);
+}
+
+body.dark-mode .pm-header h2 { color: #e0e7ff; }
+body.dark-mode .pm-header p  { color: #94a3b8; }
+
+body.dark-mode .pm-tabs {
+    background-color: #120e28;
+}
+
+body.dark-mode .pm-tab {
+    color: #94a3b8;
+}
+
+body.dark-mode .pm-tab:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: #c7d2fe;
+}
+
+body.dark-mode .pm-tab.active {
+    background: #1a1730;
+    color: #e0e7ff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .pm-tab.active-danger {
+    background: #1a1730;
+    color: #fca5a5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .pm-section-title { color: #e0e7ff; }
+body.dark-mode .pm-section-sub   { color: #94a3b8; }
+
+body.dark-mode .pm-field label { color: #c7d2fe; }
+
+body.dark-mode .pm-field input {
+    background: #241f45;
+    border-color: rgba(99, 102, 241, 0.25);
+    color: #e0e7ff;
+}
+
+body.dark-mode .pm-field input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    background: #2d2a5a;
+}
+
+body.dark-mode .pm-field input[readonly] {
+    background: #1a1730;
+    color: #6b7280;
+}
+
+body.dark-mode .pw-toggle { color: #6b7280; }
+body.dark-mode .pw-toggle:hover { color: #a5b4fc; }
+
+body.dark-mode .pm-btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+body.dark-mode .danger-warning {
+    background: rgba(127, 29, 29, 0.15);
+    border-color: rgba(220, 38, 38, 0.3);
+}
+
+body.dark-mode .danger-warning p { color: #fca5a5; }
+
+/* Delete confirm modal inside profile */
+body.dark-mode #deleteConfirmModal > div {
+    background: #1a1730 !important;
+}
+
+body.dark-mode #deleteConfirmModal h3 { color: #e0e7ff !important; }
+body.dark-mode #deleteConfirmModal p  { color: #94a3b8 !important; }
+
+body.dark-mode #deleteCancelBtn {
+    background: #241f45 !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
+    color: #c7d2fe !important;
+}
+
+/* ── Bootstrap modal dark mode (fitness tracker log modal) ── */
+body.dark-mode .modal-content {
+    background-color: #1a1730;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: rgba(99, 102, 241, 0.15);
+}
+
+body.dark-mode .modal-footer {
+    border-top-color: rgba(99, 102, 241, 0.15);
+}
+
+body.dark-mode .modal-title {
+    color: #e0e7ff;
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1) brightness(0.7);
+}
+
+/* ── Nutrition card modal dark mode ───────────────────────── */
+body.dark-mode #mealDetails {
+    background: #1a1730;
+    color: #e0e7ff;
+}
+
+body.dark-mode #mealDetails .list-group-item {
+    background: #241f45;
+    color: #c7d2fe;
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+/* ── Strava modal dark mode ───────────────────────────────── */
+body.dark-mode #stravaModal .modal-content {
+    background-color: #1a1730;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.dark-mode #stravaModal .modal-header {
+    border-bottom-color: rgba(99, 102, 241, 0.15);
+}
+
+body.dark-mode #stravaModal .modal-title { color: #e0e7ff; }
+body.dark-mode #stravaModal p { color: #94a3b8; }
+
+/* ── Reminders delete modal ───────────────────────────────── */
+body.dark-mode #deleteModal .modal-content {
+    background-color: #200818;
+    border-color: rgba(190, 24, 93, 0.2);
+}
+
+body.dark-mode #deleteModal h5 { color: #fda4af; }
+body.dark-mode #deleteModal p  { color: #94a3b8; }
