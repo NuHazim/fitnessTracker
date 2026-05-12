@@ -11,7 +11,7 @@ A comprehensive web application to help you track workouts, plan nutrition, moni
 |---------|-------------|
 | 🔐 **Authentication** | User registration, login, and secure session management |
 | 📊 **Dashboard** | Overview of total workouts, weekly progress, and today's activity |
-| 🏋️ **Fitness Tracker** | Log, edit, and delete workouts with duration, steps, and calories |
+| 🏋️ **Fitness Tracker** | Fetch latest workouts from Strava,Log, edit, and delete workouts with duration, steps, and calories |
 | 📈 **Progress Charts** | Visualize fitness trends with interactive charts & streak tracking |
 | 🥗 **Nutrition Planner** | Search recipes, save favorites, and calculate daily calorie needs |
 | ⏰ **Smart Reminders** | Browser notifications for workouts, meals, and hydration |
