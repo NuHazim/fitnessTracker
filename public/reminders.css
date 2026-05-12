@@ -1,7 +1,4 @@
-/* ============================================================
-   REMINDERS.CSS
-   Background: soft indigo-blue tint — sidebar family
-   ============================================================ */
+/*REMINDERS.CSS Background: soft indigo-blue tint — sidebar family*/
 
 body {
     background: linear-gradient(145deg, #eef2ff 0%, #e0e7ff 30%, #ede9fe 65%, #f5f3ff 100%);
@@ -15,7 +12,7 @@ body {
 #mainContent{
     padding:2rem;
 }
-/* ── Buttons ──────────────────────────────────────────────── */
+/*Buttons*/
 .btn-dark-custom {
     background: linear-gradient(135deg, #4f46e5, #7c3aed);
     color: #fff !important;
@@ -71,7 +68,7 @@ body {
 
 .btn-cancel:hover { background: #f9fafb; }
 
-/* ── Permission banner ────────────────────────────────────── */
+/*Permission banner*/
 #permissionBanner {
     background: #fffbeb;
     border: 1px solid #fbbf24;
@@ -86,7 +83,7 @@ body {
 .perm-icon { color: #f59e0b; font-size: 1.1rem; flex-shrink: 0; }
 .perm-text { margin: 0; font-size: 0.88rem; color: #92400e; flex-grow: 1; }
 
-/* ── Info banner ──────────────────────────────────────────── */
+/*Info banner*/
 .info-banner {
     background: rgba(238, 242, 255, 0.9);
     border: 1px solid rgba(99, 102, 241, 0.2);
@@ -102,7 +99,7 @@ body {
 .info-title { color: #1e1b4b; display: block; margin-bottom: 2px; font-weight: 700; }
 .info-text  { color: #4338ca; font-size: 0.875rem; }
 
-/* ── Section cards ────────────────────────────────────────── */
+/*Section cards*/
 .section-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
@@ -119,7 +116,7 @@ body {
 
 .section-sub { font-size: 0.85rem; }
 
-/* ── Reminder items ───────────────────────────────────────── */
+/*Reminder items*/
 .reminder-item {
     border: 1px solid rgba(99, 102, 241, 0.13);
     border-radius: 12px;
@@ -246,14 +243,14 @@ body {
     cursor: pointer;
 }
 
-/* ── Empty state ──────────────────────────────────────────── */
+/*Empty state*/
 .empty-state {
     text-align: center;
     padding: 36px 20px;
     color: #c7d2fe;
 }
 
-/* ── Preset cards ─────────────────────────────────────────── */
+/*Preset cards*/
 .preset-card {
     border: 1.5px solid rgba(99, 102, 241, 0.15);
     border-radius: 12px;
@@ -296,7 +293,7 @@ body {
 .preset-card-inner .fw-semibold { color: #1e1b4b; font-size: 0.92rem; }
 .preset-time { color: #6b7280; font-size: 0.82rem; margin-top: 2px; }
 
-/* ── Modal ────────────────────────────────────────────────── */
+/*Modal*/
 .modal-custom {
     border-radius: 16px !important;
     border: none !important;
@@ -394,9 +391,7 @@ body {
     margin: 0;
 }
 
-/* ============================================================
-   DARK MODE
-   ============================================================ */
+/*DARK MODE*/
 body.dark-mode {
     background: linear-gradient(145deg, #0a0818 0%, #0f0d2a 30%, #100c24 65%, #0b0817 100%);
 }

@@ -1,8 +1,6 @@
 'use strict';
 
-/* ══════════════════════════════════════════════
-   STORAGE
-══════════════════════════════════════════════ */
+/*STORAGE*/
 var STORAGE_KEY = 'hft_reminders';
 
 function loadReminders() {
@@ -18,9 +16,7 @@ function saveReminders(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-/* ══════════════════════════════════════════════
-   TYPE METADATA  —  Font Awesome icons only
-══════════════════════════════════════════════ */
+/*TYPE METADATA  —  Font Awesome icons only*/
 var TYPE_META = {
   workout: {
     icon:  'fa-solid fa-dumbbell',
@@ -58,9 +54,7 @@ function getNotificationIcon(type) {
   return icons[type] || icons.custom;
 }
 
-/* ══════════════════════════════════════════════
-   HELPERS
-══════════════════════════════════════════════ */
+/*HELPERS*/
 function generateId() {
   return 'r' + Date.now() + Math.random().toString(36).slice(2, 6);
 }
@@ -112,9 +106,7 @@ function formatTime(time24) {
   return hour12 + ':' + minute + ' ' + ampm;
 }
 
-/* ══════════════════════════════════════════════
-   RENDER REMINDER LIST
-══════════════════════════════════════════════ */
+/*RENDER REMINDER LIST*/
 function renderReminders() {
   var reminders = loadReminders();
   var listEl    = document.getElementById('reminderList');
@@ -198,9 +190,7 @@ function renderReminders() {
   listEl.innerHTML = html;
 }
 
-/* ══════════════════════════════════════════════
-   CREATE
-══════════════════════════════════════════════ */
+/*CREATE*/
 function openCreateModal() {
   document.getElementById('createType').value    = 'workout';
   document.getElementById('createTime').value    = '09:00';
@@ -238,9 +228,7 @@ function saveNewReminder() {
   showToast('Reminder "' + title + '" created.');
 }
 
-/* ══════════════════════════════════════════════
-   EDIT
-══════════════════════════════════════════════ */
+/*EDIT*/
 function openEditModal(id) {
   var list = loadReminders();
   var r    = null;
@@ -289,9 +277,7 @@ function saveEditedReminder() {
   showToast('Reminder "' + title + '" updated.');
 }
 
-/* ══════════════════════════════════════════════
-   DELETE  —  with simple confirmation modal
-══════════════════════════════════════════════ */
+/*DELETE  —  with simple confirmation modal*/
 var pendingDeleteId = null;
 
 function deleteReminder(id) {
@@ -315,9 +301,7 @@ function confirmDelete() {
   showToast('Reminder deleted.');
 }
 
-/* ══════════════════════════════════════════════
-   TOGGLE
-══════════════════════════════════════════════ */
+/*TOGGLE*/
 function toggleReminder(id, enabled) {
   var list = loadReminders();
   for (var i = 0; i < list.length; i++) {
@@ -327,9 +311,7 @@ function toggleReminder(id, enabled) {
   renderReminders();
 }
 
-/* ══════════════════════════════════════════════
-   PRESETS
-══════════════════════════════════════════════ */
+/*PRESETS*/
 function applyPreset(type, title, message, time) {
   var list = loadReminders();
   for (var i = 0; i < list.length; i++) {
@@ -352,9 +334,7 @@ function applyPreset(type, title, message, time) {
   showToast('"' + title + '" added to reminders.');
 }
 
-/* ══════════════════════════════════════════════
-   BROWSER NOTIFICATIONS
-══════════════════════════════════════════════ */
+/*BROWSER NOTIFICATIONS*/
 function requestNotificationPermission() {
   if (!('Notification' in window)) {
     alert('Your browser does not support notifications.');
@@ -407,9 +387,7 @@ function checkAndFireNotifications() {
   localStorage.setItem(firedKey, JSON.stringify(firedArr));
 }
 
-/* ══════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════ */
+/*TOAST*/
 function showToast(msg) {
   var t = document.createElement('div');
   t.textContent = msg;
@@ -435,9 +413,7 @@ function showToast(msg) {
   }, 3000);
 }
 
-/* ══════════════════════════════════════════════
-   EVENT DELEGATION
-══════════════════════════════════════════════ */
+/*EVENT DELEGATION*/
 function setupListDelegation() {
   var listEl = document.getElementById('reminderList');
   if (!listEl) return;
@@ -463,9 +439,7 @@ function setupListDelegation() {
   });
 }
 
-/* ══════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════ */
+/*INIT*/
 document.addEventListener('DOMContentLoaded', function() {
 
   renderReminders();
