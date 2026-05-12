@@ -10,10 +10,21 @@
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="darkmode.css">
     <title>Notifications &amp; Reminders</title>
+    <script>
+      if (localStorage.getItem('hft_dark_mode') === 'true') {
+          document.documentElement.classList.add('dark-mode');
+      }
+    </script>
   </head>
 
   <body>
-
+    <script>
+      (function() {
+        var saved = localStorage.getItem('hft_dark_mode');
+        var isDark = saved === 'true' || (saved === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) document.body.classList.add('dark-mode');
+      })();
+    </script>
     <!-- ══════════════ NAVBAR ══════════════ -->
     <nav class="navbar bg-light shadow-sm">
       <div class="container-fluid">

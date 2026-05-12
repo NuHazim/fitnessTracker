@@ -13,9 +13,22 @@
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link rel="stylesheet" href="darkmode.css">
+<script>
+      if (localStorage.getItem('hft_dark_mode') === 'true') {
+          document.documentElement.classList.add('dark-mode');
+      }
+    </script>
+    
   </head>
 
   <body>
+    <script>
+      (function() {
+        var saved = localStorage.getItem('hft_dark_mode');
+        var isDark = saved === 'true' || (saved === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) document.body.classList.add('dark-mode');
+      })();
+    </script>
     <nav class="navbar bg-light shadow-sm">
       <div class="container-fluid">
         <div class="d-flex align-items-center">
