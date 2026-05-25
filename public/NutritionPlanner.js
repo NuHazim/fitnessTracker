@@ -1,5 +1,9 @@
-const API_KEY = "apiKey";
+// ============================================================
+//  NutritionPlanner.js  –  uses backend proxy (/api/recipes)
+//  No API key exposed in frontend
+// ============================================================
 
+// ── Tab switching ─────────────────────────────────────────────
 function showTab(tab, el) {
   document.getElementById("searchTab").classList.add("d-none");
   document.getElementById("favoritesTab").classList.add("d-none");
@@ -7,15 +11,14 @@ function showTab(tab, el) {
 
   document.getElementById(tab + "Tab").classList.remove("d-none");
 
-  // remove active
   document
     .querySelectorAll(".tab-btn")
     .forEach((btn) => btn.classList.remove("active"));
 
-  // add active
   el.classList.add("active");
 }
 
+// ── Load recommended meals on page load ──────────────────────
 async function loadRecommendedMeals() {
   const container = document.getElementById("mealContainer");
 
@@ -26,22 +29,16 @@ async function loadRecommendedMeals() {
   `;
 
   try {
-    // Random category
     const queries = ["chicken", "healthy", "salad", "breakfast", "vegan"];
     const randomQuery = queries[Math.floor(Math.random() * queries.length)];
-
-    // Random offset (for different results)
     const randomOffset = Math.floor(Math.random() * 50);
 
     const res = await fetch(
-      `https://api.spoonacular.com/recipes/complexSearch?query=${randomQuery}&number=6&offset=${randomOffset}&addRecipeInformation=true&addRecipeNutrition=true&apiKey=${API_KEY}`,
+      `/api/recipes?query=${randomQuery}&number=6&offset=${randomOffset}`
     );
 
     const data = await res.json();
 
-    console.log("Recommended meals:", data);
-
-    // Handle API error / quota
     if (!data.results) {
       container.innerHTML = `
         <p class="text-danger text-center">Unable to load meals (API limit or error)</p>
@@ -49,17 +46,18 @@ async function loadRecommendedMeals() {
       return;
     }
 
-    // Display meals
     displayMeals(data.results);
   } catch (err) {
+    console.error(err);
     container.innerHTML = `
       <p class="text-danger text-center">Failed to load meals</p>
     `;
   }
 }
 
+// ── Search meals ──────────────────────────────────────────────
 async function searchMeals() {
-  const query = document.getElementById("searchInput").value;
+  const query = document.getElementById("searchInput").value.trim();
 
   if (!query) return;
 
@@ -73,12 +71,10 @@ async function searchMeals() {
 
   try {
     const res = await fetch(
-      `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=6&addRecipeInformation=true&addRecipeNutrition=true&apiKey=${API_KEY}`,
+      `/api/recipes?query=${encodeURIComponent(query)}&number=6`
     );
 
     const data = await res.json();
-
-    console.log(data);
 
     displayMeals(data.results);
   } catch (err) {
@@ -87,6 +83,7 @@ async function searchMeals() {
   }
 }
 
+// ── Display meal cards ────────────────────────────────────────
 function displayMeals(meals) {
   const container = document.getElementById("mealContainer");
   container.innerHTML = "";
@@ -104,8 +101,7 @@ function displayMeals(meals) {
     const protein =
       nutrients.find((n) => n.name === "Protein")?.amount?.toFixed(0) || "N/A";
     const carbs =
-      nutrients.find((n) => n.name === "Carbohydrates")?.amount?.toFixed(0) ||
-      "N/A";
+      nutrients.find((n) => n.name === "Carbohydrates")?.amount?.toFixed(0) || "N/A";
     const fats =
       nutrients.find((n) => n.name === "Fat")?.amount?.toFixed(0) || "N/A";
 
@@ -115,11 +111,10 @@ function displayMeals(meals) {
       <div class="col-md-6 col-lg-4">
         <div class="card meal-card h-100 shadow-sm border-0">
 
-          <img src="${meal.image}" class="card-img-top meal-img">
+          <img src="${meal.image}" class="card-img-top meal-img" alt="${meal.title}">
 
           <div class="card-body d-flex flex-column">
 
-            <!-- TITLE + HEART -->
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h6 class="fw-bold mb-0 text-truncate" style="max-width: 80%">
                 ${meal.title}
@@ -139,35 +134,27 @@ function displayMeals(meals) {
               ></i>
             </div>
 
-            <!-- DESCRIPTION -->
             <p class="text-muted small mb-3">${shortDesc}</p>
 
-            <!-- NUTRITION -->
             <div class="d-flex justify-content-between text-center mt-auto">
-
               <div>
                 <small class="text-muted d-block">Cal</small>
                 <strong>${calories}</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Protein</small>
                 <strong>${protein}g</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Carbs</small>
                 <strong>${carbs}g</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Fats</small>
                 <strong>${fats}g</strong>
               </div>
-
             </div>
 
-            <!-- BUTTON -->
             <button class="btn btn-outline-main btn-sm w-100 mt-3"
               onclick="openMeal(${meal.id})">
               View Recipe
@@ -180,74 +167,71 @@ function displayMeals(meals) {
   });
 }
 
+// ── Open meal modal ───────────────────────────────────────────
 async function openMeal(id) {
-  const res = await fetch(
-    `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`,
-  );
+  try {
+    const res = await fetch(`/api/recipes/${id}`);
+    const meal = await res.json();
 
-  const meal = await res.json();
-
-  document.getElementById("mealDetails").innerHTML = `
-  <div class="modal-header border-0">
-    <h4 class="fw-bold">${meal.title}</h4>
-    <button class="btn-close" data-bs-dismiss="modal"></button>
-  </div>
-
-  <div class="modal-body">
-
-    <div class="text-center mb-3">
-      <img src="${meal.image}" class="img-fluid rounded modal-img">
-    </div>
-
-    <div class="row text-center mb-4">
-
-      <div class="col">
-        <small class="text-muted">Ready</small>
-        <div class="fw-bold">${meal.readyInMinutes} min</div>
+    document.getElementById("mealDetails").innerHTML = `
+      <div class="modal-header border-0">
+        <h4 class="fw-bold">${meal.title}</h4>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="col">
-        <small class="text-muted">Servings</small>
-        <div class="fw-bold">${meal.servings}</div>
+      <div class="modal-body">
+
+        <div class="text-center mb-3">
+          <img src="${meal.image}" class="img-fluid rounded modal-img" alt="${meal.title}">
+        </div>
+
+        <div class="row text-center mb-4">
+          <div class="col">
+            <small class="text-muted">Ready</small>
+            <div class="fw-bold">${meal.readyInMinutes} min</div>
+          </div>
+          <div class="col">
+            <small class="text-muted">Servings</small>
+            <div class="fw-bold">${meal.servings}</div>
+          </div>
+        </div>
+
+        <h6 class="fw-bold">Ingredients</h6>
+        <ul class="list-group mb-3">
+          ${meal.extendedIngredients
+            .map(
+              (i) => `
+            <li class="list-group-item border-0 border-bottom">
+              ${i.original}
+            </li>
+          `
+            )
+            .join("")}
+        </ul>
+
+        <h6 class="fw-bold">Instructions</h6>
+        <ol class="text-muted">
+          ${formatInstructions(meal.instructions)}
+        </ol>
+
       </div>
+    `;
 
-    </div>
-
-    <h6 class="fw-bold">Ingredients</h6>
-    <ul class="list-group mb-3">
-      ${meal.extendedIngredients
-        .map(
-          (i) => `
-        <li class="list-group-item border-0 border-bottom">
-          ${i.original}
-        </li>
-      `,
-        )
-        .join("")}
-    </ul>
-
-    <h6 class="fw-bold">Instructions</h6>
-    <ol class="text-muted">
-      ${formatInstructions(meal.instructions)}
-    </ol>
-
-  </div>
-`;
-
-  const modalEl = document.getElementById("mealModal");
-
-  const modal = new bootstrap.Modal(modalEl);
-  modal.show();
+    const modalEl = document.getElementById("mealModal");
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  } catch (err) {
+    console.error("Failed to open meal:", err);
+  }
 }
 
+// ── Format instructions ───────────────────────────────────────
 function formatInstructions(instructions) {
   if (!instructions) return "<li>No instructions available.</li>";
 
-  // Create temp element to parse HTML
   const temp = document.createElement("div");
   temp.innerHTML = instructions;
 
-  // Try to get list items (best case)
   const steps = temp.querySelectorAll("li");
 
   if (steps.length > 0) {
@@ -256,15 +240,16 @@ function formatInstructions(instructions) {
       .join("");
   }
 
-  // Fallback: split sentences
   return instructions
-    .replace(/<[^>]*>/g, "") // remove HTML
+    .replace(/<[^>]*>/g, "")
     .split(". ")
     .map((step) => step.trim())
     .filter((step) => step.length > 0)
     .map((step) => `<li>${step}.</li>`)
     .join("");
 }
+
+// ── Short description helper ──────────────────────────────────
 function getShortDescription(meal, nutrients) {
   const tags = [];
 
@@ -283,25 +268,20 @@ function getShortDescription(meal, nutrients) {
   return tags.length > 0 ? tags.join(", ") : "balanced meal";
 }
 
+// ── Favorites ─────────────────────────────────────────────────
 function isFavorite(id) {
-  const favs = getFavorites();
-  return favs.some((item) => item.id === id);
+  return getFavorites().some((item) => item.id === id);
 }
 
-// Load favorites from localStorage
 function getFavorites() {
   const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-
-  // remove invalid items
   return favs.filter((f) => f.id && f.name && f.img);
 }
 
-// Save favorites
 function saveFavorites(favs) {
   localStorage.setItem("favorites", JSON.stringify(favs));
 }
 
-// Toggle favorite
 function toggleFavorite(el, id, name, img, calories, protein, carbs, fats) {
   id = Number(id);
 
@@ -318,12 +298,10 @@ function toggleFavorite(el, id, name, img, calories, protein, carbs, fats) {
       carbs: carbs || "N/A",
       fats: fats || "N/A",
     });
-
     el.classList.remove("heart-outline");
     el.classList.add("heart-filled");
   } else {
     favs.splice(index, 1);
-
     el.classList.remove("heart-filled");
     el.classList.add("heart-outline");
   }
@@ -348,34 +326,29 @@ function renderFavorites() {
       <div class="col-md-6 col-lg-4">
         <div class="card meal-card h-100 shadow-sm border-0">
 
-          <img src="${meal.img}" class="card-img-top meal-img">
+          <img src="${meal.img}" class="card-img-top meal-img" alt="${meal.name}">
 
           <div class="card-body d-flex flex-column">
 
             <h6 class="fw-bold mb-2">${meal.name}</h6>
 
             <div class="d-flex justify-content-between text-center mt-auto">
-
               <div>
                 <small class="text-muted d-block">Cal</small>
                 <strong>${meal.calories}</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Protein</small>
                 <strong>${meal.protein}g</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Carbs</small>
                 <strong>${meal.carbs}g</strong>
               </div>
-
               <div>
                 <small class="text-muted d-block">Fats</small>
                 <strong>${meal.fats}g</strong>
               </div>
-
             </div>
 
             <button class="btn btn-outline-main btn-sm w-100 mt-3"
@@ -383,7 +356,7 @@ function renderFavorites() {
               View Recipe
             </button>
 
-            <button class="btn btn-outline-soft btn-sm w-100 mt-2"
+            <button class="btn btn-danger-soft btn-sm w-100 mt-2"
               onclick="removeFavorite(${meal.id})">
               Remove
             </button>
@@ -397,14 +370,12 @@ function renderFavorites() {
 
 function removeFavorite(id) {
   let favs = getFavorites();
-
   favs = favs.filter((item) => item.id !== id);
-
   saveFavorites(favs);
-
   renderFavorites();
 }
 
+// ── Calorie calculator ────────────────────────────────────────
 function calculateCalories() {
   const weight = parseFloat(document.getElementById("calcWeight").value);
   const height = parseFloat(document.getElementById("calcHeight").value);
@@ -429,34 +400,28 @@ function calculateCalories() {
   const lose = maintain - 500;
   const gain = maintain + 500;
 
-  // Update UI
-  document.getElementById("maintainCalories").innerHTML =
-    `<strong>${maintain}</strong> kcal`;
-  document.getElementById("loseCalories").innerHTML =
-    `<strong>${lose}</strong> kcal`;
-  document.getElementById("gainCalories").innerHTML =
-    `<strong>${gain}</strong> kcal`;
+  document.getElementById("maintainCalories").innerHTML = `<strong>${maintain}</strong> kcal`;
+  document.getElementById("loseCalories").innerHTML = `<strong>${lose}</strong> kcal`;
+  document.getElementById("gainCalories").innerHTML = `<strong>${gain}</strong> kcal`;
 
-  // Show result section
   document.getElementById("calorieResultSection").classList.remove("d-none");
 }
 
+// ── Init ──────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   renderFavorites();
   loadRecommendedMeals();
 
   document.getElementById("searchBtn").addEventListener("click", () => {
-    const query = document.getElementById("searchInput").value;
-    searchMeals(query);
+    searchMeals();
   });
 
   let timeout;
 
-  document.getElementById("searchInput").addEventListener("input", (e) => {
+  document.getElementById("searchInput").addEventListener("input", () => {
     clearTimeout(timeout);
-
     timeout = setTimeout(() => {
-      searchMeals(e.target.value);
+      searchMeals();
     }, 500);
   });
 });
