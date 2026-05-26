@@ -12,7 +12,7 @@
 
      function applyDarkMode(enabled) {
         document.body.classList.toggle('dark-mode', enabled);
-        document.documentElement.classList.toggle('dark-mode', enabled); /* <-- ADD THIS LINE */
+        document.documentElement.classList.toggle('dark-mode', enabled); 
         localStorage.setItem(DARK_MODE_KEY, enabled);
         updateIcon();
     }
