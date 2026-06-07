@@ -8,6 +8,7 @@ require("dotenv").config();
 const express  = require("express");
 const mongoose = require("mongoose");
 const Workout  = require("./models/Workout");
+const Reminder = require('./models/Reminder');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -111,5 +112,57 @@ app.delete("/api/workouts/:id", async (req, res) => {
     }
 });
 
+// ── Reminder routes ───────────────────────────────────────────────────────────
+
+app.get('/api/reminders', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) return res.status(400).json({ error: 'userId is required' });
+        const list = await Reminder.find({ userId }).sort({ createdAt: -1 });
+        res.json(list.map(r => ({ ...r.toObject(), id: r._id.toString() })));
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to load reminders' });
+    }
+});
+
+app.post('/api/reminders', async (req, res) => {
+    try {
+        const { userId, type, time, title, message, days, enabled } = req.body;
+        if (!userId || !title || !message || !time)
+            return res.status(400).json({ error: 'userId, title, message and time are required' });
+        const r = await Reminder.create({ userId, type, time, title, message, days, enabled });
+        res.status(201).json({ ...r.toObject(), id: r._id.toString() });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to create reminder' });
+    }
+});
+
+app.put('/api/reminders/:id', async (req, res) => {
+    try {
+        const { userId, ...fields } = req.body;
+        if (!userId) return res.status(400).json({ error: 'userId is required' });
+        const r = await Reminder.findOneAndUpdate(
+            { _id: req.params.id, userId },
+            fields,
+            { new: true, runValidators: true }
+        );
+        if (!r) return res.status(404).json({ error: 'Reminder not found' });
+        res.json({ ...r.toObject(), id: r._id.toString() });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update reminder' });
+    }
+});
+
+app.delete('/api/reminders/:id', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) return res.status(400).json({ error: 'userId is required' });
+        const r = await Reminder.findOneAndDelete({ _id: req.params.id, userId });
+        if (!r) return res.status(404).json({ error: 'Reminder not found' });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete reminder' });
+    }
+});
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
