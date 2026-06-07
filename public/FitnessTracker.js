@@ -26,9 +26,57 @@ const importStravaButton   = document.getElementById("importStravaButton");
 const stravaWorkoutContainer = document.getElementById("stravaWorkoutContainer");
 
 // ── User identity ─────────────────────────────────────────────────────────────
+// Reads the logged-in user's email from activeUser in localStorage (set by Authentication.js)
 function getCurrentUserId() {
-    return localStorage.getItem("hft_user_email") || "anonymous";
+    const activeUser = JSON.parse(localStorage.getItem("activeUser") || "{}");
+    return activeUser.email || "anonymous";
 }
+
+// ── Strava token (stored in sessionStorage so it clears when browser closes) ──
+function getStravaToken() {
+    return sessionStorage.getItem("strava_token") || null;
+}
+
+function setStravaToken(token) {
+    sessionStorage.setItem("strava_token", token);
+}
+
+// ── Handle Strava redirect on page load ───────────────────────────────────────
+// After Strava OAuth, server redirects to FitnessTracker.html?strava=connected&token=xxx
+(function handleStravaRedirect() {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("strava");
+    const token  = params.get("token");
+
+    if (status === "connected" && token) {
+        setStravaToken(token);
+
+        // Update button states
+        connectStravaButton.innerHTML  = `<i class="fa-solid fa-circle-check"></i> Connected`;
+        connectStravaButton.disabled   = true;
+        importStravaButton.style.display = "block";
+
+        showToast("Strava connected successfully!");
+
+        // Clean up URL so token isn't visible in address bar
+        window.history.replaceState({}, document.title, "/FitnessTracker.html");
+
+    } else if (status === "denied") {
+        showToast("Strava connection was cancelled.", "error");
+        window.history.replaceState({}, document.title, "/FitnessTracker.html");
+
+    } else if (status === "error") {
+        showToast("Failed to connect Strava. Try again.", "error");
+        window.history.replaceState({}, document.title, "/FitnessTracker.html");
+    }
+
+    // If already connected from a previous session, restore button state
+    if (getStravaToken()) {
+        connectStravaButton.innerHTML  = `<i class="fa-solid fa-circle-check"></i> Connected`;
+        connectStravaButton.disabled   = true;
+        importStravaButton.style.display = "block";
+    }
+})();
 
 // ── API helpers ───────────────────────────────────────────────────────────────
 
@@ -71,7 +119,6 @@ async function apiDeleteWorkout(id) {
 function buildWorkBox(data) {
     const clone = templateWorkBox.content.cloneNode(true);
 
-    // Mongoose returns _id, not id — handle both just in case
     const id = data._id || data.id;
 
     clone.querySelector("#workoutName").textContent = data.type;
@@ -89,7 +136,6 @@ function buildWorkBox(data) {
         clone.querySelector("#notesWork").textContent = data.notes;
     }
 
-    // Store the MongoDB _id on the card
     const box = clone.querySelector(".workBox");
     box.dataset.id = id;
 
@@ -140,7 +186,7 @@ function updateTotals() {
     totalCals.textContent  = cals;
 }
 
-// ── Simple toast notification ─────────────────────────────────────────────────
+// ── Toast notification ────────────────────────────────────────────────────────
 
 function showToast(msg, type = "success") {
     const t = document.createElement("div");
@@ -201,8 +247,8 @@ async function validateAndSubmit() {
     };
 
     try {
-        saveWorkButton.disabled     = true;
-        saveWorkButton.textContent  = "Saving…";
+        saveWorkButton.disabled    = true;
+        saveWorkButton.textContent = "Saving…";
 
         await apiCreateWorkout(data);
         await renderAll();
@@ -214,8 +260,8 @@ async function validateAndSubmit() {
         console.error(err);
         showToast("Failed to save workout.", "error");
     } finally {
-        saveWorkButton.disabled     = false;
-        saveWorkButton.textContent  = "Save Workout";
+        saveWorkButton.disabled    = false;
+        saveWorkButton.textContent = "Save Workout";
     }
 }
 
@@ -223,11 +269,9 @@ async function validateAndSubmit() {
 
 workHisContainer.addEventListener("click", async function (e) {
 
-    // ── DELETE ────────────────────────────────────────────────────────────────
     if (e.target.classList.contains("deleteButton")) {
         const box = e.target.closest(".workBox");
         const id  = box.dataset.id;
-
         try {
             await apiDeleteWorkout(id);
             await renderAll();
@@ -239,7 +283,6 @@ workHisContainer.addEventListener("click", async function (e) {
         return;
     }
 
-    // ── EDIT ──────────────────────────────────────────────────────────────────
     if (e.target.classList.contains("editButton")) {
         const box = e.target.closest(".workBox");
         const id  = box.dataset.id;
@@ -252,7 +295,6 @@ workHisContainer.addEventListener("click", async function (e) {
         const calEl   = box.querySelector("#calWork");
         const notesEl = box.querySelector("#notesWork");
 
-        // Open modal pre-filled
         document.querySelector(".logWorkoutButton").click();
         updateWorkButton.style.display = "block";
         saveWorkButton.style.display   = "none";
@@ -301,65 +343,113 @@ workHisContainer.addEventListener("click", async function (e) {
     }
 });
 
-// ── Fake Strava Workouts ──────────────────────────────────────────────────────
-
-const stravaWorkouts = [
-    { type: "Running", date: "2026-05-05", time: "18:30", min: 45, distance: 5,   calories: 320 },
-    { type: "Walking", date: "2026-05-04", time: "08:15", min: 30, distance: 2.5, calories: 120 },
-    { type: "Cycling", date: "2026-05-03", time: "17:00", min: 60, distance: 12,  calories: 450 }
-];
-
 // ── Connect Strava ────────────────────────────────────────────────────────────
+// Redirects the user to Strava login page via our server route
 
 connectStravaButton.addEventListener("click", function () {
-    connectStravaButton.innerHTML = `<i class="fa-solid fa-circle-check"></i> Connected`;
-    connectStravaButton.disabled  = true;
-    importStravaButton.style.display = "block";
+    window.location.href = "/auth/strava";
 });
 
-// ── Open Import Modal ─────────────────────────────────────────────────────────
+// ── Import from Strava ────────────────────────────────────────────────────────
 
-importStravaButton.addEventListener("click", function () {
-    stravaWorkoutContainer.innerHTML = "";
+importStravaButton.addEventListener("click", async function () {
+    const token = getStravaToken();
 
-    stravaWorkouts.forEach(workout => {
-        const estimatedSteps = Math.round(
-            (workout.distance * 1000) / (workout.type === "Running" ? 1 : 0.75)
-        );
+    if (!token) {
+        showToast("Please connect Strava first.", "error");
+        return;
+    }
 
-        const box = document.createElement("div");
-        box.className = "stravaWorkoutBox";
-        box.innerHTML = `
-            <div class="stravaWorkoutTop">
-                <div class="stravaWorkoutType">
-                    <i class="fa-brands fa-strava" style="color:orange;"></i>
-                    ${workout.type}
+    // Show loading state
+    stravaWorkoutContainer.innerHTML = `
+        <div style="text-align:center; padding: 2rem; color: #6b7280;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;"></i>
+            <p style="margin-top:0.5rem;">Loading your Strava workouts…</p>
+        </div>
+    `;
+
+    // Open modal immediately so user sees loading state
+    new bootstrap.Modal(document.getElementById("stravaModal")).show();
+
+    try {
+        const res = await fetch(`/api/strava/activities?token=${token}`);
+
+        if (!res.ok) throw new Error("Failed to fetch");
+
+        const activities = await res.json();
+
+        stravaWorkoutContainer.innerHTML = "";
+
+        if (activities.length === 0) {
+            stravaWorkoutContainer.innerHTML = `<p style="color:grey; text-align:center;">No recent activities found on Strava.</p>`;
+            return;
+        }
+
+        activities.forEach(activity => {
+            const box = document.createElement("div");
+            box.className = "stravaWorkoutBox";
+            box.innerHTML = `
+                <div class="stravaWorkoutTop">
+                    <div class="stravaWorkoutType">
+                        <i class="fa-brands fa-strava" style="color:orange;"></i>
+                        ${activity.type}
+                        <span style="font-size:0.8rem; font-weight:400; color:#6b7280; margin-left:0.3rem;">
+                            — ${activity.name}
+                        </span>
+                    </div>
+                    <div>${activity.distanceKm} km</div>
                 </div>
-                <div>${workout.distance} km</div>
-            </div>
-            <div class="stravaWorkoutMeta">
-                ${workout.date} • ${workout.time} •
-                ${workout.min} mins •
-                ${workout.calories} cal
-            </div>
-        `;
+                <div class="stravaWorkoutMeta">
+                    ${activity.date} • ${activity.time} •
+                    ${activity.min} mins
+                    ${activity.cal ? `• ${activity.cal} cal` : ""}
+                </div>
+            `;
 
-        box.addEventListener("click", function () {
-            workType.value  = workout.type;
-            workDate.value  = workout.date;
-            workTime.value  = workout.time;
-            workMin.value   = workout.min;
-            workCal.value   = workout.calories;
-            workSteps.value = estimatedSteps;
+            box.addEventListener("click", function () {
+                // Map Strava type to our dropdown options
+                const typeMap = {
+                    "Run":    "Running",
+                    "Ride":   "Cycling",
+                    "Walk":   "Walking",
+                    "Swim":   "Swimming",
+                    "Workout":"Gym Workout",
+                    "Yoga":   "Yoga",
+                    "Hike":   "Walking"
+                };
 
-            bootstrap.Modal.getInstance(document.getElementById("stravaModal")).hide();
-            new bootstrap.Modal(document.getElementById("exampleModal")).show();
+                workType.value  = typeMap[activity.type] || "Other";
+                workDate.value  = activity.date;
+                workTime.value  = activity.time;
+                workMin.value   = activity.min;
+                workCal.value   = activity.cal   || "";
+                workSteps.value = activity.steps || "";
+
+                // Close Strava modal, open workout modal
+                bootstrap.Modal.getInstance(
+                    document.getElementById("stravaModal")
+                ).hide();
+
+                // Reset to Save mode
+                updateWorkButton.style.display = "none";
+                saveWorkButton.style.display   = "block";
+
+                new bootstrap.Modal(
+                    document.getElementById("exampleModal")
+                ).show();
+            });
+
+            stravaWorkoutContainer.appendChild(box);
         });
 
-        stravaWorkoutContainer.appendChild(box);
-    });
-
-    new bootstrap.Modal(document.getElementById("stravaModal")).show();
+    } catch (err) {
+        console.error(err);
+        stravaWorkoutContainer.innerHTML = `
+            <p style="color:#ef4444; text-align:center;">
+                Failed to load Strava activities. Your session may have expired — try reconnecting.
+            </p>
+        `;
+    }
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
