@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const axios    = require("axios");
 const Workout  = require("./models/Workout");
 const Reminder = require("./models/Reminder");
+const User = require("./models/User");
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -242,6 +243,149 @@ app.get("/api/strava/activities", async (req, res) => {
     } catch (err) {
         console.error("Strava activities error:", err.message);
         res.status(500).json({ error: "Failed to fetch Strava activities" });
+    }
+});
+
+// ── AUTHENTICATION & PROFILE API ROUTES ───────────────────────────────────
+
+// 1. REGISTER NEW USER (with default profile embedded)
+app.post("/api/auth/register", async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "An account with this email already exists. Please log in." });
+        }
+
+        // Saves user + default profile block automatically
+        const newUser = new User({ name, email, password });
+        await newUser.save();
+
+        res.status(201).json({ 
+            user: { id: newUser._id, name: newUser.name, email: newUser.email } 
+        });
+    } catch (err) {
+        console.error("Registration database fault:", err.message);
+        res.status(500).json({ message: "Server error during registration." });
+    }
+});
+
+// 2. LOGIN USER VERIFICATION
+app.post("/api/auth/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user || user.password !== password) {
+            return res.status(400).json({ message: "Invalid email or password." });
+        }
+
+        res.json({ 
+            user: { id: user._id, name: user.name, email: user.email } 
+        });
+    } catch (err) {
+        console.error("Login verification fault:", err.message);
+        res.status(500).json({ message: "Server error during login." });
+    }
+});
+
+// 3. FETCH PROFILE DETAILS FROM USER COLLECTION
+app.get("/api/profile/:email", async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (!user) return res.status(404).json({ error: "User not found." });
+        
+        // Return just the embedded profile data block
+        res.json(user.profile);
+    } catch (err) {
+        console.error("Error retrieving profile details:", err.message);
+        res.status(500).json({ error: "Server error fetching profile details." });
+    }
+});
+
+// 4. UPDATE EMBEDDED PROFILE DETAILS & NAME
+app.post("/api/profile", async (req, res) => {
+    try {
+        const { email, name, age, weight, height, fitnessGoal } = req.body;
+
+        const updatedUser = await User.findOneAndUpdate(
+            { email: email },
+            { 
+                name: name, // Updates their main name if changed
+                profile: {
+                    age: Number(age),
+                    weight: Number(weight),
+                    height: Number(height),
+                    fitnessGoal: fitnessGoal
+                }
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) return res.status(404).json({ success: false, message: "User not found." });
+
+        res.json({ success: true, message: "Profile saved securely to cloud storage!", user: updatedUser });
+    } catch (err) {
+        console.error("Error updating profile details:", err.message);
+        res.status(500).json({ success: false, error: "Server error saving profile metrics." });
+    }
+});
+
+// 5. UPDATE PASSWORD (Strict Validation)
+app.post("/api/profile/update-password", async (req, res) => {
+    try {
+        const { email, currentPassword, newPassword } = req.body;
+
+        // Find user record
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found." });
+        }
+
+        // Verify current password match
+        if (user.password !== currentPassword) {
+            return res.status(400).json({ success: false, message: "Incorrect current password." });
+        }
+
+        // Strict Check: Prevent re-using the current password
+        if (user.password === newPassword) {
+            return res.status(400).json({ success: false, message: "New password cannot be the same as your current password." });
+        }
+
+        // Save new password
+        user.password = newPassword;
+        await user.save();
+
+        res.json({ success: true, message: "Password updated successfully!" });
+    } catch (err) {
+        console.error("Error updating password:", err.message);
+        res.status(500).json({ success: false, message: "Server error updating password." });
+    }
+});
+
+// 6. DELETE USER ACCOUNT AND CASCADE ALL DATA
+app.delete("/api/profile/delete-account", async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email required for deletion processing." });
+        }
+
+        // Find and delete the primary user document record
+        const deletedUser = await User.findOneAndDelete({ email });
+        if (!deletedUser) {
+            return res.status(404).json({ success: false, message: "User account record not found." });
+        }
+
+        // Cascade-delete records matching the tracking string across associated tables
+        await Workout.deleteMany({ userId: email });
+        await Reminder.deleteMany({ userId: email });
+
+        res.json({ success: true, message: "Account and all associated fitness logs wiped successfully." });
+    } catch (err) {
+        console.error("Cascade account delete execution fault:", err.message);
+        res.status(500).json({ success: false, message: "Server error executing data wipe operations." });
     }
 });
 

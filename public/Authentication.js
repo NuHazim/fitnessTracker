@@ -19,7 +19,7 @@ togglePasswords.forEach(icon => {
 });
 
 // ==========================================
-// 2. Registration Logic
+// 2. Registration Logic (Connected to MongoDB)
 // ==========================================
 const registerForm = document.getElementById('registerForm');
 const registerError = document.getElementById('registerError');
@@ -28,25 +28,13 @@ if (registerForm) {
     registerForm.addEventListener('submit', function(e) {
         e.preventDefault(); // Prevent page from refreshing
 
-        const fullName = document.getElementById('fullname').value;
-        const email = document.getElementById('email').value;
+        const fullName = document.getElementById('fullname').value.trim();
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
         // Reset the error box just in case it was showing from a previous attempt
         if (registerError) registerError.style.display = 'none';
-
-        //  Check if email already exists 
-        const existingUser = localStorage.getItem(email);
-        
-        if (existingUser) {
-            // If we found data under this email, show error and stop!
-            if (registerError) {
-                registerError.textContent = "An account with this email already exists. Please log in.";
-                registerError.style.display = 'block';
-            }
-            return; 
-        }
 
         // Check if passwords match
         if (password !== confirmPassword) {
@@ -57,18 +45,43 @@ if (registerForm) {
             return; 
         }
 
-        // If we pass all checks, save the user
-        const user = { name: fullName, email: email, password: password };
-        localStorage.setItem(email, JSON.stringify(user));
+        // POST Payload structural mapping matching server.js endpoint expectation
+        const registrationData = {
+            name: fullName,
+            email: email,
+            password: password
+        };
 
-        // Use a quick alert for success, then redirect to login
-        alert("Account created successfully! Please log in.");
-        window.location.href = 'Login.html'; 
+        // Send registration request directly to MongoDB backend handler
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registrationData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.user) {
+                alert("Account created successfully in MongoDB! Redirecting to login...");
+                window.location.href = 'Login.html'; 
+            } else {
+                if (registerError) {
+                    registerError.textContent = data.message || "Registration failed. Email might already exist.";
+                    registerError.style.display = 'block';
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Database registration communication fault:", err);
+            if (registerError) {
+                registerError.textContent = "Database connection offline. Unable to register.";
+                registerError.style.display = 'block';
+            }
+        });
     });
 }
 
 // ==========================================
-// 3. Login Logic
+// 3. Login Logic (Connected to MongoDB)
 // ==========================================
 const loginForm = document.getElementById('loginForm');
 const loginError = document.getElementById('loginError'); // Get the error box
@@ -77,26 +90,47 @@ if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // Retrieve user from localStorage
-        const storedUser = JSON.parse(localStorage.getItem(email));
+        if (loginError) loginError.style.display = 'none';
 
-        if (storedUser && storedUser.password === password) {
-            // Success: Hide error (just in case), set session, and redirect
-            if (loginError) loginError.style.display = 'none';
-            localStorage.setItem('activeUser', JSON.stringify(storedUser));
-            window.location.href = 'Dashboard.html'; 
-        } else {
-            // Failure: Show the UI error message instead of an alert
-            if (loginError) {
-                loginError.style.display = 'block';
-                
-                // Optional: Clear the password field so they can type it again
-                document.getElementById('password').value = '';
+        const loginData = {
+            email: email,
+            password: password
+        };
+
+        // Send validation verification parameters straight to MongoDB backend routing
+        fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.user) {
+                // Success: Sync session local memory array context for active page usage routing
+                localStorage.setItem('activeUser', JSON.stringify({
+                    name: data.user.name,
+                    email: data.user.email
+                }));
+                window.location.href = 'Dashboard.html'; 
+            } else {
+                // Failure: Show the UI error message instead of an alert
+                if (loginError) {
+                    loginError.textContent = data.message || "Invalid email or password.";
+                    loginError.style.display = 'block';
+                    document.getElementById('password').value = '';
+                }
             }
-        }
+        })
+        .catch(err => {
+            console.error("Database connection verification error:", err);
+            if (loginError) {
+                loginError.textContent = "Server communication offline.";
+                loginError.style.display = 'block';
+            }
+        });
     });
 }
 
@@ -112,7 +146,7 @@ function closeModal() {
 }
 
 function confirmLogout() {
-    // Clear the active session, but keep the registered account
+    // Clear the active session tracking array metrics safely
     localStorage.removeItem('activeUser');
-    window.location.href = 'login.html';
+    window.location.href = 'Login.html';
 }

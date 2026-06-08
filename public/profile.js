@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showToast(msg, type = 'success') {
   const el = document.getElementById('pm-inline-msg');
+  if (!el) return;
   el.textContent = msg;
   el.style.display = 'flex';
   el.style.background = type === 'error' ? '#fff5f5' : '#f0fdf4';
@@ -33,6 +34,7 @@ function showToast(msg, type = 'success') {
   setTimeout(() => { el.style.display = 'none'; }, 4000);
 }
 
+// OPEN BTN: Shows modal and pulls initial data from MongoDB Atlas
 openBtn.addEventListener('click', () => {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -40,20 +42,29 @@ openBtn.addEventListener('click', () => {
   // Get logged-in user
   const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
 
-  // Get this specific user's profile data
-  const savedProfile = JSON.parse(
-    localStorage.getItem(`profile_${activeUser.email}`) || '{}'
-  );
-
-  // Fill basic info from login
+  // Fill basic info from login session
   if (activeUser.name)  document.getElementById('fullName').value = activeUser.name;
   if (activeUser.email) document.getElementById('email').value    = activeUser.email;
 
-  // Fill additional profile info
-  if (savedProfile.age)         document.getElementById('age').value         = savedProfile.age;
-  if (savedProfile.weight)      document.getElementById('weight').value      = savedProfile.weight;
-  if (savedProfile.height)      document.getElementById('height').value      = savedProfile.height;
-  if (savedProfile.fitnessGoal) document.getElementById('fitnessGoal').value = savedProfile.fitnessGoal;
+  // FETCH ADDITIONAL METRICS DIRECTLY FROM MONGODB ATLAS (Single Model)
+  fetch(`/api/profile/${activeUser.email}`)
+    .then(res => res.json())
+    .then(data => {
+      // Maps directly to the embedded profile sub-object sent by the backend
+      if (document.getElementById('age'))         document.getElementById('age').value         = data.age || '';
+      if (document.getElementById('weight'))      document.getElementById('weight').value      = data.weight || '';
+      if (document.getElementById('height'))      document.getElementById('height').value      = data.height || '';
+      if (document.getElementById('fitnessGoal')) document.getElementById('fitnessGoal').value = data.fitnessGoal || '';
+    })
+    .catch(err => {
+      console.error("Database connection fault, fallback to local storage:", err);
+      // Fallback if server or DB goes offline down the road
+      const savedProfile = JSON.parse(localStorage.getItem(`profile_${activeUser.email}`) || '{}');
+      if (savedProfile.age)         document.getElementById('age').value         = savedProfile.age;
+      if (savedProfile.weight)      document.getElementById('weight').value      = savedProfile.weight;
+      if (savedProfile.height)      document.getElementById('height').value      = savedProfile.height;
+      if (savedProfile.fitnessGoal) document.getElementById('fitnessGoal').value = savedProfile.fitnessGoal;
+    });
 });
 
 function closeModal() {
@@ -88,51 +99,101 @@ document.querySelectorAll('.pw-toggle').forEach(btn => {
   });
 });
 
+// SAVE BTN: Updates the UI, checks validation, and posts directly to MongoDB (Single Model Setup)
 document.getElementById('saveProfile').addEventListener('click', () => {
   const name = document.getElementById('fullName').value.trim();
   if (!name) { showToast('Full name is required.', 'error'); return; }
 
-  const data = {
-    name,
-    email:       document.getElementById('email').value.trim(),
+  const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+  if (!activeUser.email) return;
+
+  // Build the flat body structure that your new server.js endpoint parameters expect
+  const unifiedPayload = {
+    name:        name,
+    email:       activeUser.email, // Passing 'email' explicitly to find user
     age:         document.getElementById('age').value,
     weight:      document.getElementById('weight').value,
     height:      document.getElementById('height').value,
     fitnessGoal: document.getElementById('fitnessGoal').value.trim(),
   };
 
-  const activeUser = JSON.parse(localStorage.getItem('activeUser'));
-
-  //  Update active user
-  activeUser.name = data.name;
+  // Update local active user cache session elements immediately
+  activeUser.name = unifiedPayload.name;
   localStorage.setItem('activeUser', JSON.stringify(activeUser));
+  localStorage.setItem(`profile_${activeUser.email}`, JSON.stringify(unifiedPayload));
 
-  //  Save profile
-  localStorage.setItem(
-    `profile_${activeUser.email}`,
-    JSON.stringify(data)
-  );
-
-  //  UPDATE UI IMMEDIATELY 
-
+  // Update layout header widgets immediately
   const sidebarUsername = document.getElementById('sidebarUsername');
   const usernameBox = document.getElementById('usernameBox');
+  if (sidebarUsername) sidebarUsername.textContent = unifiedPayload.name;
+  if (usernameBox) usernameBox.textContent = unifiedPayload.name;
 
-  if (sidebarUsername) sidebarUsername.textContent = data.name;
-  if (usernameBox) usernameBox.textContent = data.name;
-
-  showToast('Profile saved successfully!', 'success');
+  // POST METRICS SECURELY TO THE UNIFIED USER ROUTE
+  fetch('/api/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(unifiedPayload)
+  })
+  .then(res => res.json())
+  .then(responseData => {
+    if (responseData.success) {
+      showToast('Profile saved successfully!', 'success');
+    } else {
+      showToast('Profile sync failed, saved locally instead.', 'error');
+    }
+  })
+  .catch(err => {
+    console.error("Database connection fault:", err);
+    showToast('Saved locally. Database sync failed.', 'error');
+  });
 });
 
+// STRICT PASSWORD UPDATE HANDLER
 document.getElementById('updatePassword').addEventListener('click', () => {
   const cur  = document.getElementById('currentPw').value;
   const nw   = document.getElementById('newPw').value;
   const conf = document.getElementById('confirmPw').value;
+
   if (!cur || !nw || !conf) { showToast('Please fill in all password fields.', 'error'); return; }
   if (nw.length < 8)        { showToast('New password must be at least 8 characters.', 'error'); return; }
   if (nw !== conf)          { showToast('Passwords do not match.', 'error'); return; }
-  document.getElementById('currentPw').value = document.getElementById('newPw').value = document.getElementById('confirmPw').value = '';
-  showToast('Password updated successfully!', 'success');
+  
+  // Frontend Guard Check: Prevent submitting same password right away
+  if (cur === nw) { 
+    showToast('New password cannot be the same as your current password.', 'error'); 
+    return; 
+  }
+
+  const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+  if (!activeUser.email) return;
+
+  const passwordPayload = {
+    email: activeUser.email,
+    currentPassword: cur,
+    newPassword: nw
+  };
+
+  fetch('/api/profile/update-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(passwordPayload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showToast(data.message, 'success');
+      // Clear out the text inputs
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value = '';
+      document.getElementById('confirmPw').value = '';
+    } else {
+      showToast(data.message || 'Failed to update password.', 'error');
+    }
+  })
+  .catch(err => {
+    console.error("Password update transmission failure:", err);
+    showToast('Server communication failure updating password.', 'error');
+  });
 });
 
 // Delete Account
@@ -148,11 +209,34 @@ deleteCancelBtn.addEventListener('click', () => {
   deleteConfirmModal.style.display = 'none';
 });
 
+// FULL CASCADE ACCOUNT DELETION HANDLER
 deleteConfirmBtn.addEventListener('click', () => {
+  const activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+  if (!activeUser.email) return;
+
   deleteConfirmModal.style.display = 'none';
-  localStorage.clear();
-  showToast('Account deleted. Redirecting…', 'error');
-  setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+
+  // Issue DELETE request to drop document bindings and associated historical maps
+  fetch('/api/profile/delete-account', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: activeUser.email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      // Clear out local session data tracking completely
+      localStorage.clear();
+      showToast('Account and all logs deleted. Redirecting to login…', 'error');
+      setTimeout(() => { window.location.href = 'Login.html'; }, 2000);
+    } else {
+      showToast(data.message || 'Failed to clear database logs.', 'error');
+    }
+  })
+  .catch(err => {
+    console.error("Account erasure synchronization error:", err);
+    showToast('Database connection offline. Data preservation fallback triggered.', 'error');
+  });
 });
 
 // close on backdrop click
