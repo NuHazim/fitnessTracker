@@ -6,7 +6,8 @@
 // Adjust the key name if yours differs (e.g. 'hft_user_id').
 // ─────────────────────────────────────────────────────────────────────────────
 function getUserId() {
-  return localStorage.getItem('hft_user_id') || localStorage.getItem('userId') || 'guest';
+    var activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+    return activeUser.email || 'guest';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -57,13 +58,13 @@ var TYPE_META = {
 function getMeta(type) { return TYPE_META[type] || TYPE_META.custom; }
 
 function getNotificationIcon(type) {
-  var icons = {
-    workout: 'https://cdn-icons-png.flaticon.com/512/2936/2936886.png',
-    meal:    'https://cdn-icons-png.flaticon.com/512/2771/2771406.png',
-    water:   'https://cdn-icons-png.flaticon.com/512/824/824239.png',
-    custom:  'https://cdn-icons-png.flaticon.com/512/1827/1827312.png'
-  };
-  return icons[type] || icons.custom;
+    var icons = {
+        workout: 'https://img.icons8.com/fluency/96/dumbbell.png',
+        meal:    'https://img.icons8.com/fluency/96/food-bar.png',
+        water:   'https://img.icons8.com/fluency/96/water.png',
+        custom:  '/Logo.png'
+    };
+    return icons[type] || '/Logo.png';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
