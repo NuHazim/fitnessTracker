@@ -1,64 +1,85 @@
 'use strict';
 
-/*STORAGE*/
-var STORAGE_KEY = 'hft_reminders';
+// ─────────────────────────────────────────────────────────────────────────────
+// USER ID
+// Reads the userId stored by your Authentication.js at login.
+// Adjust the key name if yours differs (e.g. 'hft_user_id').
+// ─────────────────────────────────────────────────────────────────────────────
+function getUserId() {
+    var activeUser = JSON.parse(localStorage.getItem('activeUser') || '{}');
+    return activeUser.email || 'guest';
+}
 
-function loadReminders() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    return [];
+// ─────────────────────────────────────────────────────────────────────────────
+// API HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+var BASE = '/api/reminders';
+
+async function apiFetch(method, path, body) {
+  var opts = {
+    method: method,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  var res = await fetch(path, opts);
+  if (!res.ok) {
+    var err = await res.json().catch(function() { return {}; });
+    throw new Error(err.error || 'Request failed');
   }
+  return res.json();
 }
 
-function saveReminders(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+async function apiGetAll() {
+  return apiFetch('GET', BASE + '?userId=' + getUserId());
 }
 
-/*TYPE METADATA  —  Font Awesome icons only*/
+async function apiCreate(reminder) {
+  return apiFetch('POST', BASE, Object.assign({ userId: getUserId() }, reminder));
+}
+
+async function apiUpdate(id, fields) {
+  return apiFetch('PUT', BASE + '/' + id, Object.assign({ userId: getUserId() }, fields));
+}
+
+async function apiDelete(id) {
+  return apiFetch('DELETE', BASE + '/' + id + '?userId=' + getUserId());
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPE METADATA  —  Font Awesome icons only
+// ─────────────────────────────────────────────────────────────────────────────
 var TYPE_META = {
-  workout: {
-    icon:  'fa-solid fa-dumbbell',
-    bg:    'icon-workout',
-    label: 'workout'
-  },
-  meal: {
-    icon:  'fa-solid fa-utensils',
-    bg:    'icon-meal',
-    label: 'meal'
-  },
-  water: {
-    icon:  'fa-solid fa-droplet',
-    bg:    'icon-water',
-    label: 'water'
-  },
-  custom: {
-    icon:  'fa-solid fa-bell',
-    bg:    'icon-custom',
-    label: 'custom'
-  }
+  workout: { icon: 'fa-solid fa-dumbbell',  bg: 'icon-workout', label: 'workout' },
+  meal:    { icon: 'fa-solid fa-utensils',  bg: 'icon-meal',    label: 'meal'    },
+  water:   { icon: 'fa-solid fa-droplet',   bg: 'icon-water',   label: 'water'   },
+  custom:  { icon: 'fa-solid fa-bell',      bg: 'icon-custom',  label: 'custom'  }
 };
 
-function getMeta(type) {
-  return TYPE_META[type] || TYPE_META.custom;
-}
+function getMeta(type) { return TYPE_META[type] || TYPE_META.custom; }
 
 function getNotificationIcon(type) {
-  var icons = {
-    workout: 'https://cdn-icons-png.flaticon.com/512/2936/2936886.png',
-    meal: 'https://cdn-icons-png.flaticon.com/512/2771/2771406.png',
-    water:   'https://cdn-icons-png.flaticon.com/512/824/824239.png',
-    custom:  'https://cdn-icons-png.flaticon.com/512/1827/1827312.png'
-  };
-  return icons[type] || icons.custom;
+    var icons = {
+        workout: 'https://img.icons8.com/fluency/96/dumbbell.png',
+        meal:    'https://img.icons8.com/fluency/96/food-bar.png',
+        water:   'https://img.icons8.com/fluency/96/water.png',
+        custom:  '/Logo.png'
+    };
+    return icons[type] || '/Logo.png';
 }
 
-/*HELPERS*/
-function generateId() {
-  return 'r' + Date.now() + Math.random().toString(36).slice(2, 6);
+// ─────────────────────────────────────────────────────────────────────────────
+// IN-MEMORY CACHE  (avoids redundant round-trips for notification checks)
+// ─────────────────────────────────────────────────────────────────────────────
+var _cache = [];
+
+async function refreshCache() {
+  _cache = await apiGetAll();
+  return _cache;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
 function getCheckedDays(prefix) {
   var days   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   var result = [];
@@ -73,7 +94,7 @@ function setCheckedDays(prefix, selectedDays) {
   var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   for (var i = 0; i < days.length; i++) {
     var el = document.getElementById(prefix + days[i]);
-    if (el) el.checked = selectedDays.indexOf(days[i]) !== -1;
+    if (el) el.checked = (selectedDays || []).indexOf(days[i]) !== -1;
   }
 }
 
@@ -91,32 +112,28 @@ function showInvalid(id) {
 
 function escHtml(str) {
   return String(str)
-    .replace(/&/g,  '&amp;')
-    .replace(/</g,  '&lt;')
-    .replace(/>/g,  '&gt;')
-    .replace(/"/g,  '&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
 function formatTime(time24) {
   var parts  = time24.split(':');
   var hour   = parseInt(parts[0], 10);
   var minute = parts[1];
   var ampm   = hour >= 12 ? 'PM' : 'AM';
-  var hour12 = hour % 12;
-  if (hour12 === 0) hour12 = 12;
-  return hour12 + ':' + minute + ' ' + ampm;
+  var h12    = hour % 12 || 12;
+  return h12 + ':' + minute + ' ' + ampm;
 }
 
-/*RENDER REMINDER LIST*/
-function renderReminders() {
-  var reminders = loadReminders();
-  var listEl    = document.getElementById('reminderList');
-  var countEl   = document.getElementById('activeCount');
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────────────────────────────────────
+function renderReminders(reminders) {
+  var listEl  = document.getElementById('reminderList');
+  var countEl = document.getElementById('activeCount');
   if (!listEl || !countEl) return;
 
-  var enabledCount = 0;
-  for (var i = 0; i < reminders.length; i++) {
-    if (reminders[i].enabled) enabledCount++;
-  }
+  var enabledCount = reminders.filter(function(r) { return r.enabled; }).length;
   countEl.textContent = enabledCount + ' reminder(s) enabled';
 
   if (reminders.length === 0) {
@@ -142,55 +159,55 @@ function renderReminders() {
         '</span>';
     }
 
-    var checkIcon     = '<i class="fa-solid fa-circle-check active-dot' + (r.enabled ? '' : ' active-dot-hidden') + '"></i>';
+    var checkIcon     = '<i class="fa-solid fa-circle-check active-dot' +
+                        (r.enabled ? '' : ' active-dot-hidden') + '"></i>';
     var disabledClass = r.enabled ? '' : ' is-disabled';
 
     html +=
       '<div class="reminder-item' + disabledClass + '" id="item_' + r.id + '">' +
-
         '<div class="reminder-icon ' + meta.bg + '">' +
           '<i class="' + meta.icon + '"></i>' +
         '</div>' +
-
         '<div class="reminder-info">' +
-          '<div class="reminder-title">' +
-            escHtml(r.title) + ' ' + checkIcon +
-          '</div>' +
+          '<div class="reminder-title">' + escHtml(r.title) + ' ' + checkIcon + '</div>' +
           '<div class="reminder-msg">' + escHtml(r.message) + '</div>' +
           '<div class="reminder-meta">' +
-            '<span class="meta-time">' +
-              '<i class="fa-regular fa-clock"></i> ' + formatTime(r.time) +
-            '</span>' +
+            '<span class="meta-time"><i class="fa-regular fa-clock"></i> ' +
+            formatTime(r.time) + '</span>' +
             '<span class="badge-type">' + meta.label + '</span>' +
             daysHtml +
           '</div>' +
         '</div>' +
-
         '<div class="reminder-actions">' +
           '<div class="form-check form-switch mb-0">' +
             '<input class="form-check-input" type="checkbox" role="switch"' +
               ' data-id="' + r.id + '" data-action="toggle"' +
               (r.enabled ? ' checked' : '') + '>' +
           '</div>' +
-          '<button class="btn-icon edit"' +
-            ' data-id="' + r.id + '" data-action="edit"' +
-            ' title="Edit reminder">' +
-            '<i class="fa-solid fa-pencil"></i>' +
-          '</button>' +
-          '<button class="btn-icon del"' +
-            ' data-id="' + r.id + '" data-action="delete"' +
-            ' title="Delete reminder">' +
-            '<i class="fa-solid fa-trash"></i>' +
-          '</button>' +
+          '<button class="btn-icon edit" data-id="' + r.id + '" data-action="edit"' +
+            ' title="Edit reminder"><i class="fa-solid fa-pencil"></i></button>' +
+          '<button class="btn-icon del" data-id="' + r.id + '" data-action="delete"' +
+            ' title="Delete reminder"><i class="fa-solid fa-trash"></i></button>' +
         '</div>' +
-
       '</div>';
   }
 
   listEl.innerHTML = html;
 }
 
-/*CREATE*/
+async function loadAndRender() {
+  try {
+    var list = await refreshCache();
+    renderReminders(list);
+  } catch (err) {
+    console.error('loadAndRender error:', err);
+    showToast('Could not load reminders. Check your connection.');
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CREATE
+// ─────────────────────────────────────────────────────────────────────────────
 function openCreateModal() {
   document.getElementById('createType').value    = 'workout';
   document.getElementById('createTime').value    = '09:00';
@@ -201,7 +218,7 @@ function openCreateModal() {
   new bootstrap.Modal(document.getElementById('createModal')).show();
 }
 
-function saveNewReminder() {
+async function saveNewReminder() {
   var title   = document.getElementById('createTitle').value.trim();
   var message = document.getElementById('createMessage').value.trim();
   var valid   = true;
@@ -211,30 +228,28 @@ function saveNewReminder() {
   if (!message) { showInvalid('createMessage'); valid = false; }
   if (!valid) return;
 
-  var list = loadReminders();
-  list.push({
-    id:      generateId(),
-    type:    document.getElementById('createType').value,
-    time:    document.getElementById('createTime').value,
-    title:   title,
-    message: message,
-    days:    getCheckedDays('c'),
-    enabled: true
-  });
-
-  saveReminders(list);
-  renderReminders();
-  bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
-  showToast('Reminder "' + title + '" created.');
+  try {
+    await apiCreate({
+      type:    document.getElementById('createType').value,
+      time:    document.getElementById('createTime').value,
+      title:   title,
+      message: message,
+      days:    getCheckedDays('c'),
+      enabled: true
+    });
+    await loadAndRender();
+    bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+    showToast('Reminder "' + title + '" created.');
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  }
 }
 
-/*EDIT*/
+// ─────────────────────────────────────────────────────────────────────────────
+// EDIT
+// ─────────────────────────────────────────────────────────────────────────────
 function openEditModal(id) {
-  var list = loadReminders();
-  var r    = null;
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].id === id) { r = list[i]; break; }
-  }
+  var r = _cache.find(function(x) { return x.id === id; });
   if (!r) return;
 
   document.getElementById('editId').value      = r.id;
@@ -247,7 +262,7 @@ function openEditModal(id) {
   new bootstrap.Modal(document.getElementById('editModal')).show();
 }
 
-function saveEditedReminder() {
+async function saveEditedReminder() {
   var title   = document.getElementById('editTitle').value.trim();
   var message = document.getElementById('editMessage').value.trim();
   var valid   = true;
@@ -257,27 +272,27 @@ function saveEditedReminder() {
   if (!message) { showInvalid('editMessage'); valid = false; }
   if (!valid) return;
 
-  var id   = document.getElementById('editId').value;
-  var list = loadReminders();
+  var id = document.getElementById('editId').value;
 
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].id === id) {
-      list[i].type    = document.getElementById('editType').value;
-      list[i].time    = document.getElementById('editTime').value;
-      list[i].title   = title;
-      list[i].message = message;
-      list[i].days    = getCheckedDays('e');
-      break;
-    }
+  try {
+    await apiUpdate(id, {
+      type:    document.getElementById('editType').value,
+      time:    document.getElementById('editTime').value,
+      title:   title,
+      message: message,
+      days:    getCheckedDays('e')
+    });
+    await loadAndRender();
+    bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+    showToast('Reminder "' + title + '" updated.');
+  } catch (err) {
+    showToast('Error: ' + err.message);
   }
-
-  saveReminders(list);
-  renderReminders();
-  bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-  showToast('Reminder "' + title + '" updated.');
 }
 
-/*DELETE  —  with simple confirmation modal*/
+// ─────────────────────────────────────────────────────────────────────────────
+// DELETE
+// ─────────────────────────────────────────────────────────────────────────────
 var pendingDeleteId = null;
 
 function deleteReminder(id) {
@@ -285,56 +300,61 @@ function deleteReminder(id) {
   new bootstrap.Modal(document.getElementById('deleteModal')).show();
 }
 
-function confirmDelete() {
+async function confirmDelete() {
   if (!pendingDeleteId) return;
-
-  var list    = loadReminders();
-  var newList = [];
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].id !== pendingDeleteId) newList.push(list[i]);
+  try {
+    await apiDelete(pendingDeleteId);
+    pendingDeleteId = null;
+    await loadAndRender();
+    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+    showToast('Reminder deleted.');
+  } catch (err) {
+    showToast('Error: ' + err.message);
   }
-
-  saveReminders(newList);
-  renderReminders();
-  bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-  pendingDeleteId = null;
-  showToast('Reminder deleted.');
 }
 
-/*TOGGLE*/
-function toggleReminder(id, enabled) {
-  var list = loadReminders();
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].id === id) { list[i].enabled = enabled; break; }
+// ─────────────────────────────────────────────────────────────────────────────
+// TOGGLE
+// ─────────────────────────────────────────────────────────────────────────────
+async function toggleReminder(id, enabled) {
+  try {
+    await apiUpdate(id, { enabled: enabled });
+    await loadAndRender();
+  } catch (err) {
+    showToast('Error: ' + err.message);
   }
-  saveReminders(list);
-  renderReminders();
 }
 
-/*PRESETS*/
-function applyPreset(type, title, message, time) {
-  var list = loadReminders();
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].title === title && list[i].time === time) {
-      showToast('"' + title + '" is already in your reminders.');
-      return;
-    }
-  }
-  list.push({
-    id:      generateId(),
-    type:    type,
-    time:    time,
-    title:   title,
-    message: message,
-    days:    ['Mon','Tue','Wed','Thu','Fri'],
-    enabled: true
+// ─────────────────────────────────────────────────────────────────────────────
+// PRESETS
+// ─────────────────────────────────────────────────────────────────────────────
+async function applyPreset(type, title, message, time) {
+  var duplicate = _cache.find(function(r) {
+    return r.title === title && r.time === time;
   });
-  saveReminders(list);
-  renderReminders();
-  showToast('"' + title + '" added to reminders.');
+  if (duplicate) {
+    showToast('"' + title + '" is already in your reminders.');
+    return;
+  }
+  try {
+    await apiCreate({
+      type:    type,
+      time:    time,
+      title:   title,
+      message: message,
+      days:    ['Mon','Tue','Wed','Thu','Fri'],
+      enabled: true
+    });
+    await loadAndRender();
+    showToast('"' + title + '" added to reminders.');
+  } catch (err) {
+    showToast('Error: ' + err.message);
+  }
 }
 
-/*BROWSER NOTIFICATIONS*/
+// ─────────────────────────────────────────────────────────────────────────────
+// BROWSER NOTIFICATIONS
+// ─────────────────────────────────────────────────────────────────────────────
 function requestNotificationPermission() {
   if (!('Notification' in window)) {
     alert('Your browser does not support notifications.');
@@ -354,57 +374,48 @@ function checkAndFireNotifications() {
   if (!('Notification' in window)) return;
   if (Notification.permission !== 'granted') return;
 
-  var now  = new Date();
-  var hh   = now.getHours()   < 10 ? '0' + now.getHours()   : '' + now.getHours();
-  var mm   = now.getMinutes() < 10 ? '0' + now.getMinutes() : '' + now.getMinutes();
-  var hhmm = hh + ':' + mm;
-
+  var now      = new Date();
+  var hh       = String(now.getHours()).padStart(2, '0');
+  var mm       = String(now.getMinutes()).padStart(2, '0');
+  var hhmm     = hh + ':' + mm;
   var dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   var today    = dayNames[now.getDay()];
   var firedKey = 'hft_fired_' + now.toDateString();
   var firedArr = [];
 
-  try { firedArr = JSON.parse(localStorage.getItem(firedKey) || '[]'); }
-  catch(e) {}
+  try { firedArr = JSON.parse(localStorage.getItem(firedKey) || '[]'); } catch(e) {}
 
-  var list = loadReminders();
-  for (var i = 0; i < list.length; i++) {
-    var r = list[i];
-    if (!r.enabled) continue;
-    if (r.time !== hhmm) continue;
-    if (r.days && r.days.length > 0 && r.days.indexOf(today) === -1) continue;
+  _cache.forEach(function(r) {
+    if (!r.enabled) return;
+    if (r.time !== hhmm) return;
+    if (r.days && r.days.length > 0 && r.days.indexOf(today) === -1) return;
 
     var fireId = r.id + '_' + hhmm;
-    if (firedArr.indexOf(fireId) !== -1) continue;
+    if (firedArr.indexOf(fireId) !== -1) return;
 
     new Notification(r.title, {
       body: r.message,
       icon: getNotificationIcon(r.type)
     });
     firedArr.push(fireId);
-  }
+  });
 
   localStorage.setItem(firedKey, JSON.stringify(firedArr));
 }
 
-/*TOAST*/
+// ─────────────────────────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────────────────────────
 function showToast(msg) {
   var t = document.createElement('div');
   t.textContent = msg;
   t.style.cssText = [
-    'position:fixed',
-    'bottom:28px',
-    'right:28px',
-    'background:#1a1a1a',
-    'color:#fff',
-    'padding:12px 22px',
-    'border-radius:10px',
-    'font-size:0.9rem',
-    'font-weight:600',
-    'z-index:9999',
-    'box-shadow:0 4px 16px rgba(0,0,0,0.2)',
-    'opacity:1',
-    'transition:opacity 0.4s'
+    'position:fixed','bottom:28px','right:28px',
+    'background:#1a1a1a','color:#fff',
+    'padding:12px 22px','border-radius:10px',
+    'font-size:0.9rem','font-weight:600',
+    'z-index:9999','box-shadow:0 4px 16px rgba(0,0,0,0.2)',
+    'opacity:1','transition:opacity 0.4s'
   ].join(';');
   document.body.appendChild(t);
   setTimeout(function() {
@@ -413,7 +424,9 @@ function showToast(msg) {
   }, 3000);
 }
 
-/*EVENT DELEGATION*/
+// ─────────────────────────────────────────────────────────────────────────────
+// EVENT DELEGATION
+// ─────────────────────────────────────────────────────────────────────────────
 function setupListDelegation() {
   var listEl = document.getElementById('reminderList');
   if (!listEl) return;
@@ -439,51 +452,16 @@ function setupListDelegation() {
   });
 }
 
-/*INIT*/
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
 
-  renderReminders();
+  loadAndRender();
   setupListDelegation();
 
   var btnAdd = document.getElementById('btnAddReminder');
   if (btnAdd) btnAdd.addEventListener('click', openCreateModal);
-  var btnTest = document.getElementById('btnTestNotification');
-if (btnTest) btnTest.addEventListener('click', function() {
-  if (!('Notification' in window)) {
-    showToast('Your browser does not support notifications.');
-    return;
-  }
-  function fireRandomNotification() {
-  var active = [];
-  var list = loadReminders();
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].enabled) active.push(list[i]);
-  }
-  if (active.length === 0) {
-    showToast('No active reminders to show.');
-    return;
-  }
-  var r = active[Math.floor(Math.random() * active.length)];
-  new Notification(r.title, {
-    body: r.message,
-    icon: getNotificationIcon(r.type)
-  });
-}
-
-if (Notification.permission === 'granted') {
-  fireRandomNotification();
-} else if (Notification.permission === 'default') {
-  Notification.requestPermission().then(function(perm) {
-    if (perm === 'granted') {
-      fireRandomNotification();
-    } else {
-      showToast('Please allow notifications to see the demo.');
-    }
-  });
-} else {
-  showToast('Notifications are blocked. Enable them in your browser settings.');
-}
-});
 
   var btnCreate = document.getElementById('btnSaveCreate');
   if (btnCreate) btnCreate.addEventListener('click', saveNewReminder);
@@ -497,27 +475,21 @@ if (Notification.permission === 'granted') {
   /* preset cards */
   var presets = [
     { id: 'preset1', type: 'workout', title: 'Morning Workout',
-      message: 'Time for your morning workout. Get up and get moving!',
-      time: '07:00' },
+      message: 'Time for your morning workout. Get up and get moving!',   time: '07:00' },
     { id: 'preset2', type: 'meal',    title: 'Lunch Time',
-      message: 'Time for lunch. Remember to eat a healthy, balanced meal.',
-      time: '12:00' },
+      message: 'Time for lunch. Remember to eat a healthy, balanced meal.', time: '12:00' },
     { id: 'preset3', type: 'water',   title: 'Afternoon Hydration',
-      message: 'Time to drink some water and stay hydrated.',
-      time: '15:00' },
+      message: 'Time to drink some water and stay hydrated.',               time: '15:00' },
     { id: 'preset4', type: 'workout', title: 'Evening Workout',
-      message: 'Time for your evening workout session.',
-      time: '18:00' }
+      message: 'Time for your evening workout session.',                    time: '18:00' }
   ];
 
   for (var i = 0; i < presets.length; i++) {
     (function(p) {
       var el = document.getElementById(p.id);
-      if (el) {
-        el.addEventListener('click', function() {
-          applyPreset(p.type, p.title, p.message, p.time);
-        });
-      }
+      if (el) el.addEventListener('click', function() {
+        applyPreset(p.type, p.title, p.message, p.time);
+      });
     })(presets[i]);
   }
 
@@ -536,6 +508,5 @@ if (Notification.permission === 'granted') {
       setInterval(checkAndFireNotifications, 60000);
     }, msUntilNext);
   }
-
   startNotificationClock();
 });
