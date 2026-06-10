@@ -12,6 +12,10 @@ const Reminder = require("./models/Reminder");
 const User = require("./models/User");
 const FavoriteMeal = require("./models/FavoriteMeal");
 
+const rateLimit = require("express-rate-limit");
+const mongoSanitize = require("express-mongo-sanitize");
+const bcrypt = require("bcryptjs"); // Import to compare hashes
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,6 +32,31 @@ mongoose
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.json());
+
+// 1a. Express 5 Compatibility Fix: Make req.query writable so the sanitizer doesn't crash
+app.use((req, res, next) => {
+    Object.defineProperty(req, 'query', {
+        value: req.query,
+        writable: true,
+        configurable: true,
+        enumerable: true
+    });
+    next();
+});
+
+// 1b. Defend against NoSQL Injection
+app.use(mongoSanitize());
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 5, 
+    message: { success: false, message: "Too many login/registration attempts from this IP. Please try again after 15 minutes." },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Intercept all routes matching the routing prefix parameter
+app.use("/api/auth/", authLimiter);
 
 app.get("/", (req, res) => res.redirect("/Login.html"));
 app.use(express.static("public"));
@@ -309,22 +338,44 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-// 2. LOGIN USER VERIFICATION
+// 2. LOGIN USER VERIFICATION (With Backward Compatibility)
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
-    if (!user || user.password !== password) {
-      return res.status(400).json({ message: "Invalid email or password." });
+
+    if (!user) {
+        return res.status(401).json({ success: false, message: "Invalid email or password." });
     }
 
-    res.json({
-      user: { id: user._id, name: user.name, email: user.email },
-    });
+    let isMatch = false;
+
+    // Check if the password in the database is already a bcrypt hash (they start with $2a$ or $2b$)
+    if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
+        // It's a NEW account -> check using bcrypt
+        isMatch = await bcrypt.compare(password, user.password);
+    } else {
+        // It's an OLD account -> check plain text directly
+        isMatch = (password === user.password);
+
+        // 🔥 Magic Trick: Upgrade their security automatically!
+        if (isMatch) {
+            user.password = password; // Set it back to trigger the save hook
+            await user.save(); // Your User.js file will intercept this and hash it!
+            console.log(`Security upgrade complete for user: ${email}`);
+        }
+    }
+
+    if (isMatch) {
+      res.json({
+        success: true,
+        user: { name: user.name, email: user.email },
+      });
+    } else {
+      res.status(401).json({ success: false, message: "Invalid email or password." });
+    }
   } catch (err) {
-    console.error("Login verification fault:", err.message);
-    res.status(500).json({ message: "Server error during login." });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
