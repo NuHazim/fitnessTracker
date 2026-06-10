@@ -1,104 +1,140 @@
-const logBox = document.getElementById("logBox");
-const planBox = document.getElementById("planBox");
-const progressBox = document.getElementById("progressBox");
+// ── Shortcuts ────────────────────────────────────────────────────────────────
+document.getElementById("logBox").addEventListener("click",      () => window.location.href = "FitnessTracker.html");
+document.getElementById("planBox").addEventListener("click",     () => window.location.href = "NutritionPlanner.html");
+document.getElementById("progressBox").addEventListener("click", () => window.location.href = "ProgressCharts.html");
 
-logBox.addEventListener("click", function () { window.location.href = "FitnessTracker.html"; });
-planBox.addEventListener("click", function () { window.location.href = "NutritionPlanner.html"; });
-progressBox.addEventListener("click", function () { window.location.href = "ProgressCharts.html"; });
-
-// ── LocalStorage helper ───────────────────────────────────────────────────────
-
-function getWorkouts() {
-    return JSON.parse(localStorage.getItem("workouts") || "[]");
-}
-function getFavourites() {
-    return JSON.parse(localStorage.getItem("favorites") || "[]");
+// ── Current user ──────────────────────────────────────────────────────────────
+function getCurrentUser() {
+    try {
+        return JSON.parse(localStorage.getItem("activeUser")) || null;
+    } catch {
+        return null;
+    }
 }
 
-function getReminders() {
-    return JSON.parse(localStorage.getItem("hft_reminders") || "[]");
+function getCurrentUserId() {
+    const user = getCurrentUser();
+    return user ? user.email : "anonymous";
 }
+
 // ── Date helpers ──────────────────────────────────────────────────────────────
-
 function getTodayStr() {
-    return new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    return new Date(now - offset).toISOString().split("T")[0];
 }
 
 function getWeekRange() {
     const now = new Date();
-    const day = now.getDay(); // 0=Sun, 1=Mon ...
-    const diffToMon = (day === 0 ? -6 : 1 - day);
+    now.setHours(0, 0, 0, 0);
+    const day = now.getDay();
+    const diffToMon = day === 0 ? -6 : 1 - day;
     const monday = new Date(now);
     monday.setDate(now.getDate() + diffToMon);
-    monday.setHours(0, 0, 0, 0);
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
     sunday.setHours(23, 59, 59, 999);
     return { monday, sunday };
 }
 
+// ── API fetchers ──────────────────────────────────────────────────────────────
+async function fetchWorkouts(userId) {
+    const res = await fetch(`/api/workouts?userId=${encodeURIComponent(userId)}`);
+    if (!res.ok) throw new Error("Failed to fetch workouts");
+    return res.json();
+}
+
+async function fetchFavorites(userId) {
+    const res = await fetch(`/api/favorites/${encodeURIComponent(userId)}`);
+    if (!res.ok) throw new Error("Failed to fetch favorites");
+    return res.json();
+}
+
+async function fetchReminders(userId) {
+    const res = await fetch(`/api/reminders?userId=${encodeURIComponent(userId)}`);
+    if (!res.ok) throw new Error("Failed to fetch reminders");
+    return res.json();
+}
+
 // ── Populate dashboard ────────────────────────────────────────────────────────
+async function populateDashboard() {
+    const user = getCurrentUser();
 
-function populateDashboard() {
-    const workouts = getWorkouts();
-    const favourites = getFavourites();
-    const reminders = getReminders();
+    // ── Username greeting ─────────────────────────────
+    const displayName = user ? user.name.split(" ")[0] : "User";
+    document.getElementById("usernameBox").textContent = displayName;
 
-    const todayStr  = getTodayStr();
+    // ── Sidebar user info ─────────────────────────────
+    if (user) {
+        const sidebarUsername = document.getElementById("sidebarUsername");
+        const sidebarEmail    = document.getElementById("sidebarEmail");
+        if (sidebarUsername) sidebarUsername.textContent = user.name;
+        if (sidebarEmail)    sidebarEmail.textContent    = user.email;
+    }
+
+    const userId = getCurrentUserId();
+
+    // ── Fetch all data in parallel ────────────────────
+    let workouts  = [];
+    let favorites = [];
+    let reminders = [];
+
+    try {
+        [workouts, favorites, reminders] = await Promise.all([
+            fetchWorkouts(userId),
+            fetchFavorites(userId),
+            fetchReminders(userId)
+        ]);
+    } catch (err) {
+        console.error("Dashboard fetch error:", err);
+    }
+
+    const todayStr          = getTodayStr();
     const { monday, sunday } = getWeekRange();
 
-    // ── Summary cards ─────────────────────────────
+    // ── Summary cards ─────────────────────────────────
 
+    // Total workouts
     document.getElementById("totalWorks").textContent = workouts.length;
 
-    // Favourite meals
-    document.getElementById("favMeals").textContent = favourites.length;
+    // Avg Duration (replaces "This Week")
+    const totalMins = workouts.reduce((sum, w) => sum + (parseInt(w.min) || 0), 0);
+    const avgDuration = workouts.length > 0 ? Math.round(totalMins / workouts.length) : 0;
+    document.getElementById("totalProgress").textContent = avgDuration + " min";
 
-    // Active reminders (FIXED: use enabled)
+    // Favourite meals
+    document.getElementById("favMeals").textContent = favorites.length;
+
+    // Active reminders
     const activeReminders = reminders.filter(r => r.enabled === true);
     document.getElementById("totalReminders").textContent = activeReminders.length;
 
-    // This week workouts
-    const thisWeekCount = workouts.filter(w => {
-        const d = new Date(w.date);
-        return d >= monday && d <= sunday;
-    }).length;
-    document.getElementById("totalProgress").textContent = thisWeekCount;
-
-    // ── Today's activity ─────────────────────────
-
+    // ── Today's activity ──────────────────────────────
     const todaysWorkouts = workouts.filter(w => w.date === todayStr);
+    document.getElementById("todaysSteps").textContent    = todaysWorkouts.reduce((s, w) => s + (parseInt(w.steps) || 0), 0);
+    document.getElementById("todaysCalories").textContent = todaysWorkouts.reduce((s, w) => s + (parseInt(w.cal)   || 0), 0);
+    document.getElementById("todaysMinutes").textContent  = todaysWorkouts.reduce((s, w) => s + (parseInt(w.min)   || 0), 0);
 
-    const todaysSteps = todaysWorkouts.reduce((sum, w) => sum + (Number(w.steps) || 0), 0);
-    const todaysCals  = todaysWorkouts.reduce((sum, w) => sum + (Number(w.cal)   || 0), 0);
-    const todaysMins  = todaysWorkouts.reduce((sum, w) => sum + (Number(w.min)   || 0), 0);
-
-    document.getElementById("todaysSteps").textContent    = todaysSteps;
-    document.getElementById("todaysCalories").textContent = todaysCals;
-    document.getElementById("todaysMinutes").textContent  = todaysMins;
-
-    // ── Recent workouts ──────────────────────────
-
+    // ── Recent workouts ───────────────────────────────
     const container = document.getElementById("workHisContainer");
     const noWorkBox = document.querySelector(".recentWorkouts .noWorkBox");
+    const viewAll   = document.getElementById("viewAllWorkouts");
 
     container.innerHTML = "";
 
     if (workouts.length === 0) {
         noWorkBox.style.display = "flex";
-        document.getElementById("viewAllWorkouts").style.display = "none"; // small fix
+        viewAll.style.display   = "none";
         return;
     }
 
     noWorkBox.style.display = "none";
-    document.getElementById("viewAllWorkouts").style.display = "block";
+    viewAll.style.display   = "block";
 
-    const recent = [...workouts].reverse().slice(0, 3);
-
-    recent.forEach(w => {
+    // API already returns sorted by createdAt desc, take first 3
+    workouts.slice(0, 3).forEach(w => {
         const card = document.createElement("div");
         card.className = "workBox";
-
         card.innerHTML = `
             <div style="display:flex;align-items:center;">
                 <i class="fa-solid fa-person-running workBoxLogo"></i>
@@ -115,11 +151,9 @@ function populateDashboard() {
                 </div>
             </div>
         `;
-
         container.appendChild(card);
     });
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-
 populateDashboard();
