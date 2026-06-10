@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ── User identity (matches FitnessTracker.js) ─────────────────────────────
     function getCurrentUserId() {
-        return localStorage.getItem("hft_user_email") || "anonymous";
+        const activeUser = JSON.parse(localStorage.getItem("activeUser") || "{}");
+        return activeUser.email || "anonymous";
     }
 
     let activityChartInstance = null;
