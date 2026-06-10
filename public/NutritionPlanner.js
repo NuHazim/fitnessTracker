@@ -34,7 +34,7 @@ async function loadRecommendedMeals() {
     const randomOffset = Math.floor(Math.random() * 50);
 
     const res = await fetch(
-      `/api/recipes?query=${randomQuery}&number=6&offset=${randomOffset}`
+      `/api/recipes?query=${randomQuery}&number=6&offset=${randomOffset}`,
     );
 
     const data = await res.json();
@@ -71,7 +71,7 @@ async function searchMeals() {
 
   try {
     const res = await fetch(
-      `/api/recipes?query=${encodeURIComponent(query)}&number=6`
+      `/api/recipes?query=${encodeURIComponent(query)}&number=6`,
     );
 
     const data = await res.json();
@@ -101,7 +101,8 @@ function displayMeals(meals) {
     const protein =
       nutrients.find((n) => n.name === "Protein")?.amount?.toFixed(0) || "N/A";
     const carbs =
-      nutrients.find((n) => n.name === "Carbohydrates")?.amount?.toFixed(0) || "N/A";
+      nutrients.find((n) => n.name === "Carbohydrates")?.amount?.toFixed(0) ||
+      "N/A";
     const fats =
       nutrients.find((n) => n.name === "Fat")?.amount?.toFixed(0) || "N/A";
 
@@ -204,7 +205,7 @@ async function openMeal(id) {
             <li class="list-group-item border-0 border-bottom">
               ${i.original}
             </li>
-          `
+          `,
             )
             .join("")}
         </ul>
@@ -269,20 +270,40 @@ function getShortDescription(meal, nutrients) {
 }
 
 // ── Favorites ─────────────────────────────────────────────────
+function getFavorites() {
+  return JSON.parse(localStorage.getItem("favorites")) || [];
+}
+
 function isFavorite(id) {
   return getFavorites().some((item) => item.id === id);
 }
 
-function getFavorites() {
-  const favs = JSON.parse(localStorage.getItem("favorites")) || [];
-  return favs.filter((f) => f.id && f.name && f.img);
+async function loadFavorites() {
+  const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+
+  if (!activeUser) return;
+
+  const res = await fetch(`/api/favorites/${activeUser.email}`);
+
+  const favorites = await res.json();
+
+  renderFavorites(favorites);
 }
 
 function saveFavorites(favs) {
   localStorage.setItem("favorites", JSON.stringify(favs));
 }
 
-function toggleFavorite(el, id, name, img, calories, protein, carbs, fats) {
+async function toggleFavorite(
+  el,
+  id,
+  name,
+  img,
+  calories,
+  protein,
+  carbs,
+  fats,
+) {
   id = Number(id);
 
   let favs = getFavorites();
@@ -298,6 +319,26 @@ function toggleFavorite(el, id, name, img, calories, protein, carbs, fats) {
       carbs: carbs || "N/A",
       fats: fats || "N/A",
     });
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+
+    if (activeUser) {
+      await fetch("/api/favorites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: activeUser.email,
+          mealId: id,
+          name,
+          img,
+          calories,
+          protein,
+          carbs,
+          fats,
+        }),
+      });
+    }
     el.classList.remove("heart-outline");
     el.classList.add("heart-filled");
   } else {
@@ -312,6 +353,7 @@ function toggleFavorite(el, id, name, img, calories, protein, carbs, fats) {
 
 function renderFavorites() {
   const container = document.getElementById("favoritesContainer");
+
   const favs = getFavorites();
 
   container.innerHTML = "";
@@ -367,11 +409,13 @@ function renderFavorites() {
     `;
   });
 }
-
 function removeFavorite(id) {
   let favs = getFavorites();
+
   favs = favs.filter((item) => item.id !== id);
+
   saveFavorites(favs);
+
   renderFavorites();
 }
 
@@ -400,9 +444,12 @@ function calculateCalories() {
   const lose = maintain - 500;
   const gain = maintain + 500;
 
-  document.getElementById("maintainCalories").innerHTML = `<strong>${maintain}</strong> kcal`;
-  document.getElementById("loseCalories").innerHTML = `<strong>${lose}</strong> kcal`;
-  document.getElementById("gainCalories").innerHTML = `<strong>${gain}</strong> kcal`;
+  document.getElementById("maintainCalories").innerHTML =
+    `<strong>${maintain}</strong> kcal`;
+  document.getElementById("loseCalories").innerHTML =
+    `<strong>${lose}</strong> kcal`;
+  document.getElementById("gainCalories").innerHTML =
+    `<strong>${gain}</strong> kcal`;
 
   document.getElementById("calorieResultSection").classList.remove("d-none");
 }
