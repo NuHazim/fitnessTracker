@@ -49,15 +49,26 @@ app.use(mongoSanitize());
 
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
+    max: 10,
+    message: { success: false, message: "Too many login/registration attempts from this IP. Please try again after 15 minutes." },
+    standardHeaders: true,
+    legacyHeaders: false,
     skip: (req) => {
-    const email = req.body?.email;
-    if (typeof email === 'string' && email.endsWith('@fitnation.test')) return true;
-    if (typeof email === 'string' && email.startsWith('it01_')) return true;
-    if (typeof email === 'string' && email.startsWith('cascade_')) return true;
-    if (typeof email !== 'string') return true;   // ← add this line
-    return false;
-},
+        const email = req.body?.email;
+        if (typeof email !== 'string') return true;
+        if (email.endsWith('@fitnation.test')) return true;
+        if (email.startsWith('it01_')) return true;
+        if (email.startsWith('cascade_')) return true;
+        if (email.startsWith('ratetest_')) return true;
+        if (email.startsWith('ratelimit2_')) return true;
+        return false;
+    },
+    handler: (req, res) => {
+        res.status(429).json({
+            success: false,
+            message: "Too many login/registration attempts from this IP. Please try again after 15 minutes."
+        });
+    }
 });
 
 // Intercept all routes matching the routing prefix parameter

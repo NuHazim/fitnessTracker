@@ -388,7 +388,7 @@ body.dark-mode .btn-cancel:hover { background: #2d2a5a; }
     .sidebar-wrapper,
     #sidebarMenu,
     .offcanvas-start {
-        position: fixed !important;
+        position: absolute !important;
         top: 64px; /* Sits perfectly right under your main navbar header */
         bottom: 0;
         left: 0;
@@ -418,7 +418,6 @@ body.dark-mode .btn-cancel:hover { background: #2d2a5a; }
 
     /* 3. CRITICAL: Prevent the main dashboard content container from shrinking or compressing */
     .main-content,
-    #mainContent,
     .page-content,
     body {
         margin-left: 0 !important;
