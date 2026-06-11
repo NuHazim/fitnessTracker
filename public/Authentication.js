@@ -10,10 +10,10 @@ togglePasswords.forEach(icon => {
         
         if (input.type === 'password') {
             input.type = 'text';
-            this.textContent = '🙈'; // Change icon to hide
+            this.className = 'fa-regular fa-eye-slash toggle-password'; // Swaps to eye-slash icon
         } else {
             input.type = 'password';
-            this.textContent = '👁️'; // Change icon to show
+            this.className = 'fa-regular fa-eye toggle-password'; // Swaps back to eye icon
         }
     });
 });
