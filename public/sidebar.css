@@ -379,3 +379,70 @@ body.dark-mode .btn-cancel {
 }
 
 body.dark-mode .btn-cancel:hover { background: #2d2a5a; }
+
+/* ==========================================================================
+   MOBILE VIEW SIDEBAR OVERLAY CORRECTIONS (Targets screens up to 991px)
+   ========================================================================== */
+@media (max-width: 991.98px) {
+    /* 1. Force the sidebar wrapper into an absolute float layer */
+    .sidebar-wrapper,
+    #sidebarMenu,
+    .offcanvas-start {
+        position: fixed !important;
+        top: 64px; /* Sits perfectly right under your main navbar header */
+        bottom: 0;
+        left: 0;
+        width: 260px !important; 
+        height: calc(100vh - 64px) !important;
+        z-index: 1060 !important; /* Floats above main dash metrics elements */
+        
+        /* Smooth off-screen transition mechanics */
+        visibility: visible !important; /* Keeps the container visible so the exit animation can run */
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s !important;
+        
+        /* Modern floating visual separation card shadow */
+        box-shadow: 15px 0 30px rgba(0, 0, 0, 0.15) !important;
+        
+        /* Stop layout padding shifts from passing to underlying page elements */
+        margin-right: 0 !important;
+    }
+
+    /* 2. When active/open class is appended, slide it smoothly into view */
+    .sidebar-wrapper.show,
+    #sidebarMenu.show,
+    .offcanvas-start.show,
+    body.sidebar-open .sidebar-wrapper {
+        transform: translateX(0) !important;
+    }
+
+    /* 3. CRITICAL: Prevent the main dashboard content container from shrinking or compressing */
+    .main-content,
+    #mainContent,
+    .page-content,
+    body {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        transition: none !important; /* Disable content compression animations on mobile */
+    }
+
+    /* 4. Darker Backdrop Overlay System */
+    /* This targets standard Bootstrap offcanvas backdrops or custom overlays */
+    .offcanvas-backdrop, 
+    .sidebar-overlay,
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.6) !important; /* Made significantly darker */
+        backdrop-filter: blur(4px) !important; /* Adds a clean premium blur effect */
+        opacity: 0;
+        transition: opacity 0.3s ease !important;
+    }
+
+    .offcanvas-backdrop.show,
+    .sidebar-overlay.show,
+    .modal-backdrop.show {
+        opacity: 1 !important;
+    }
+}
+
