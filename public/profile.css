@@ -99,3 +99,145 @@
 .pm-toast.show { opacity: 1; transform: translateY(0); }
 .pm-toast.success { background: #065f46; }
 .pm-toast.error { background: #7f1d1d; }
+
+/* ==========================================================================
+   ULTRA-COMPACT MOBILE ARCHITECTURE FOR PROFILE MANAGEMENT MODAL
+   ========================================================================== */
+@media (max-width: 576px) {
+  /* 1. Primary Container Bounds Restrictor */
+  .pm-overlay {
+    padding: 8px; /* Safe micro-buffer from device bezels */
+  }
+
+  .pm-modal {
+    width: 100% !important;
+    max-width: 380px !important; /* Forces a slimmer visual footprint */
+    max-height: 85vh !important; /* Hard constraint to ensure structural element visibility */
+    margin: 0 auto;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Lock master layout scrolling */
+  }
+
+  /* 2. Micro Header Configurations */
+  .pm-header {
+    padding: 0.75rem 1rem 0.5rem !important;
+    align-items: center;
+  }
+  
+  .pm-header h2 {
+    font-size: 0.95rem !important; /* Scaled down header title sizing */
+    font-weight: 700;
+  }
+
+  .pm-header p {
+    font-size: 0.72rem !important;
+    margin-top: 1px;
+    line-height: 1.1;
+  }
+
+  .pm-close {
+    font-size: 0.95rem !important;
+    padding: 0.2rem !important;
+  }
+
+  /* 3. Segmented Navigation Tab Optimization */
+  .pm-tabs {
+    margin: 0 1rem 0.25rem !important;
+    padding: 2px !important;
+    gap: 1px !important;
+    border-radius: 6px !important;
+  }
+
+  .pm-tab {
+    padding: 0.45rem 0.25rem !important; /* Shrunk tab heights */
+    font-size: 0.75rem !important; /* Avoids text overflow bugs */
+    gap: 0.25rem !important;
+    border-radius: 4px !important;
+  }
+
+  .pm-tab i {
+    font-size: 0.78rem !important;
+  }
+
+  /* 4. Enclosed Scrollable Body (Isolates viewport overflows inside white card) */
+  .pm-body {
+    padding: 0.75rem 1rem 1rem !important;
+    overflow-y: auto !important; /* Scroll strictly restricted to this inner panel */
+    flex: 1;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Component Headings */
+  .pm-section-title {
+    font-size: 0.82rem !important;
+  }
+  
+  .pm-section-sub {
+    font-size: 0.72rem !important;
+    margin-top: 1px !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  /* 5. Fluid Single-Column Input Matrix */
+  .pm-grid {
+    grid-template-columns: 1fr !important; /* Drops 50/50 split cleanly */
+    gap: 0.5rem !important; /* Reduces large empty margins between data fields */
+  }
+
+  .pm-field {
+    gap: 0.15rem !important;
+  }
+
+  .pm-field label {
+    font-size: 0.72rem !important;
+    font-weight: 600;
+  }
+
+  .pm-field input {
+    padding: 0.45rem 0.6rem !important; /* Compact typing fields */
+    font-size: 0.78rem !important;
+    border-radius: 6px !important;
+  }
+
+  /* Password Overrides */
+  .pw-wrap input {
+    padding-right: 2rem !important;
+  }
+
+  .pw-toggle {
+    right: 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* 6. Execution Control Bar Placement */
+  .pm-actions {
+    margin-top: 0.75rem !important;
+  }
+
+  .pm-btn {
+    width: 100% !important; /* Spans full operational field width for thumb taps */
+    padding: 0.55rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+  }
+
+  /* 7. Conditional System Alerts */
+  .danger-warning {
+    padding: 0.6rem !important;
+    margin-bottom: 0.75rem !important;
+    gap: 0.4rem !important;
+    border-radius: 8px !important;
+  }
+
+  .danger-warning i {
+    font-size: 0.78rem !important;
+    margin-top: 1px;
+  }
+
+  .danger-warning p {
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+  }
+}
