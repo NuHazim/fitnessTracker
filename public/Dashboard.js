@@ -1,3 +1,28 @@
+// ── Workout type → FontAwesome icon ──────────────────────────────────────────
+// Derived from w.type at render time — nothing stored in DB.
+function getWorkoutIcon(type) {
+    const map = {
+        "Running":           "fa-solid fa-person-running",
+        "Walking":           "fa-solid fa-person-walking",
+        "Cycling":           "fa-solid fa-person-biking",
+        "Swimming":          "fa-solid fa-person-swimming",
+        "Gym Workout":       "fa-solid fa-dumbbell",
+        "Yoga":              "fa-solid fa-spa",
+        "HIIT":              "fa-solid fa-bolt",
+        "Cardio":            "fa-solid fa-heart-pulse",
+        "Strength Training": "fa-solid fa-dumbbell",
+        "Sports":            "fa-solid fa-basketball",
+        "Other":             "fa-solid fa-shoe-prints",
+        "Run":               "fa-solid fa-person-running",
+        "Walk":              "fa-solid fa-person-walking",
+        "Ride":              "fa-solid fa-person-biking",
+        "Swim":              "fa-solid fa-person-swimming",
+        "Workout":           "fa-solid fa-dumbbell",
+        "Hike":              "fa-solid fa-person-hiking",
+    };
+    return map[type] || "fa-solid fa-shoe-prints";
+}
+
 // ── Shortcuts ────────────────────────────────────────────────────────────────
 document.getElementById("logBox").addEventListener("click",      () => window.location.href = "FitnessTracker.html");
 document.getElementById("planBox").addEventListener("click",     () => window.location.href = "NutritionPlanner.html");
@@ -137,7 +162,7 @@ async function populateDashboard() {
         card.className = "workBox";
         card.innerHTML = `
             <div style="display:flex;align-items:center;">
-                <i class="fa-solid fa-person-running workBoxLogo"></i>
+                <i class="${getWorkoutIcon(w.type)} workBoxLogo"></i>
                 <div class="workDetails">
                     <p style="font-weight:bolder;margin-bottom:0.2rem;">${w.type}</p>
                     <p style="margin-bottom:0.2rem;">
